@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bucked Up AIGC Video Dashboard</title>
+<script src="chart.umd.min.js"></script>
+<style>
+  :root{
+    --green-900:#0e3a23; --green-800:#14401f; --green-700:#1b5e34; --green-500:#2e8b50;
+    --green-100:#e7f1e9; --gold:#e9a020; --gold-soft:#fbe9c8; --ink:#16241b; --muted:#5e7065;
+    --line:#dde7e0; --bg:#f4f7f4; --card:#fff; --shadow:0 1px 3px rgba(16,40,25,.08),0 1px 2px rgba(16,40,25,.06);
+    /* status palette (from the NAS sync plan) */
+    --s-not:#c4cdc7; --s-prog:#3a7bd5; --s-up:#5aa873; --s-rev:#e9a020; --s-appr:#2e8b50; --s-rej:#d9534f; --s-done:#14401f;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;}
+  .wrap{max-width:1480px;margin:0 auto;padding:0 20px 60px;}
+
+  header{background:var(--green-900);color:#fff;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,0,0,.15);}
+  .header-in{max-width:1480px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .logo{display:flex;align-items:center;}
+  .brand{background:#fff;border-radius:9px;padding:6px 12px;display:inline-flex;align-items:center;height:42px;box-shadow:0 1px 4px rgba(0,0,0,.22);}
+  .brand img{height:26px;display:block;}
+  .brand-fallback{display:inline-flex;align-items:center;gap:9px;}
+  .brand-fallback svg{height:28px;display:block;}
+  .brand-fallback .wm{font-weight:800;font-size:22px;letter-spacing:.2px;color:var(--green-800);}
+  .title-block h1{font-size:16px;margin:0;font-weight:700;}
+  .title-block .sub{font-size:12px;color:#a9c6b3;}
+  .spacer{flex:1;}
+  .deadline-pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);padding:6px 12px;border-radius:20px;font-size:12px;display:flex;gap:8px;align-items:center;}
+  .deadline-pill b{color:var(--gold);font-size:15px;}
+  .lang-toggle{display:flex;background:rgba(255,255,255,.12);border-radius:8px;overflow:hidden;}
+  .lang-toggle button{background:none;border:none;color:#cfe0d5;padding:7px 14px;cursor:pointer;font-size:13px;font-weight:600;}
+  .lang-toggle button.active{background:var(--gold);color:var(--green-900);}
+
+  .tabbar{background:#fff;border-bottom:1px solid var(--line);box-shadow:0 1px 3px rgba(16,40,25,.05);}
+  .tabbar-in{max-width:1480px;margin:0 auto;padding:0 20px;display:flex;gap:4px;flex-wrap:wrap;}
+  .tab{background:none;border:none;border-bottom:3px solid transparent;padding:13px 18px;cursor:pointer;font-size:14px;font-weight:600;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+  .tab:hover{color:var(--green-800);} .tab.active{color:var(--green-800);border-bottom-color:var(--gold);}
+  .tab .badge{background:#d9534f;color:#fff;border-radius:20px;font-size:10px;font-weight:800;padding:1px 7px;min-width:18px;text-align:center;}
+
+  .sec-title{font-size:13px;font-weight:700;color:var(--green-800);text-transform:uppercase;letter-spacing:.6px;margin:24px 0 12px;display:flex;align-items:center;gap:8px;}
+  .sec-title::before{content:"";width:4px;height:16px;background:var(--gold);border-radius:2px;}
+  .card{background:var(--card);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow);border:1px solid var(--line);}
+
+  /* Status banner */
+  .banner{background:linear-gradient(120deg,var(--green-800),var(--green-700));color:#fff;border-radius:14px;padding:18px 24px;margin:20px 0 16px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;box-shadow:var(--shadow);}
+  .banner .b-pct{font-size:46px;font-weight:800;line-height:1;}
+  .banner .b-pct small{font-size:14px;font-weight:600;color:#bcd6c4;display:block;margin-top:3px;}
+  .status-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 15px;border-radius:30px;font-size:14px;font-weight:700;}
+  .status-pill.ok{background:rgba(255,255,255,.15);color:#bff0cf;border:1px solid rgba(191,240,207,.4);}
+  .status-pill.risk{background:rgba(255,180,160,.18);color:#ffd2c4;border:1px solid rgba(255,180,160,.5);}
+  .banner .b-right{margin-left:auto;text-align:right;}
+  .banner .b-days{font-size:26px;font-weight:800;} .banner .b-days small{font-size:13px;font-weight:600;color:#bcd6c4;}
+  .banner .b-date{font-size:13px;color:#bcd6c4;}
+
+  /* Stat strip */
+  .statstrip{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 8px;}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 14px;box-shadow:var(--shadow);min-width:104px;flex:1;}
+  .stat .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:600;}
+  .stat .v{font-size:21px;font-weight:800;line-height:1.1;} .stat .v small{font-size:12px;color:var(--muted);font-weight:600;}
+  .stat.green .v{color:var(--green-700);} .stat.gold .v{color:var(--gold);} .stat.red .v{color:#b23b2e;} .stat.blue .v{color:#2456a6;}
+
+  /* KPI tiles */
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:14px 0;}
+  .kpi{background:var(--card);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);border:1px solid var(--line);}
+  .kpi .label{font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+  .kpi .num{font-size:26px;font-weight:800;line-height:1;} .kpi .num small{font-size:13px;color:var(--muted);font-weight:600;}
+  .kpi .hint{font-size:11px;color:var(--muted);margin-top:4px;}
+  .kpi.accent .num{color:var(--green-700);} .kpi.gold .num{color:var(--gold);} .kpi.red .num{color:#b23b2e;} .kpi.blue .num{color:#2456a6;}
+
+  /* Related-tools launcher buttons */
+  .tools-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:4px 0 4px;}
+  .tool-card{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow);text-decoration:none;color:var(--ink);transition:transform .12s,box-shadow .12s;}
+  .tool-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(16,40,25,.14);background:#fffdf7;}
+  .tool-card .tool-ic{font-size:26px;width:50px;height:50px;border-radius:12px;background:var(--green-100);display:grid;place-items:center;flex:none;}
+  .tool-card .tool-tx{flex:1;min-width:0;}
+  .tool-card .tool-name{font-weight:800;font-size:15px;color:var(--green-800);}
+  .tool-card .tool-desc{font-size:12px;color:var(--muted);margin-top:2px;}
+  .tool-card .tool-url{font-size:11px;color:var(--green-700);font-family:ui-monospace,Consolas,monospace;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .tool-card .tool-arrow{font-size:20px;color:var(--gold);font-weight:700;flex:none;}
+  .tools-hint{font-size:11px;color:var(--muted);margin:2px 0 4px;}
+
+  /* Fixed home button (every page) */
+  .home-fab{position:fixed;left:18px;bottom:18px;z-index:90;display:inline-flex;align-items:center;gap:7px;background:#1b5e34;color:#fff;border:none;border-radius:24px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(16,40,25,.28);text-decoration:none;font-family:inherit;}
+  .home-fab:hover{background:#14401f;transform:translateY(-1px);}
+  .home-fab .hf-ic{font-size:15px;line-height:1;}
+
+  /* Production pipeline (7 stages) */
+  .pipe{display:flex;gap:6px;flex-wrap:wrap;align-items:stretch;}
+  .pipe .pcard{flex:1;min-width:118px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 12px;box-shadow:var(--shadow);position:relative;}
+  .pipe .pcard.gate{border-color:var(--gold-soft);background:#fffdf7;}
+  .pipe .pl{font-size:11px;font-weight:700;color:var(--green-800);text-transform:uppercase;letter-spacing:.3px;display:flex;align-items:center;gap:5px;}
+  .pipe .pl .num{width:18px;height:18px;border-radius:50%;background:var(--green-100);display:inline-grid;place-items:center;font-size:10px;}
+  .pipe .pv{font-size:19px;font-weight:800;margin-top:4px;} .pipe .pv small{font-size:12px;color:var(--muted);font-weight:600;}
+  .pipe .pmini{height:6px;background:var(--green-100);border-radius:4px;overflow:hidden;margin-top:6px;}
+  .pipe .pmini>span{display:block;height:100%;background:var(--green-500);}
+  .pipe .parrow{align-self:center;color:var(--gold);font-weight:700;font-size:16px;}
+
+  /* Daily output strip (overview) */
+  .daily-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 6px;}
+  .daily-panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);}
+  .daily-panel-h{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-weight:700;font-size:14px;color:var(--green-800);}
+  .daily-panel-h::before{content:"";width:4px;height:16px;background:var(--gold);border-radius:2px;flex:none;}
+  .daily-out{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .daily-out .dcard{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .daily-out .dcard.accent{border-left:4px solid var(--gold);}
+  .daily-out .dl{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+  .daily-out .dv{font-size:28px;font-weight:800;line-height:1.1;margin-top:6px;color:var(--green-700);}
+  .daily-out .dv.muted{font-size:22px;color:var(--muted);}
+  .daily-out .dh{font-size:11px;color:var(--muted);margin-top:5px;}
+  .daily-out .goal-in{display:flex;align-items:center;gap:8px;margin-top:8px;}
+  .daily-out .goal-in input{width:100%;max-width:120px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:22px;font-weight:800;color:var(--green-800);font-family:inherit;text-align:center;}
+  .daily-out .goal-in input:focus{outline:2px solid var(--green-500);outline-offset:-1px;}
+  .daily-out .goal-in span{font-size:12px;color:var(--muted);font-weight:600;}
+  .daily-stage-sel{width:100%;margin-top:8px;padding:7px 8px;border:1px solid var(--line);border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;background:#fff;color:var(--green-800);}
+  .daily-stage-sel:focus{outline:2px solid var(--green-500);outline-offset:-1px;}
+  .daily-bar{height:12px;background:var(--green-100);border-radius:8px;overflow:hidden;margin-top:10px;}
+  .daily-bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--green-500),var(--gold));border-radius:8px;transition:width .25s;}
+  .daily-bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:6px;font-weight:600;}
+  @media(max-width:900px){.daily-wrap{grid-template-columns:1fr;}.daily-out{grid-template-columns:1fr 1fr;}}
+
+  /* status legend */
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:4px 0 0;}
+  .legend .li{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
+  .legend .sw{width:12px;height:12px;border-radius:4px;display:inline-block;}
+
+  /* generation/asset bars */
+  .abars{display:grid;grid-template-columns:1fr 1fr;gap:12px 26px;}
+  .abar{display:flex;align-items:center;gap:12px;}
+  .abar .an{width:90px;font-weight:600;font-size:13px;}
+  .abar .at{flex:1;height:13px;background:var(--green-100);border-radius:8px;overflow:hidden;}
+  .abar .at>span{display:block;height:100%;background:linear-gradient(90deg,#5aa873,#2e8b50);}
+  .abar .av{width:96px;text-align:right;font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;}
+
+  /* EN vs ES bars */
+  .langbars{display:flex;flex-direction:column;gap:14px;}
+  .lb-row{display:flex;align-items:center;gap:14px;}
+  .lb-name{width:90px;flex:none;font-weight:700;font-size:14px;}
+  .lb-track{flex:1;height:16px;background:var(--green-100);border-radius:10px;overflow:hidden;}
+  .lb-track > span{display:block;height:100%;border-radius:10px;}
+  .lb-en > span{background:linear-gradient(90deg,#3a7bd5,#2456a6);} .lb-es > span{background:linear-gradient(90deg,var(--gold),#c98214);}
+  .lb-val{width:96px;text-align:right;font-weight:800;font-size:15px;} .lb-val small{font-size:11px;color:var(--muted);font-weight:600;}
+
+  /* Timeline */
+  .timeline{padding:6px 6px 2px;}
+  .tl-marks{display:flex;justify-content:space-between;margin:0 0 4px;}
+  .tl-marks span{font-size:12px;color:var(--muted);font-weight:600;max-width:34%;}
+  .tl-marks span:nth-child(2){text-align:center;} .tl-marks span:last-child{text-align:right;}
+  .tl-line{position:relative;height:10px;background:var(--green-100);border-radius:6px;margin:24px 8px 8px;}
+  .tl-fill{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,var(--green-500),var(--green-700));border-radius:6px;}
+  .tl-node{position:absolute;top:50%;width:13px;height:13px;border-radius:50%;background:#fff;border:3px solid var(--green-700);transform:translate(-50%,-50%);}
+  .tl-today{position:absolute;top:-24px;transform:translateX(-50%);text-align:center;}
+  .tl-today .lbl{background:var(--gold);color:var(--green-900);font-size:11px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap;}
+  .tl-today .pin{width:2px;height:26px;background:var(--gold);margin:0 auto;}
+
+  /* Overview grid */
+  .ov-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;align-items:start;margin-top:4px;}
+  .ov-right{display:flex;flex-direction:column;gap:14px;}
+  .ov-grid > .card,.ov-right > .card{padding:13px 16px;}
+  .ov-grid h4,.ov-right h4{margin:0 0 9px;font-size:13px;}
+  .ov-right .abars{grid-template-columns:1fr;gap:9px;}
+  .ov-grid .langbars{gap:12px;}
+
+  /* Anomalies */
+  .anoms{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .anom{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow);}
+  .anom.warn{border-left-color:var(--gold);} .anom.bad{border-left-color:#d9534f;} .anom.ok{border-left-color:var(--green-500);}
+  .anom .ah{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .anom .at{font-size:12px;font-weight:700;color:var(--green-800);}
+  .anom .ac{font-size:22px;font-weight:800;} .anom.bad .ac{color:#b23b2e;} .anom.warn .ac{color:#9a6510;} .anom.ok .ac{color:var(--green-700);}
+  .anom .ad{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4;}
+  .anom .alist{font-size:11px;color:var(--muted);margin-top:6px;font-family:ui-monospace,Consolas,monospace;word-break:break-all;}
+
+  /* Admin */
+  .admin-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .admin-row select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff;color:var(--ink);font-weight:600;}
+  #aNames{width:100%;min-height:120px;padding:10px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;margin:0 0 10px;resize:vertical;}
+  .team-row{display:flex;gap:8px;margin-bottom:7px;align-items:center;}
+  .team-row input{flex:1;padding:7px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;font-family:inherit;}
+  #adminBody td{padding:6px 10px;}
+  #adminBody input,#adminBody select{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;font-size:13px;font-family:inherit;color:var(--ink);}
+  #adminBody input:focus{outline:2px solid var(--green-500);outline-offset:-1px;}
+
+  /* Charts + products */
+  .charts{display:grid;gap:16px;} .chart-box{position:relative;height:240px;}
+  .charts h4{margin:0 0 12px;font-size:14px;}
+  .prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 30px;}
+  .prod-row{display:flex;align-items:center;gap:10px;font-size:13px;}
+  .prod-row .name{width:170px;flex:none;} .prod-row .mini{flex:1;height:9px;background:var(--green-100);border-radius:6px;overflow:hidden;}
+  .prod-row .mini > span{display:block;height:100%;background:var(--green-500);border-radius:6px;}
+  .prod-row .val{width:42px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;}
+
+  /* Translation panel */
+  .trans-panel{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;background:var(--card);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow);border:1px solid var(--line);border-left:5px solid var(--gold);margin-bottom:14px;}
+  .trans-left .cov{font-size:30px;font-weight:800;color:var(--gold);} .trans-left .cov small{font-size:14px;color:var(--muted);font-weight:600;}
+  .bar{height:14px;background:var(--green-100);border-radius:10px;overflow:hidden;}
+  .bar > span{display:block;height:100%;border-radius:10px;}
+  .trans-counts{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap;}
+  .tc{display:flex;align-items:center;gap:7px;font-size:13px;}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block;}
+  .dot.done{background:var(--green-500);} .dot.wip{background:var(--gold);} .dot.none{background:#c4cdc7;}
+  .trans-box{position:relative;height:160px;}
+
+  /* Toolbar / table */
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
+  .toolbar input[type=text],.toolbar select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff;color:var(--ink);}
+  .btn{padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink);}
+  .btn:hover{background:var(--green-100);}
+  .btn.primary{background:var(--green-700);color:#fff;border-color:var(--green-700);} .btn.primary:hover{background:var(--green-800);}
+  .btn.warn{color:#b23b2e;border-color:#f0d4cf;} .btn.warn:hover{background:#fbeae7;}
+  .batchbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--green-800);color:#fff;border-radius:10px;padding:10px 14px;margin-bottom:12px;}
+  .batchbar label{font-size:12px;font-weight:600;color:#cfe0d5;}
+  .batchbar select{padding:6px 9px;border-radius:7px;border:none;font-size:13px;font-weight:600;} .batchbar .btn{padding:6px 12px;} .batchbar #selCount{font-weight:700;margin-right:6px;}
+  .flag-summary{font-size:12px;color:var(--muted);margin:0 0 12px;display:flex;gap:18px;flex-wrap:wrap;} .flag-summary b{color:#b23b2e;font-size:13px;}
+  .table-card{background:var(--card);border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  thead th{background:var(--green-100);color:var(--green-800);text-align:left;padding:10px 12px;font-weight:700;position:sticky;top:0;z-index:3;box-shadow:0 2px 4px rgba(16,40,25,.10);}
+  tbody td{padding:8px 12px;border-top:1px solid var(--line);vertical-align:middle;}
+  tbody tr:hover{background:#f8fbf8;}
+  .tbl-wrap{max-height:620px;overflow:auto;}
+  .pill{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+  .pill.t1{background:#e4eefb;color:#2456a6;} .pill.t2{background:#f3e8fb;color:#7a3aa6;}
+  .task-base{font-family:ui-monospace,Consolas,monospace;font-size:12px;font-weight:700;color:var(--green-700);}
+  .vid-cell{cursor:pointer;border-radius:6px;} .vid-cell:hover{background:#eef6f0;}
+  .vid-name{font-weight:600;color:var(--green-800);} .vid-cell:hover .vid-name{text-decoration:underline;}
+  .vid-name .edit-hint{opacity:0;color:var(--muted);font-size:12px;margin-left:5px;transition:opacity .15s;} .vid-cell:hover .edit-hint{opacity:.75;}
+  .vid-sub{font-size:11px;color:var(--muted);margin-top:2px;font-family:ui-monospace,Consolas,monospace;}
+  .vid-desc{font-size:11px;color:var(--muted);margin-top:3px;max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:italic;}
+  .vid-add{font-size:11px;color:var(--green-500);margin-top:3px;opacity:0;} .vid-cell:hover .vid-add{opacity:1;}
+  .steps-wrap .task-id{font-family:ui-monospace,Consolas,monospace;font-size:10px;color:var(--muted);margin-bottom:4px;}
+  .chips-line{display:flex;align-items:center;gap:3px;flex-wrap:wrap;}
+  .chip-stage{display:inline-grid;place-items:center;min-width:26px;height:23px;padding:0 5px;border-radius:6px;font-size:10px;font-weight:800;cursor:pointer;border:1px solid rgba(0,0,0,.06);color:#fff;user-select:none;}
+  .chip-stage.cur{box-shadow:0 0 0 2px var(--gold-soft);outline:1px solid var(--gold);}
+  .track-tag{display:inline-block;padding:1px 6px;border-radius:5px;font-size:10px;font-weight:800;margin-right:6px;}
+  .track-tag.en{background:#e4eefb;color:#2456a6;} .track-tag.es{background:var(--gold-soft);color:#9a6510;}
+  .ov-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;}
+  .latest-cell{font-size:11px;color:var(--muted);font-family:ui-monospace,Consolas,monospace;max-width:200px;}
+  .latest-cell .lf{color:var(--green-800);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;}
+  .pending{color:#b23b2e;font-weight:700;} .cur-pic{font-weight:600;} .cur-done{color:var(--green-700);font-weight:700;}
+  .row-bar{width:74px;height:7px;background:var(--green-100);border-radius:5px;overflow:hidden;display:inline-block;vertical-align:middle;} .row-bar>span{display:block;height:100%;background:var(--green-500);}
+  .row-flagged{background:#fdf3f1 !important;box-shadow:inset 4px 0 0 #d9534f;}
+  .row-abn{background:#fff7ef !important;box-shadow:inset 4px 0 0 var(--gold);}
+  .flag-btn{border:1px solid var(--line);background:#fff;cursor:pointer;font-size:14px;padding:4px 8px;border-radius:7px;line-height:1;} .flag-btn:hover{background:var(--green-100);} .flag-btn.on{border-color:#e7b0a8;background:#fdeeeb;}
+  .issue-cell{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  .rev-badge{background:#eef1ef;color:#5e7065;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:700;} .rev-badge.max{background:#fbe2de;color:#b23b2e;}
+  .reason-chip{background:var(--gold-soft);color:#9a6510;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .note-dot{font-size:12px;}
+  .footer-note{font-size:12px;color:var(--muted);margin-top:16px;text-align:center;}
+
+  /* File sync page */
+  .sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
+  .conv{font-family:ui-monospace,Consolas,monospace;font-size:13px;background:#0e3a23;color:#cfe9d6;border-radius:8px;padding:10px 12px;line-height:1.7;overflow:auto;}
+  .conv b{color:var(--gold);}
+  #syncInput{width:100%;min-height:96px;padding:10px;border:1px solid var(--line);border-radius:8px;font-family:ui-monospace,Consolas,monospace;font-size:12px;resize:vertical;}
+  .ex-btn{font-family:ui-monospace,Consolas,monospace;font-size:11px;padding:5px 9px;margin:3px 4px 0 0;}
+  .sync-result{margin-top:10px;font-size:13px;}
+  .sync-result .ln{padding:5px 8px;border-radius:6px;margin-bottom:4px;}
+  .sync-result .ok{background:#eaf6ee;color:#1b5e34;} .sync-result .err{background:#fbeae7;color:#b23b2e;}
+  .log-result{font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px;}
+  .log-result.ok{background:#eaf6ee;color:#1b5e34;} .log-result.err{background:#fbeae7;color:#b23b2e;}
+  .mono{font-family:ui-monospace,Consolas,monospace;font-size:12px;}
+
+  /* Modal */
+  .overlay{position:fixed;inset:0;background:rgba(14,40,25,.45);display:none;align-items:center;justify-content:center;z-index:100;}
+  .overlay.open{display:flex;}
+  .modal{background:#fff;border-radius:14px;width:min(640px,92vw);padding:22px 24px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:90vh;overflow:auto;}
+  .modal h3{margin:0 0 4px;font-size:17px;} .modal .msub{font-size:12px;color:var(--muted);margin-bottom:16px;font-family:ui-monospace,Consolas,monospace;}
+  .field{margin-bottom:14px;}
+  .field > label{display:block;font-size:12px;font-weight:700;color:var(--green-800);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
+  .field select,.field textarea,.field input[type=text]{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;font-size:13px;font-family:inherit;color:var(--ink);background:#fff;}
+  .field textarea{resize:vertical;min-height:60px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .flag-check{display:flex;align-items:center;gap:10px;padding:11px 13px;border:1px solid var(--line);border-radius:9px;background:#fffdf7;cursor:pointer;margin-bottom:0;}
+  .flag-check input{width:auto;transform:scale(1.2);} .flag-check .ftxt{font-size:13px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink);}
+  .rev-note{font-size:11px;color:var(--muted);margin-top:5px;}
+  .se-track{border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:10px;}
+  .se-h{font-size:12px;font-weight:700;color:var(--green-800);margin-bottom:8px;display:flex;align-items:center;gap:7px;}
+  .se-h .se-latest{margin-left:auto;font-weight:500;color:var(--muted);font-family:ui-monospace,Consolas,monospace;font-size:11px;}
+  .se-row{display:grid;grid-template-columns:18px 1fr 120px 110px 148px;align-items:center;gap:8px;padding:4px 0;}
+  .se-row .se-dot{width:11px;height:11px;border-radius:3px;}
+  .se-row .se-name{font-size:13px;font-weight:600;}
+  .se-row select{padding:6px 8px;border:1px solid var(--line);border-radius:7px;font-size:12px;font-family:inherit;background:#fff;}
+  .se-row .se-done{padding:5px 6px;border:1px solid var(--line);border-radius:7px;font-size:11px;font-family:inherit;background:#fff;color:var(--ink);width:100%;}
+  .se-row .se-done:disabled{opacity:.45;background:#f4f7f4;}
+  @media(max-width:720px){.se-row{grid-template-columns:1fr 1fr;}.se-row .se-dot,.se-row .se-name{display:none;}}
+  .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;}
+  .modal-actions.split{justify-content:space-between;align-items:center;}
+  .save-pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:14px;background:var(--green-100);color:var(--green-800);}
+  .save-pill.err{background:#fbeae7;color:#b23b2e;}
+  .save-pill.file{background:#e8f0ff;color:#2456a6;}
+
+  /* Avatar / login button */
+  .avatar-btn{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#eaf3ec;
+    padding:5px 12px 5px 6px;border-radius:24px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;margin-left:6px;}
+  .avatar-btn:hover{background:rgba(255,255,255,.2);}
+  .avatar-btn .av-ic{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;flex:none;}
+  .avatar-btn .av-ic svg{width:17px;height:17px;display:block;}
+  .avatar-btn.authed{background:var(--gold);border-color:var(--gold);color:var(--green-900);}
+  .avatar-btn.authed .av-ic{background:rgba(14,40,25,.18);}
+  .avatar-btn .av-label{white-space:nowrap;}
+  .header-actions{display:flex;align-items:center;gap:10px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end;}
+  .avatar-wrap{position:relative;display:inline-block;}
+  .avatar-menu{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.20);min-width:170px;overflow:hidden;z-index:80;}
+  .avatar-menu.open{display:block;}
+  .avatar-menu .menu-item{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;text-align:left;padding:11px 14px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;font-family:inherit;}
+  .avatar-menu .menu-item:hover{background:var(--green-100);}
+  .avatar-menu .menu-item+.menu-item{border-top:1px solid var(--line);}
+  .avatar-menu .menu-item.danger{color:#b23b2e;}
+  /* Help modal */
+  .help-modal{width:min(680px,94vw);max-height:90vh;overflow:auto;}
+  .help-sec{margin-bottom:18px;}
+  .help-sec h4{margin:0 0 8px;font-size:14px;color:var(--green-800);}
+  .help-sec p{margin:0 0 8px;font-size:13px;color:var(--ink);line-height:1.6;}
+  .help-code{font-family:ui-monospace,Consolas,monospace;font-size:12px;background:#0e3a23;color:#cfe9d6;border-radius:8px;padding:10px 12px;line-height:1.7;overflow:auto;}
+  .help-code b{color:var(--gold);}
+  .help-chips{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 8px;}
+  .help-chip{font-size:11px;font-weight:700;color:#fff;border-radius:5px;padding:2px 7px;}
+  .help-list{margin:0;padding:0;list-style:none;}
+  .help-list li{font-size:13px;line-height:1.6;padding:6px 0;border-top:1px solid var(--line);}
+  .help-list li:first-child{border-top:none;}
+  .help-list li b{color:var(--green-800);} .help-list code{background:var(--green-100);border-radius:4px;padding:1px 5px;font-size:12px;}
+  .faq-q{font-weight:700;color:var(--green-800);font-size:13px;margin-top:10px;}
+  .faq-a{font-size:13px;color:var(--ink);line-height:1.6;margin-top:2px;}
+
+  /* Lock screen */
+  .lockscreen{display:none;min-height:62vh;align-items:center;justify-content:center;padding:40px 20px;}
+  .lock-card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);max-width:440px;width:100%;padding:34px 32px;text-align:center;}
+  .lock-card .lock-ic{width:64px;height:64px;border-radius:50%;background:var(--green-100);display:grid;place-items:center;margin:0 auto 16px;}
+  .lock-card .lock-ic svg{width:30px;height:30px;}
+  .lock-card h2{margin:0 0 6px;font-size:20px;color:var(--green-800);}
+  .lock-card p{margin:0 0 20px;color:var(--muted);font-size:14px;line-height:1.5;}
+  .lock-card .btn{font-size:14px;padding:11px 22px;}
+  .auth-field{margin-bottom:14px;text-align:left;}
+  .auth-field label{display:block;font-size:12px;font-weight:700;color:var(--green-800);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
+  .auth-field input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:14px;font-family:inherit;color:var(--ink);background:#fff;}
+  .auth-field input:focus{outline:2px solid var(--green-500);outline-offset:-1px;}
+  .auth-err{display:none;background:#fbeae7;color:#b23b2e;border-radius:8px;padding:9px 12px;font-size:13px;font-weight:600;margin-bottom:12px;text-align:left;}
+
+  @media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr);}.charts{grid-template-columns:1fr !important;}.prod-grid{grid-template-columns:1fr;}.trans-panel,.abars{grid-template-columns:1fr;}.ov-grid{grid-template-columns:1fr;}.anoms{grid-template-columns:1fr;}.sync-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-in">
+    <div class="logo"><span class="brand">
+      <img src="logo.png" alt="lifewood" onerror="this.style.display='none';document.getElementById('logoFallback').style.display='inline-flex';" />
+      <span id="logoFallback" class="brand-fallback" style="display:none;">
+        <svg viewBox="0 0 40 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="20,0 40,18 40,46 20,64 0,46 0,18" fill="#f5a93c"/></svg>
+        <span class="wm">lifewood</span>
+      </span>
+    </span></div>
+    <div class="title-block">
+      <h1 data-i18n="appTitle">Bucked Up AIGC Video Dashboard</h1>
+      <div class="sub" data-i18n="appSub">DAS Labs, LLC (Bucked Up) · Lifewood AIGC · NAS-synced</div>
+    </div>
+    <div class="header-actions">
+      <div class="deadline-pill"><span data-i18n="daysLeft">Days to delivery</span><b id="daysLeft">–</b><span id="deadlineDate" style="color:#a9c6b3"></span></div>
+      <div class="lang-toggle"><button id="btn-en" class="active" onclick="setLang('en')">EN</button><button id="btn-zh" onclick="setLang('zh')">中文</button></div>
+      <div class="avatar-wrap">
+        <button class="avatar-btn" id="avatarBtn" onclick="onAvatarClick(event)" title="">
+          <span class="av-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg></span>
+          <span class="av-label" id="avatarLabel">Login</span>
+        </button>
+        <div class="avatar-menu" id="avatarMenu">
+          <button class="menu-item" onclick="openHelp()">❓ <span data-i18n="helpTitle">Help / User guide</span></button>
+          <button class="menu-item" onclick="openChangePass()">🔑 <span data-i18n="changePass">Change password</span></button>
+          <button class="menu-item danger" onclick="logout()">⎋ <span data-i18n="logout">Sign out</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="tabbar" id="tabbar"><div class="tabbar-in">
+  <button class="tab active" data-view="overview" onclick="showView('overview')" data-i18n="navOverview">Overview</button>
+  <button class="tab" data-view="tracker" onclick="showView('tracker')" data-i18n="navTracker">Video tracker</button>
+  <button class="tab" data-view="sync" onclick="showView('sync')"><span data-i18n="navSync">File sync</span><span class="badge" id="anomBadge" style="display:none"></span></button>
+  <button class="tab" data-view="translation" onclick="showView('translation')" data-i18n="navSpanish">Spanish status</button>
+  <button class="tab" data-view="analytics" onclick="showView('analytics')" data-i18n="navAnalytics">Analytics</button>
+  <button class="tab" data-view="admin" onclick="showView('admin')" data-i18n="navAdmin">Admin</button>
+  <a class="tab" href="workflow.html" data-i18n="navWorkflow">⛏ Workflow</a>
+</div></div>
+
+<!-- Lock screen (shown until signed in) -->
+<div class="lockscreen" id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1b5e34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+    <h2 data-i18n="lockTitle">Dashboard locked</h2>
+    <p data-i18n="lockMsg">Please sign in to view the project data.</p>
+    <button class="btn primary" onclick="openAuth()" data-i18n="login">Login</button>
+  </div>
+</div>
+
+<div class="wrap" id="appContent">
+  <button class="home-fab" onclick="goHome()" title="主页 / Home"><span class="hf-ic">🏠</span><span data-i18n="home">Home</span></button>
+  <!-- ===================== OVERVIEW ===================== -->
+  <section id="view-overview" class="view">
+    <div class="banner" id="banner"></div>
+    <div class="sec-title" data-i18n="toolsSec">Related tools</div>
+    <div class="tools-row">
+      <a class="tool-card" id="toolAgent" href="https://ug.link/18576341573" target="_blank" rel="noopener">
+        <div class="tool-ic">📁</div>
+        <div class="tool-tx"><div class="tool-name" data-i18n="tool1Name">File Agent (LifewoodFileAgent)</div><div class="tool-desc" data-i18n="tool1Desc">NAS file sync &amp; project registry</div><div class="tool-url" id="toolAgentUrl">https://ug.link/18576341573</div></div>
+        <div class="tool-arrow">↗</div>
+      </a>
+      <a class="tool-card" href="storyboard-studio.html" target="_blank" rel="noopener">
+        <div class="tool-ic">🎬</div>
+        <div class="tool-tx"><div class="tool-name" data-i18n="tool2Name">Storyboard Studio</div><div class="tool-desc" data-i18n="tool2Desc">AI storyboard &amp; script generator</div><div class="tool-url">storyboard-studio.html</div></div>
+        <div class="tool-arrow">↗</div>
+      </a>
+    </div>
+    <div class="tools-hint" data-i18n="toolsHint">These open the apps running on this computer — start each app first.</div>
+    <div class="kpis" id="kpis"></div>
+    <div class="sec-title" data-i18n="dailyOutputSec">Daily output</div>
+    <div class="daily-wrap" id="dailyOut"></div>
+    <div class="sec-title" data-i18n="pipelineSec">Production pipeline · stages done (of 200 tracks)</div>
+    <div class="pipe" id="pipe"></div>
+    <div class="legend" id="legend" style="margin-top:10px"></div>
+    <div class="sec-title" data-i18n="anomSec">Anomaly alerts</div>
+    <div class="anoms" id="anoms"></div>
+    <div class="ov-grid" style="margin-top:18px">
+      <div class="card"><h4 data-i18n="byStep">Tracks by current stage</h4><div class="chart-box" style="height:230px"><canvas id="stageChart"></canvas></div></div>
+      <div class="ov-right">
+        <div class="card"><h4 data-i18n="statusDist">Status distribution (200 tracks)</h4><div class="chart-box" style="height:200px"><canvas id="statusChart"></canvas></div></div>
+        <div class="card"><h4 data-i18n="byLangProgress">Delivery progress by language</h4><div class="langbars" id="langBars"></div></div>
+      </div>
+      <div class="card"><h4 data-i18n="timelineTitle">Project timeline</h4><div class="timeline" id="timeline"></div></div>
+      <div class="card"><h4 data-i18n="issuesSec">Issues &amp; revisions</h4><div class="statstrip" id="issueStats" style="margin-bottom:0"></div></div>
+    </div>
+  </section>
+
+  <!-- ===================== VIDEO TRACKER ===================== -->
+  <section id="view-tracker" class="view" style="display:none">
+    <div class="sec-title" data-i18n="tracker">Video tracker</div>
+    <div class="statstrip" id="trackerStats"></div>
+    <div class="legend" id="legend2" style="margin:10px 0"></div>
+    <div class="flag-summary" id="flagSummary"></div>
+    <div class="batchbar" id="batchbar" style="display:none">
+      <span id="selCount"></span>
+      <label data-i18n="trackLabel">Track</label>
+      <select id="bTrack"></select>
+      <select id="bStage"></select>
+      <label data-i18n="statusWord">Status</label>
+      <select id="bStatus"></select>
+      <button class="btn" onclick="batchStatus()" data-i18n="applyStatus">Apply status</button>
+      <select id="bPic"></select>
+      <button class="btn" onclick="batchAssign()" data-i18n="assignPIC">Assign PIC</button>
+      <button class="btn warn" onclick="batchDeleteVideos()" data-i18n="batchDelete">Delete selected</button>
+      <div class="spacer" style="flex:1"></div>
+      <button class="btn" onclick="clearSel()" data-i18n="clearSel">Clear</button>
+    </div>
+    <div class="toolbar">
+      <input type="text" id="search" oninput="render()" data-i18n-ph="searchPh" placeholder="Search…" />
+      <select id="fStage" onchange="render()"></select>
+      <select id="fOverall" onchange="render()"></select>
+      <select id="fType" onchange="render()"></select>
+      <select id="fTrans" onchange="render()"></select>
+      <select id="fPIC" onchange="render()"></select>
+      <select id="fFlag" onchange="render()"></select>
+      <div class="spacer" style="flex:1"></div>
+      <button class="btn primary" onclick="startEnterData()" data-i18n="enterData" data-i18n-tip="enterDataTip" title="">录入数据</button>
+      <button class="btn" onclick="reloadFromFile()" data-i18n="reloadFile" title="">Reload file</button>
+      <span class="save-pill" id="savePill" style="display:none"></span>
+      <button class="btn" onclick="exportJSON()" data-i18n="export">Export backup</button>
+      <button class="btn" onclick="exportSlice()" data-i18n="exportSlice" title="Export only your selected / filtered videos">Export slice</button>
+      <button class="btn" onclick="document.getElementById('importFile').click()" data-i18n="import" title="Replace ALL data with a backup file">Import</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importJSON(event)" />
+      <button class="btn" onclick="document.getElementById('mergeFile').click()" data-i18n="merge" title="Combine a teammate's slice into your data (by id)">Merge</button>
+      <input type="file" id="mergeFile" accept="application/json" style="display:none" onchange="mergeJSON(event)" />
+      <button class="btn warn" onclick="resetData()" data-i18n="reset">Reset</button>
+      <button class="btn" id="undoBtn" onclick="restoreUndo()" style="display:none" data-i18n="undoReset">Undo reset</button>
+    </div>
+    <div class="table-card"><div class="tbl-wrap"><table><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table></div></div>
+    <div class="footer-note" data-i18n="footerFile">When started via Start Lifewood AIGC.bat, all changes are saved to dashboard-data.json in this folder. You can also edit that file directly (reload the page afterward).</div>
+  </section>
+
+  <!-- ===================== FILE SYNC ===================== -->
+  <section id="view-sync" class="view" style="display:none">
+    <div class="sec-title" data-i18n="syncTitle">NAS file sync</div>
+    <div class="footer-note" data-i18n="syncHint" style="text-align:left;margin:0 0 14px">When a file syncs to the NAS, the sync system parses its name and upserts the video_progress table — one record per (project_id, video_id). The dashboard only reads that table. Use the simulator below to see how a filename drives a progress update.</div>
+    <div class="sync-grid">
+      <div class="card">
+        <h4 data-i18n="convTitle">Naming convention</h4>
+        <div class="conv" id="convBox"></div>
+        <h4 style="margin-top:16px" data-i18n="simTitle">Simulate a file sync</h4>
+        <div class="footer-note" data-i18n="simHint" style="text-align:left;margin:0 0 8px">One filename per line. Each valid name upserts the matching video &amp; stage; invalid names are logged as naming errors.</div>
+        <textarea id="syncInput" spellcheck="false"></textarea>
+        <div id="exBtns"></div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" onclick="runSync()" data-i18n="processBtn">Process files</button>
+          <button class="btn" onclick="clearLog()" data-i18n="clearLog">Clear sync log</button>
+        </div>
+        <div class="sync-result" id="syncResult"></div>
+      </div>
+      <div class="card">
+        <h4 data-i18n="rulesTitle">Sync update rules</h4>
+        <div id="rulesBox" style="font-size:12.5px;color:var(--ink);line-height:1.6"></div>
+      </div>
+    </div>
+    <div class="sec-title" data-i18n="anomSec">Anomaly alerts</div>
+    <div class="anoms" id="anoms2"></div>
+    <div class="sec-title" data-i18n="logTitle">video_file_sync_log</div>
+    <div class="table-card"><div class="tbl-wrap" style="max-height:420px"><table>
+      <thead><tr>
+        <th data-i18n="logTime">Synced at</th><th data-i18n="logProj">Project</th><th data-i18n="logVid">Video</th>
+        <th data-i18n="logTrack">Track</th><th data-i18n="logStage">Stage</th><th data-i18n="logStatus">Status</th>
+        <th data-i18n="logVer">Version</th><th data-i18n="logFile">File</th><th data-i18n="logRes">Result</th>
+      </tr></thead>
+      <tbody id="logBody"></tbody>
+    </table></div></div>
+  </section>
+
+  <!-- ===================== SPANISH STATUS ===================== -->
+  <section id="view-translation" class="view" style="display:none">
+    <div class="sec-title" data-i18n="spanishTitle">Spanish translation status</div>
+    <div class="statstrip" id="esStats"></div>
+    <div class="trans-panel">
+      <div class="trans-left">
+        <div class="cov"><span id="covPct">0%</span> <small data-i18n="covSub">of videos translated to Spanish</small></div>
+        <div class="bar" style="margin-top:10px"><span id="covBar" style="width:0%;background:linear-gradient(90deg,var(--gold),#c98214)"></span></div>
+        <div class="trans-counts" id="transCounts"></div>
+      </div>
+      <div class="trans-box"><canvas id="transChart"></canvas></div>
+    </div>
+    <div class="sec-title" data-i18n="esStageSec">Spanish stages complete (of 100)</div>
+    <div class="card"><div class="abars" id="esStageBars"></div></div>
+    <div class="charts" style="grid-template-columns:1fr;margin-top:16px;">
+      <div class="card"><h4 data-i18n="byLangCompletion">Completion by language</h4><div class="chart-box"><canvas id="langChart"></canvas></div></div>
+    </div>
+  </section>
+
+  <!-- ===================== ANALYTICS ===================== -->
+  <section id="view-analytics" class="view" style="display:none">
+    <div class="sec-title" data-i18n="analytics">Analytics</div>
+    <div class="statstrip" id="anStats"></div>
+    <div class="charts" style="grid-template-columns:1fr;">
+      <div class="card"><h4 data-i18n="completionByType">Completion by type</h4><div class="chart-box"><canvas id="typeChart"></canvas></div></div>
+    </div>
+    <div class="charts" style="grid-template-columns:1fr;margin-top:16px;">
+      <div class="card"><h4 data-i18n="byProduct">Progress by product (EN + ES)</h4><div class="prod-grid" id="prodGrid"></div></div>
+    </div>
+    <div class="charts" style="grid-template-columns:1fr;margin-top:16px;">
+      <div class="card">
+        <h4 data-i18n="dailyWorkload">Daily workload</h4>
+        <div class="footer-note" style="text-align:left;margin:0 0 10px" data-i18n="dailyWorkloadHint">Stage completions per day — each stage marked done counts once.</div>
+        <div class="chart-box"><canvas id="dailyChart"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ADMIN ===================== -->
+  <section id="view-admin" class="view" style="display:none">
+    <div class="sec-title" data-i18n="adminTitle">Admin · fill production data</div>
+    <div class="footer-note" data-i18n="adminHint" style="text-align:left;margin:0 0 14px">Changes here update your local data and apply across all tabs.</div>
+    <div class="charts" style="grid-template-columns:1.3fr 1fr;">
+      <div class="card">
+        <h4 data-i18n="bulkPicTitle">Bulk assign PIC</h4>
+        <div class="admin-row">
+          <select id="aStage"></select>
+          <select id="aTrack"></select>
+          <select id="aPic"></select>
+          <button class="btn primary" onclick="adminBulkPic()" data-i18n="applyAll">Apply to all</button>
+        </div>
+        <h4 style="margin-top:18px" data-i18n="bulkNamesTitle">Bulk fill names (one per line, in video order)</h4>
+        <textarea id="aNames" data-i18n-ph="namesPh" placeholder=""></textarea>
+        <button class="btn primary" onclick="adminBulkNames()" data-i18n="applyNames">Apply names</button>
+      </div>
+      <div class="card">
+        <h4 data-i18n="teamTitle">Team members (PICs)</h4>
+        <div id="adminTeam"></div>
+      </div>
+    </div>
+    <div class="sec-title" data-i18n="adminDataTitle">Video data</div>
+    <div class="table-card"><div class="tbl-wrap"><table>
+      <thead><tr>
+        <th data-i18n="colNum">ID</th><th data-i18n="colProductH">Product</th><th data-i18n="colType">Type</th>
+        <th data-i18n="prioLabel">Priority</th><th data-i18n="nameLabel">Video name</th><th data-i18n="descLabel">Description</th>
+      </tr></thead>
+      <tbody id="adminBody"></tbody>
+    </table></div></div>
+  </section>
+</div>
+
+<!-- Detail modal -->
+<div class="overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3 data-i18n="modalTitle">Video details</h3>
+    <div class="msub" id="mSub"></div>
+    <div class="row2">
+      <div class="field"><label data-i18n="colProductH">Product</label><input type="text" id="mProduct" list="productList" /></div>
+      <div class="field"><label data-i18n="colType">Type</label><select id="mType"></select></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label data-i18n="nameLabel">Video name</label><input type="text" id="mName" data-i18n-ph="namePh" placeholder="e.g. Creatine — energy hook" /></div>
+      <div class="field"><label data-i18n="prioLabel">Priority</label><select id="mPrio"></select></div>
+    </div>
+    <div class="field"><label data-i18n="descLabel">Description</label><textarea id="mDesc" data-i18n-ph="descPh" placeholder="What this video covers…"></textarea></div>
+    <div class="field"><label data-i18n="stepsPicTitle">Stages, status &amp; PIC</label><div id="mSteps"></div></div>
+    <div class="field"><label class="flag-check"><input type="checkbox" id="mFlag" /><span class="ftxt" data-i18n="flagLabel">Flag this video — needs redoing / has an issue</span></label></div>
+    <div class="row2">
+      <div class="field"><label data-i18n="revLabel">Client revision rounds used</label>
+        <select id="mRev"><option value="0">0</option><option value="1">1</option><option value="2">2</option></select>
+        <div class="rev-note" data-i18n="revNote">Client may request changes up to twice (2 rounds in scope).</div></div>
+      <div class="field"><label data-i18n="reasonLabel">Reason — what's the problem?</label><select id="mReason"></select></div>
+    </div>
+    <div class="field"><label data-i18n="notesLabel">Notes</label><textarea id="mNotes" data-i18n-ph="notesPh" placeholder="Add any details…"></textarea></div>
+    <div class="modal-actions split">
+      <button class="btn warn" onclick="deleteEditingVideo()" data-i18n="deleteVideo">Delete video</button>
+      <div style="display:flex;gap:8px"><button class="btn" onclick="closeModal()" data-i18n="cancel">Cancel</button><button class="btn primary" onclick="saveModal()" data-i18n="saveBtn">Save</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- Login modal -->
+<div class="overlay" id="authModal" onclick="if(event.target===this)closeAuth()">
+  <div class="modal" style="width:min(400px,92vw)">
+    <h3 data-i18n="authTitle">Sign in to view data</h3>
+    <div class="msub" style="font-family:inherit" data-i18n="authSub">Enter the team account to unlock the dashboard.</div>
+    <div class="auth-err" id="authErr" data-i18n="authBad">Wrong account or password.</div>
+    <div class="auth-field"><label data-i18n="authUser">Account</label><input type="text" id="authUser" autocomplete="username" data-i18n-ph="authUserPh" placeholder="account" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <div class="auth-field"><label data-i18n="authPass">Password</label><input type="password" id="authPass" autocomplete="current-password" data-i18n-ph="authPassPh" placeholder="password" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <div class="modal-actions"><button class="btn" onclick="closeAuth()" data-i18n="cancel">Cancel</button><button class="btn primary" onclick="doLogin()" data-i18n="authBtn">Sign in</button></div>
+  </div>
+</div>
+
+<!-- Change password modal -->
+<div class="overlay" id="passModal" onclick="if(event.target===this)closePass()">
+  <div class="modal" style="width:min(400px,92vw)">
+    <h3 data-i18n="changePass">Change password</h3>
+    <div class="msub" style="font-family:inherit" data-i18n="changePassSub">Set a new team password for this browser.</div>
+    <div class="auth-err" id="passErr"></div>
+    <div class="auth-field"><label data-i18n="curPass">Current password</label><input type="password" id="curPass" autocomplete="current-password" /></div>
+    <div class="auth-field"><label data-i18n="newPass">New password</label><input type="password" id="newPass" autocomplete="new-password" /></div>
+    <div class="auth-field"><label data-i18n="confirmPass">Confirm new password</label><input type="password" id="confirmPass" autocomplete="new-password" onkeydown="if(event.key==='Enter')doChangePass()" /></div>
+    <div class="modal-actions"><button class="btn" onclick="closePass()" data-i18n="cancel">Cancel</button><button class="btn primary" onclick="doChangePass()" data-i18n="saveBtn">Save</button></div>
+  </div>
+</div>
+
+<!-- Help / user guide modal -->
+<div class="overlay" id="helpModal" onclick="if(event.target===this)closeHelp()">
+  <div class="modal help-modal">
+    <h3 data-i18n="helpTitle">Help / User guide</h3>
+    <div id="helpBody"></div>
+    <div class="modal-actions"><button class="btn primary" onclick="closeHelp()" data-i18n="close">Close</button></div>
+  </div>
+</div>
+
+<!-- Enter / add video modal -->
+<div class="overlay" id="entryModal" onclick="if(event.target===this)closeEntryModal()">
+  <div class="modal" style="width:min(520px,92vw)">
+    <h3 data-i18n="enterDataTitle">Add videos</h3>
+    <div class="msub" style="font-family:inherit" data-i18n="enterDataSub">Demo data is cleared. Add your videos below — each entry appears in all dashboard tabs immediately.</div>
+    <div id="entryCount" style="font-size:12px;font-weight:700;color:var(--green-700);margin-bottom:12px"></div>
+    <div class="field"><label data-i18n="colProductH">Product</label><input type="text" id="eProduct" list="productList" data-i18n-ph="enterProductPh" placeholder="Product name" onkeydown="if(event.key==='Enter')addEntryVideo()" /></div>
+    <datalist id="productList"></datalist>
+    <div class="row2">
+      <div class="field"><label data-i18n="colType">Type</label><select id="eType"><option value="T1">T1</option><option value="T2">T2</option></select></div>
+      <div class="field"><label data-i18n="prioLabel">Priority</label><select id="ePrio"></select></div>
+    </div>
+    <div class="field"><label data-i18n="nameLabel">Video name</label><input type="text" id="eName" data-i18n-ph="namePh" placeholder="e.g. Creatine — energy hook" onkeydown="if(event.key==='Enter')addEntryVideo()" /></div>
+    <div class="field"><label data-i18n="descLabel">Description</label><textarea id="eDesc" data-i18n-ph="descPh" placeholder="What this video covers…"></textarea></div>
+    <div class="modal-actions" style="justify-content:space-between">
+      <button class="btn" onclick="closeEntryModal()" data-i18n="enterDoneBtn">Done</button>
+      <button class="btn primary" onclick="addEntryVideo()" data-i18n="enterAddBtn">Add video</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================== i18n ============================== */
+const I18N = {
+  en:{
+    appTitle:"Bucked Up AIGC Video Dashboard", appSub:"DAS Labs, LLC (Bucked Up) · Lifewood AIGC · NAS-synced",
+    daysLeft:"Days to delivery",
+    navOverview:"Overview", navTracker:"Video tracker", navSync:"File sync", navSpanish:"Spanish status", navAnalytics:"Analytics", navAdmin:"Admin", navWorkflow:"⛏ Workflow",
+    adminTitle:"Admin · fill production data", adminHint:"Changes here update your local data and apply across all tabs.",
+    bulkPicTitle:"Bulk assign PIC to a stage", applyAll:"Apply to all", teamTitle:"Team members (PICs)",
+    bulkNamesTitle:"Bulk fill names (one per line, in video order)", namesPh:"Creatine — energy hook\nRUT — strength explainer\n…",
+    applyNames:"Apply names", adminDataTitle:"Video data (edit priority, name & description inline)", trackBoth:"Both (EN + ES)",
+    colProductH:"Product", newPicPh:"New member name", addPic:"Add", removePicT:"Remove",
+    picApplied:"PIC applied across all videos.", namesApplied:"{n} names applied.",
+    pipelineSec:"Production pipeline · stages done (of 200 tracks)", anomSec:"Anomaly alerts", statusDist:"Status distribution (200 tracks)",
+    dailyOutputSec:"Daily output",
+    dailyVideoSec:"Video output", dailyVideoToday:"Today's videos", dailyVideoTodayHint:"Videos fully completed today (EN + ES)",
+    dailyStageSec:"Stage output", dailyStagePick:"Stage", dailyStageTodayHint:"Tracks marked done for this stage today",
+    dailyGoal:"Daily goal", dailyGoalPh:"e.g. 20", dailyVideoGoalUnit:"videos / day", dailyStageGoalUnit:"tracks / day",
+    dailyPct:"Goal progress", dailyRemain:"{n} to go", dailyNoGoal:"Set a daily goal above",
+    dailyProgress:"Progress bar",
+    toolsSec:"Related tools", tool1Name:"File Agent (LifewoodFileAgent)", tool1Desc:"NAS file sync & project registry", tool2Name:"Storyboard Studio", tool2Desc:"AI storyboard & script generator", home:"Home",
+    toolsHint:"Storyboard Studio is bundled in this site and opens directly. File Agent is a separate backend (LifewoodFileAgent.exe + your NAS) — set its address via FILE_AGENT_URL in index.html before publishing.",
+    byStep:"Tracks by current stage", byLangProgress:"Delivery progress by language", issuesSec:"Issues & revisions",
+    timelineTitle:"Project timeline", spanishTitle:"Spanish translation status", covSub:"of videos translated to Spanish",
+    esStageSec:"Spanish stages complete (of 100)", byLangCompletion:"Completion by language", analytics:"Analytics",
+    completionByType:"Completion by type", byProduct:"Progress by product (EN + ES)", tracker:"Video tracker",
+    completeWord:"complete", onTrack:"On track", atRisk:"At risk", toDelivery:"days to delivery",
+    tlKickoff:"Kickoff · 1 Jul 2026", tlProduction:"Production · Jul 2026", tlDelivery:"Delivery · 1 Aug 2026", todayLabel:"Today",
+    kTotal:"Total deliverables", kTotalHint:"100 videos × EN + ES", kDone:"Completed", kProd:"In production",
+    kReview:"Pending review", kRejected:"Rejected", kDistributed:"Distributed",
+    stShowing:"Showing", stCompleted:"Completed", stInProgress:"In production", stRejected:"Rejected", stTotal:"Total",
+    flaggedLbl:"Flagged", inRevision:"In revision", revLimit:"Revision limit",
+    searchPh:"Search id / name / product / file…", allStages:"All stages", allOverall:"All states", allTypes:"All types", allTrans:"All translation states", allPICs:"All PICs",
+    allFlags:"All", flaggedOnly:"Flagged only", notFlagged:"Not flagged",
+    trackLabel:"Track", statusWord:"Status", applyStatus:"Apply status", assignPIC:"Assign PIC",
+    clearSel:"Clear selection", selectedWord:"selected", allWord:"all",
+    export:"Export backup", exportSlice:"Export slice", import:"Import", merge:"Merge", reset:"Reset", undoReset:"Undo reset",
+    enterData:"Enter data", enterDataTip:"Clear demo data and enter your own videos", enterDataTitle:"Add videos",
+    enterDataSub:"Demo data is cleared. Add your videos below — each entry appears in all dashboard tabs immediately.",
+    enterDataSubMore:"Add more videos below. Each entry syncs to all dashboard tabs immediately.",
+    confirmEnterData:"Clear all {n} videos (including demo data)? A backup will download first, then you can enter your own videos.",
+    enterProductRequired:"Please enter a product name.", enterAddBtn:"Add video", enterDoneBtn:"Done", enterCount:"{n} video(s) added",
+    enterProductPh:"Product name",
+    noUndo:"No saved progress to restore.", mergeDone:"Merged {n} videos from the file into your data.",
+    resetDone:"Progress reset. A backup file was downloaded, and you can click “Undo reset” to restore.",
+    footer:"Data is saved locally in this browser. In production the NAS sync writes the video_progress table and the dashboard reads it. Use “Export backup” to share or move data between computers.",
+    footerFile:"When started via Start Lifewood AIGC.bat, all changes auto-save to dashboard-data.json on the server. Anyone on the same URL sees the latest data after signing in.",
+    deleteVideo:"Delete video", batchDelete:"Delete selected",
+    confirmDelete:"Delete video {id} and all its progress? This cannot be undone.",
+    confirmDeleteBatch:"Delete {n} selected video(s)? This cannot be undone.",
+    reloadFile:"Reload file", reloadFileDone:"Reloaded from dashboard-data.json.",
+    reloadFileFail:"Could not load dashboard-data.json — is the local server running?",
+    saveToFile:"Saved · server", saveToFilePending:"Saving…", saveToFileErr:"Save failed", saveLocalOnly:"Browser only (open via Start Lifewood AIGC.bat for shared server save)",
+    saveFromGitHub:"Data from GitHub · edits saved in this browser only", reloadGitHub:"Reload from GitHub",
+    fileApiOff:"Server not connected — double-click Start Lifewood AIGC.bat and open the URL it shows (do not open index.html directly)",
+    flaggedCount:"Flagged with issues", revLimitReached:"Revision limit reached",
+    colNum:"ID", colVideo:"Video", colType:"Type", colEN:"English stages", colES:"Spanish stages",
+    colCurrent:"Current · state", colLatest:"Latest file", colCompletedAt:"Completed at", colIssue:"Issue", colProgress:"Progress",
+    completedAtLabel:"Done at", noCompletedAt:"— not done —",
+    dailyWorkload:"Daily workload (stage completions)", dailyWorkloadHint:"Each stage marked done counts once toward that day. Used for daily output tracking.",
+    todayCompletions:"Today's completions",
+    done:"Completed", remaining:"Remaining", english:"English", spanish:"Spanish",
+    types:{T1:"Type 1 (~30s)", T2:"Type 2 (~120s)"}, trans:{done:"Translated", wip:"In translation", none:"Not translated"},
+    completed:"Completed", pending:"Pending assignment", noFile:"— no file synced —",
+    stages:{brief:"Brief",script:"Script",voice:"Voice",music:"Music",video:"Video",review:"Review",distribution:"Distribution"},
+    stageAbbr:{brief:"Bf",script:"Sc",voice:"Vo",music:"Mu",video:"Vd",review:"Rv",distribution:"Ds"},
+    statuses:{not_started:"Not started",in_progress:"In progress",uploaded:"Uploaded",reviewing:"Reviewing",approved:"Approved",rejected:"Rejected",completed:"Completed"},
+    overall:{not_started:"Not started",in_progress:"In production",reviewing:"In review",rejected:"Rejected",abnormal:"Abnormal",completed:"Completed"},
+    prios:{"":"— none —",high:"High",medium:"Medium",low:"Low"},
+    nameLabel:"Video name", namePh:"e.g. Creatine — energy hook", descLabel:"Description", descPh:"What this video covers…",
+    prioLabel:"Priority", clickToEdit:"Click to edit name & details", addDetails:"Add details",
+    modalTitle:"Video details", stepsPicTitle:"Stages, status & PIC",
+    flagLabel:"Flag this video — needs redoing / has an issue",
+    revLabel:"Client revision rounds used", revNote:"Client may request changes up to twice (2 rounds in scope).",
+    reasonLabel:"Reason — what's the problem?", notesLabel:"Notes", notesPh:"Add any details…", cancel:"Cancel", saveBtn:"Save",
+    reasons:{"":"— none —", brand:"Off-brand / messaging", claims:"Product claims / accuracy", info:"Wrong product info", audio:"Audio / voiceover", caption:"Subtitle / caption error", translation:"Translation issue", pacing:"Pacing / length", visual:"Visual quality", naming:"File naming error", other:"Other"},
+    confirmReset:"Reset all videos — clear every stage status, PIC, flag, revision, reason, note and file info?\n\nYour current data will be backed up first (a file is downloaded and a one-click Undo is kept), so this is safe to reverse.",
+    importBad:"Could not read that file — make sure it is a backup exported from this dashboard.",
+    login:"Login", logout:"Sign out", authTitle:"Sign in to view data", authSub:"Enter the team account to unlock the dashboard.",
+    authUser:"Account", authPass:"Password", authUserPh:"account", authPassPh:"password", authBtn:"Sign in", authBad:"Wrong account or password.",
+    lockTitle:"Dashboard locked", lockMsg:"Please sign in with the team account to view the project data.",
+    loginTip:"Sign in", logoutTip:"Signed in as lifewood — click to sign out", accountMenu:"Account menu", logoutConfirm:"Sign out? You'll need the team account to view data again.",
+    changePass:"Change password", changePassSub:"Set a new team password for this browser.", curPass:"Current password", newPass:"New password", confirmPass:"Confirm new password",
+    passWrongCur:"Current password is incorrect.", passEmpty:"New password cannot be empty.", passMismatch:"New passwords do not match.", passChanged:"Password changed. Use it next time you sign in.",
+    helpTitle:"Help / User guide", close:"Close",
+    helpNamingH:"File naming — quick reference",
+    helpNamingP:"You don't update the dashboard by hand — when a file syncs to the NAS, its name updates the matching video and stage. Format:",
+    helpNamingFmt:"<b>project_id</b>_<b>video_id</b>_[<b>lang</b>]_<b>stage</b>_<b>version</b>_<b>status</b>_<b>date</b>.ext",
+    helpNamingExamples:["AIGC001_VID023_EN_script_v01_uploaded_20260622.docx","AIGC001_VID023_EN_video_v02_reviewing_20260622.mp4","AIGC001_VID023_ES_review_v02_approved_20260623.xlsx"],
+    helpStagesLine:"Brief → Script → Voice → Music → Video → Review → Distribution",
+    helpStatusLabel:"Statuses:",
+    helpNamingNote:"lang (EN/ES) is optional — a 6-field name defaults to EN. Stage aliases: vo/voiceover→voice, verify/qa→review, dist→distribution. A name that breaks the rule is logged as a naming error and does NOT change progress.",
+    helpRulesH:"The four sync rules",
+    helpPagesH:"What each page does",
+    helpPages:[
+      ["Overview","Headline metrics (total / completed / in production / pending review / rejected / distributed), the 7-stage pipeline, anomaly alerts, charts and timeline."],
+      ["Video tracker","Every video's EN and ES stage statuses, current stage, latest file and progress. Click a stage chip to cycle its status; use batch actions, filters, and Export / Import / Merge."],
+      ["File sync","The naming convention, a sync simulator (paste filenames to see updates), the video_file_sync_log, and the full anomaly list."],
+      ["Spanish status","Spanish translation coverage and per-stage completion."],
+      ["Analytics","Completion by video type and by product."],
+      ["Admin","Bulk-assign PICs, bulk-fill names, set priority, and manage team members."],
+      ["Workflow","The 7-stage pipeline diagram, the NAS data flow, the status model, naming convention, sync rules and roles."]
+    ],
+    helpFaqH:"FAQ",
+    helpFaq:[
+      ["I can't see any data.","Sign in first with the team account (default lifewood / lifewood). Data stays hidden until you do."],
+      ["Where is my data stored?","When using Start Lifewood AIGC.bat, data is saved on the server (dashboard-data.json) and shared with everyone on the same URL. Opening index.html directly stores data only in this browser."],
+      ["How do we work as a team?","One person runs Start Lifewood AIGC.bat and shares the LAN URL shown in the black window. Everyone opens that link, signs in, and edits — changes sync automatically. For offline use, see Export / Merge in SHARING.md."],
+      ["If I change the password, does it change for everyone?","No — it only applies on this browser. The default stays lifewood for everyone you shared the file with."],
+      ["A distribution file appeared but review was not approved.","The video is flagged Abnormal (Rule 3). Uploading a new version also resets Review automatically (Rule 4)."],
+      ["A filename was wrong.","It is recorded in the sync log and shown under Anomaly alerts; it does not change any progress."],
+      ["I lost data / want to start over.","Reset auto-downloads a backup and keeps a one-click Undo; you can also Import a backup to restore."]
+    ],
+    /* file sync */
+    syncTitle:"NAS file sync", syncHint:"When a file syncs to the NAS, the sync system parses its name and upserts the video_progress table — one record per (project_id, video_id). The dashboard only reads that table. Use the simulator below to see how a filename drives a progress update.",
+    convTitle:"Naming convention", simTitle:"Simulate a file sync",
+    simHint:"One filename per line. Each valid name upserts the matching video & stage; invalid names are logged as naming errors.",
+    processBtn:"Process files", clearLog:"Clear sync log", rulesTitle:"Sync update rules",
+    logTitle:"video_file_sync_log", logTime:"Synced at", logProj:"Project", logVid:"Video", logTrack:"Track", logStage:"Stage", logStatus:"Status", logVer:"Version", logFile:"File", logRes:"Result",
+    logEmpty:"No sync events yet — process a filename above.",
+    rules:[
+      "<b>Rule 1.</b> One video keeps one master record, keyed by <code>project_id + video_id</code> — any number of files/versions still map to a single row.",
+      "<b>Rule 2.</b> Every valid file updates its stage's status, the current stage, the progress %, and the latest file name / path / version / time.",
+      "<b>Rule 3.</b> Distribution may not complete unless review is approved. If a distribution file appears first, the video is flagged <b>abnormal</b>.",
+      "<b>Rule 4.</b> A newer version resets review back to not-started — a fresh upload invalidates a prior approval, so the dashboard never shows it as done by mistake."
+    ],
+    syncOk:"✓ {file} → {vid} {track} · {stage} = {status}", syncErr:"✗ {file} — {msg}",
+    errStage:"unknown stage", errStatus:"unknown status", errVersion:"bad version (expected v01, v02…)", errDate:"bad date (expected YYYYMMDD)", errTokens:"wrong field count — expected project_id_video_id_[lang_]stage_version_status_date", errVid:"video id not found",
+    created:"created", versionReset:"newer version → review reset",
+    /* anomalies */
+    anom:{naming:"File naming errors",namingD:"Files whose name did not match the convention (logged, not applied).",
+      prereq:"Missing prerequisite",prereqD:"A later stage progressed while an earlier stage is still not started.",
+      rejected:"Review rejected",rejectedD:"Tracks whose review was rejected — send back to production.",
+      version:"Multiple versions",versionD:"Same stage synced with more than one version (possible overwrite).",
+      stale:"Stale (>7 days)",staleD:"Not complete and not updated in over 7 days.",
+      undist:"Done, not distributed",undistD:"Review approved but distribution not completed yet.",
+      abnormal:"Abnormal (rule 3)",abnormalD:"Distribution advanced before review was approved."},
+    none2:"none"
+  },
+  zh:{
+    appTitle:"Bucked Up AIGC 视频项目看板", appSub:"DAS Labs, LLC (Bucked Up) · Lifewood AIGC · NAS 同步",
+    daysLeft:"距交付天数",
+    navOverview:"概览", navTracker:"视频追踪", navSync:"文件同步", navSpanish:"西语状态", navAnalytics:"数据分析", navAdmin:"管理", navWorkflow:"⛏ 工作流程",
+    adminTitle:"管理 · 填写生产数据", adminHint:"此处的修改会更新本地数据并在所有页面生效。",
+    bulkPicTitle:"批量为某阶段指派负责人", applyAll:"应用到全部", teamTitle:"团队成员（负责人）",
+    bulkNamesTitle:"批量填写名称（每行一个，按视频顺序）", namesPh:"肌酸 — 能量开场\nRUT — 力量讲解\n…",
+    applyNames:"应用名称", adminDataTitle:"视频数据（直接编辑优先级、名称与描述）", trackBoth:"两者（英 + 西）",
+    colProductH:"产品", newPicPh:"新成员名称", addPic:"添加", removePicT:"移除",
+    picApplied:"已为所有视频应用负责人。", namesApplied:"已应用 {n} 个名称。",
+    pipelineSec:"生产管线 · 各阶段完成数（共 200 条轨道）", anomSec:"异常提醒", statusDist:"状态分布（200 条轨道）",
+    dailyOutputSec:"每日产量统计",
+    dailyVideoSec:"视频产量", dailyVideoToday:"今日视频", dailyVideoTodayHint:"今日英西双轨均完成的视频数",
+    dailyStageSec:"阶段产量", dailyStagePick:"选择阶段", dailyStageTodayHint:"今日该阶段标记完成的轨道数（英 + 西）",
+    dailyGoal:"每日目标", dailyGoalPh:"例如 20", dailyVideoGoalUnit:"个/天", dailyStageGoalUnit:"条/天",
+    dailyPct:"目标进度", dailyRemain:"还差 {n}", dailyNoGoal:"请在上方填写每日目标",
+    dailyProgress:"完成进度",
+    toolsSec:"相关工具", tool1Name:"文件代理 (LifewoodFileAgent)", tool1Desc:"NAS 文件同步与项目登记", tool2Name:"分镜工作室", tool2Desc:"AI 分镜 / 脚本生成", home:"主页",
+    toolsHint:"分镜工作室已内置于本站点，可直接打开。文件代理是独立后端（LifewoodFileAgent.exe + 你的 NAS）—— 发布前请在 index.html 的 FILE_AGENT_URL 中设置其地址。",
+    byStep:"按当前阶段统计轨道", byLangProgress:"按语言交付进度", issuesSec:"问题与修改",
+    timelineTitle:"项目时间线", spanishTitle:"西班牙语翻译状态", covSub:"的视频已翻译为西班牙语",
+    esStageSec:"西班牙语各阶段完成数（共 100）", byLangCompletion:"按语言完成情况", analytics:"数据分析",
+    completionByType:"按类型完成情况", byProduct:"按产品进度（英 + 西）", tracker:"视频追踪表",
+    completeWord:"完成", onTrack:"进度正常", atRisk:"有风险", toDelivery:"天后交付",
+    tlKickoff:"启动 · 2026年7月1日", tlProduction:"制作 · 2026年7月", tlDelivery:"交付 · 2026年8月1日", todayLabel:"今天",
+    kTotal:"交付件总数", kTotalHint:"100 个视频 × 英 + 西", kDone:"已完成", kProd:"制作中",
+    kReview:"待审核", kRejected:"被退回", kDistributed:"已分发",
+    stShowing:"显示中", stCompleted:"已完成", stInProgress:"制作中", stRejected:"被退回", stTotal:"总数",
+    flaggedLbl:"已标记", inRevision:"修改中", revLimit:"达修改上限",
+    searchPh:"搜索 编号 / 名称 / 产品 / 文件…", allStages:"全部阶段", allOverall:"全部状态", allTypes:"全部类型", allTrans:"全部翻译状态", allPICs:"全部负责人",
+    allFlags:"全部", flaggedOnly:"仅标记", notFlagged:"未标记",
+    trackLabel:"轨道", statusWord:"状态", applyStatus:"应用状态", assignPIC:"指派负责人",
+    clearSel:"清除选择", selectedWord:"项已选", allWord:"全部",
+    export:"导出备份", exportSlice:"导出部分", import:"导入", merge:"合并", reset:"重置", undoReset:"撤销重置",
+    enterData:"录入数据", enterDataTip:"清除模拟数据并自行录入视频", enterDataTitle:"录入视频",
+    enterDataSub:"模拟数据已清除。在下方添加视频 —— 每条会立即同步到看板各模块。",
+    enterDataSubMore:"在下方继续添加视频，每条会立即同步到看板各模块。",
+    confirmEnterData:"将清除全部 {n} 条视频（含模拟数据），并先自动下载备份，然后可自行录入。继续？",
+    enterProductRequired:"请填写产品名称。", enterAddBtn:"添加视频", enterDoneBtn:"完成", enterCount:"已添加 {n} 条",
+    enterProductPh:"产品名称",
+    noUndo:"没有可恢复的进度。", mergeDone:"已从文件合并 {n} 个视频到你的数据中。",
+    resetDone:"已重置。已下载备份文件，可点击“撤销重置”恢复。",
+    footer:"数据保存在本浏览器本地。在生产环境中由 NAS 同步系统写入 video_progress 表，看板只读取该表。使用“导出备份”可在不同电脑间共享或迁移。",
+    flaggedCount:"有问题的标记", revLimitReached:"已达修改上限",
+    colNum:"编号", colVideo:"视频", colType:"类型", colEN:"英语阶段", colES:"西班牙语阶段",
+    colCurrent:"当前 · 状态", colLatest:"最新文件", colCompletedAt:"完成时间", colIssue:"问题", colProgress:"进度",
+    completedAtLabel:"完成于", noCompletedAt:"— 未完成 —",
+    dailyWorkload:"每日工作量（阶段完成数）", dailyWorkloadHint:"每个阶段标记为「已完成/已通过」时，按完成日期计入当日工作量。",
+    todayCompletions:"今日完成",
+    done:"已完成", remaining:"剩余", english:"英语", spanish:"西班牙语",
+    types:{T1:"类型1 (约30秒)", T2:"类型2 (约120秒)"}, trans:{done:"已翻译", wip:"翻译中", none:"未翻译"},
+    completed:"已完成", pending:"待指派", noFile:"— 暂无同步文件 —",
+    stages:{brief:"简报",script:"脚本",voice:"配音",music:"音乐",video:"视频",review:"审核",distribution:"分发"},
+    stageAbbr:{brief:"简",script:"脚",voice:"配",music:"音",video:"视",review:"审",distribution:"分"},
+    statuses:{not_started:"未开始",in_progress:"进行中",uploaded:"已上传",reviewing:"审核中",approved:"已通过",rejected:"被退回",completed:"已完成"},
+    overall:{not_started:"未开始",in_progress:"制作中",reviewing:"审核中",rejected:"被退回",abnormal:"异常",completed:"已完成"},
+    prios:{"":"— 无 —",high:"高",medium:"中",low:"低"},
+    nameLabel:"视频名称", namePh:"例如：肌酸 — 能量开场", descLabel:"描述", descPh:"该视频内容…",
+    prioLabel:"优先级", clickToEdit:"点击编辑名称和详情", addDetails:"添加详情",
+    modalTitle:"视频详情", stepsPicTitle:"阶段、状态与负责人",
+    flagLabel:"标记此视频 — 需重做 / 有问题",
+    revLabel:"客户已用修改轮次", revNote:"客户最多可提出两次修改（范围内 2 轮）。",
+    reasonLabel:"原因 — 问题是什么？", notesLabel:"备注", notesPh:"补充任何细节…", cancel:"取消", saveBtn:"保存",
+    reasons:{"":"— 无 —", brand:"品牌调性/信息", claims:"产品宣称/准确性", info:"产品信息错误", audio:"音频/配音", caption:"字幕错误", translation:"翻译问题", pacing:"节奏/时长", visual:"画面质量", naming:"文件命名错误", other:"其他"},
+    confirmReset:"重置所有视频 —— 清除每个阶段状态、负责人、标记、修改、原因、备注和文件信息？\n\n系统会先备份当前数据（下载备份文件并保留一键撤销），可安全恢复。",
+    footer:"数据保存在本浏览器。生产环境中 NAS 同步会写入 video_progress 表，看板从中读取。使用「导出备份」在电脑间共享或迁移。",
+    footerFile:"通过 Start Lifewood AIGC.bat 启动时，所有修改会自动保存到服务器的 dashboard-data.json。同一网址登录的所有人都能看到最新数据。",
+    deleteVideo:"删除视频", batchDelete:"删除选中",
+    confirmDelete:"确定删除视频 {id} 及其全部进度？此操作不可撤销。",
+    confirmDeleteBatch:"确定删除选中的 {n} 条视频？此操作不可撤销。",
+    reloadFile:"重新加载文件", reloadFileDone:"已从 dashboard-data.json 重新加载。",
+    reloadFileFail:"无法加载 dashboard-data.json —— 请确认本地服务已启动。",
+    saveToFile:"已保存 · 服务器", saveToFilePending:"保存中…", saveToFileErr:"保存失败", saveLocalOnly:"仅浏览器缓存（请用 Start Lifewood AIGC.bat 启动以共享服务器保存）",
+    saveFromGitHub:"数据来自 GitHub · 修改仅保存在本浏览器", reloadGitHub:"从 GitHub 重新加载",
+    fileApiOff:"未连接服务器 —— 请双击 Start Lifewood AIGC.bat，使用窗口里显示的网址（不要直接打开 index.html）",
+    importBad:"无法读取该文件 — 请确认这是从本看板导出的备份。",
+    login:"登录", logout:"退出登录", authTitle:"登录以查看数据", authSub:"输入团队账号以解锁看板。",
+    authUser:"账号", authPass:"密码", authUserPh:"账号", authPassPh:"密码", authBtn:"登录", authBad:"账号或密码错误。",
+    lockTitle:"看板已锁定", lockMsg:"请使用团队账号登录后查看项目数据。",
+    loginTip:"登录", logoutTip:"已登录：lifewood —— 点击展开菜单", accountMenu:"账号菜单", logoutConfirm:"确定退出登录？再次查看数据需要重新输入团队账号。",
+    changePass:"修改密码", changePassSub:"为本浏览器设置新的团队密码。", curPass:"当前密码", newPass:"新密码", confirmPass:"确认新密码",
+    passWrongCur:"当前密码不正确。", passEmpty:"新密码不能为空。", passMismatch:"两次输入的新密码不一致。", passChanged:"密码已修改，下次登录请使用新密码。",
+    helpTitle:"帮助 / 使用指南", close:"关闭",
+    helpNamingH:"命名规则速查",
+    helpNamingP:"你不需要手动更新看板 —— 当文件同步到 NAS 后，文件名会自动更新对应视频与阶段。格式：",
+    helpNamingFmt:"<b>项目ID</b>_<b>视频ID</b>_[<b>语言</b>]_<b>阶段</b>_<b>版本</b>_<b>状态</b>_<b>日期</b>.后缀",
+    helpNamingExamples:["AIGC001_VID023_EN_script_v01_uploaded_20260622.docx","AIGC001_VID023_EN_video_v02_reviewing_20260622.mp4","AIGC001_VID023_ES_review_v02_approved_20260623.xlsx"],
+    helpStagesLine:"简报 → 脚本 → 配音 → 音乐 → 视频 → 审核 → 分发",
+    helpStatusLabel:"状态：",
+    helpNamingNote:"语言(EN/ES)可省略 —— 6 段式默认按 EN 处理。阶段别名：vo/voiceover→配音，verify/qa→审核，dist→分发。不符合规则的文件名会记入命名错误日志，且不更新进度。",
+    helpRulesH:"四条同步规则",
+    helpPagesH:"各页面说明",
+    helpPages:[
+      ["概览","总览指标（总数 / 已完成 / 制作中 / 待审核 / 被退回 / 已分发）、7 阶段管线、异常提醒、图表与时间线。"],
+      ["视频追踪","每条视频的英语与西语阶段状态、当前阶段、最新文件与进度。点状态块可切换状态；支持批量操作、筛选、导出 / 导入 / 合并。"],
+      ["文件同步","命名规则、同步模拟器（粘贴文件名查看更新效果）、video_file_sync_log 日志、完整异常清单。"],
+      ["西语状态","西班牙语翻译覆盖率与各阶段完成情况。"],
+      ["数据分析","按视频类型、按产品的完成情况。"],
+      ["管理","批量指派负责人、批量填写名称、设置优先级、维护团队成员。"],
+      ["工作流程","7 阶段流程图、NAS 数据流、状态模型、命名规则、同步规则与职责分工。"]
+    ],
+    helpFaqH:"常见问题",
+    helpFaq:[
+      ["看不到数据？","请先用团队账号登录（默认 lifewood / lifewood）。未登录前数据不显示。"],
+      ["数据保存在哪里？","使用 Start Lifewood AIGC.bat 时，数据保存在服务器（dashboard-data.json），同一网址的所有人共享。直接打开 index.html 则只存在本浏览器。"],
+      ["怎么和同事协作？","由一人运行 Start Lifewood AIGC.bat，把黑色窗口里显示的局域网网址发给同事；大家打开该链接、登录后即可编辑，修改自动同步。离线场景见 SHARING.md 的导出/合并。"],
+      ["改了密码同事也会变吗？","不会 —— 只在本浏览器生效。你分享出去的文件，默认密码仍是 lifewood。"],
+      ["分发文件出现了但审核没通过？","该视频会标记为「异常」（规则 3）；并且上传新版本会自动重置「审核」（规则 4）。"],
+      ["文件名写错了？","会记入同步日志并在「异常提醒」中显示，不会更新任何进度。"],
+      ["数据丢了 / 想重来？","重置前会自动下载备份并保留一键撤销；也可用「导入」恢复备份。"]
+    ],
+    syncTitle:"NAS 文件同步", syncHint:"当文件同步到 NAS 后，同步系统解析文件名并对 video_progress 表执行 upsert —— 每个 (project_id, video_id) 只保留一条记录。看板只读取该表。使用下方模拟器查看文件名如何驱动进度更新。",
+    convTitle:"命名规则", simTitle:"模拟文件同步",
+    simHint:"每行一个文件名。每个合法文件名会 upsert 对应视频与阶段；不合法的会记入命名错误日志。",
+    processBtn:"处理文件", clearLog:"清空同步日志", rulesTitle:"同步更新规则",
+    logTitle:"video_file_sync_log（文件同步日志）", logTime:"同步时间", logProj:"项目", logVid:"视频", logTrack:"轨道", logStage:"阶段", logStatus:"状态", logVer:"版本", logFile:"文件", logRes:"结果",
+    logEmpty:"暂无同步事件 —— 在上方处理一个文件名。",
+    rules:[
+      "<b>规则 1.</b> 同一个视频只保留一条主记录，以 <code>project_id + video_id</code> 为唯一键 —— 再多文件/版本也只对应一行。",
+      "<b>规则 2.</b> 每个有效文件都会更新对应阶段状态、当前阶段、总进度，以及最新文件名 / 路径 / 版本 / 时间。",
+      "<b>规则 3.</b> 审核通过前不得完成分发。若分发文件先出现，该视频标记为 <b>异常</b>。",
+      "<b>规则 4.</b> 新版本会把审核状态重置为未开始 —— 新上传使之前的审核通过失效，避免看板误判为已完成。"
+    ],
+    syncOk:"✓ {file} → {vid} {track} · {stage} = {status}", syncErr:"✗ {file} — {msg}",
+    errStage:"未知阶段", errStatus:"未知状态", errVersion:"版本格式错误（应为 v01、v02…）", errDate:"日期格式错误（应为 YYYYMMDD）", errTokens:"字段数量错误 — 应为 项目ID_视频ID_[语言_]阶段_版本_状态_日期", errVid:"未找到该视频编号",
+    created:"已新建", versionReset:"新版本 → 审核已重置",
+    anom:{naming:"文件命名错误",namingD:"文件名不符合命名规则（已记录，未应用）。",
+      prereq:"缺少前置文件",prereqD:"后续阶段已推进，但前置阶段仍未开始。",
+      rejected:"审核被退回",rejectedD:"审核被退回的轨道 —— 需退回制作。",
+      version:"同阶段多版本",versionD:"同一阶段同步了多个版本（可能存在覆盖）。",
+      stale:"长时间未更新（>7天）",staleD:"未完成且超过 7 天未更新。",
+      undist:"已完成未分发",undistD:"审核已通过但分发尚未完成。",
+      abnormal:"异常（规则3）",abnormalD:"审核通过前分发已推进。"},
+    none2:"无"
+  }
+};
+let LANG = localStorage.getItem("bu_lang") || "en";
+const t = k => I18N[LANG][k];
+
+/* ============================== Model ==============================
+   The NAS sync plan: each (video × language) is one video_progress row.
+   Seven stages, each with a status. The dashboard reads these rows. */
+const PRODUCTS = ["Creatine Monohydrate","RUT Testosterone Booster","Bucked Up Pre Workout",
+  "Woke AF Pre Workout","Mother Bucker Pre Workout","6 Point Creatine","PWR Buck Energy Pouches",
+  "Buck Naked - Fat Burner","Buck Feed - Protein Powder","Pumpocalypse"];
+const STAGES = ["brief","script","voice","music","video","review","distribution"];
+const TRACKS = ["en","es"];
+const STATUSES = ["not_started","in_progress","uploaded","reviewing","approved","rejected","completed"];
+const DONE = new Set(["approved","completed"]);
+const STATUS_PCT = {not_started:0,in_progress:0.4,uploaded:0.7,reviewing:0.75,rejected:0.15,approved:1,completed:1};
+const STATUS_COLOR = {not_started:"#c4cdc7",in_progress:"#3a7bd5",uploaded:"#5aa873",reviewing:"#e9a020",approved:"#2e8b50",rejected:"#d9534f",completed:"#14401f"};
+const OVERALL_COLOR = {not_started:"#c4cdc7",in_progress:"#3a7bd5",reviewing:"#e9a020",rejected:"#d9534f",abnormal:"#c98214",completed:"#14401f"};
+const PROJECT_ID = "AIGC001";
+const DEADLINE = new Date("2026-08-01T00:00:00");
+const KICKOFF = new Date("2026-07-01T00:00:00");
+const STALE_DAYS = 7;
+
+let TEAM = (function(){ try{ const s=JSON.parse(localStorage.getItem("bu_team")); return (Array.isArray(s)&&s.length)?s:["Gavin","Ian","Eva","Pierce","Vena"]; }catch(e){ return ["Gavin","Ian","Eva","Pierce","Vena"]; } })();
+function saveTeam(){ localStorage.setItem("bu_team", JSON.stringify(TEAM)); schedulePersist(); }
+let SYNC_LOG = (function(){ try{ return JSON.parse(localStorage.getItem("bu_sync_log"))||[]; }catch(e){ return []; } })();
+function saveLog(){ localStorage.setItem("bu_sync_log", JSON.stringify(SYNC_LOG.slice(0,500))); schedulePersist(); }
+
+const vidCode = id => "VID"+String(id).padStart(3,"0");
+const taskCode = id => "BU-"+String(id).padStart(3,"0");
+function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
+function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function nowDT(){ const d=new Date(),p=n=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; }
+function fmtDate(s){ if(!s)return ""; return String(s).slice(0,10); }
+function fmtDateTime(s){ if(!s)return ""; const x=String(s).replace("T"," "); return x.length>=16?x.slice(0,16):x.slice(0,10); }
+function dateKey(dt){ return (dt||"").slice(0,10); }
+function toDatetimeLocal(s){ if(!s)return ""; const x=String(s).replace(" ","T"); if(x.length>=16)return x.slice(0,16); if(x.length===10)return x+"T12:00"; return ""; }
+function fromDatetimeLocal(v){ return (v||"").trim(); }
+function daysSince(dateStr){ if(!dateStr)return Infinity; const d=new Date(String(dateStr).slice(0,10)); if(isNaN(d))return Infinity; return Math.floor((new Date()-d)/86400000); }
+function verNum(v){ const m=/v?(\d+)/i.exec(v||""); return m?parseInt(m[1],10):0; }
+
+function blankTrack(){ const o={status:{},pic:{},completed_at:{},latest_file_name:"",latest_file_path:"",latest_version:"",last_updated_at:""}; STAGES.forEach(s=>{o.status[s]="not_started";o.pic[s]="";o.completed_at[s]="";}); return o; }
+function ensureTrack(tr){ if(!tr)return blankTrack(); if(!tr.completed_at||typeof tr.completed_at!=="object") tr.completed_at={}; STAGES.forEach(s=>{ if(tr.completed_at[s]===undefined) tr.completed_at[s]=""; }); return tr; }
+function backfillCompletedAt(tr){
+  ensureTrack(tr);
+  STAGES.forEach(s=>{
+    if(DONE.has(tr.status[s])&&!tr.completed_at[s]){
+      const lu=tr.last_updated_at||"";
+      tr.completed_at[s]=lu.length===10?lu+"T12:00":(lu||"");
+    }
+  });
+}
+function applyStatusChange(tr,stage,newStatus,oldStatus,at){
+  ensureTrack(tr);
+  const wasDone=DONE.has(oldStatus), isDone=DONE.has(newStatus);
+  if(isDone&&!wasDone) tr.completed_at[stage]=at||nowDT();
+  else if(!isDone&&wasDone) tr.completed_at[stage]="";
+  else if(isDone&&wasDone&&at) tr.completed_at[stage]=at;
+}
+function trackLatestCompletedAt(tr){
+  ensureTrack(tr);
+  let latest="";
+  STAGES.forEach(s=>{ if(DONE.has(tr.status[s])&&tr.completed_at[s]&&(!latest||tr.completed_at[s]>latest)) latest=tr.completed_at[s]; });
+  return latest;
+}
+function trackFullyCompletedAt(tr){
+  if(!trackComplete(tr)) return "";
+  return trackLatestCompletedAt(tr);
+}
+function countCompletionsOnDate(dk){
+  let n=0;
+  DATA.forEach(v=>TRACKS.forEach(trk=>{ ensureTrack(v[trk]); STAGES.forEach(s=>{ if(dateKey(v[trk].completed_at[s])===dk) n++; }); }));
+  return n;
+}
+function countVideosCompletedOnDate(dk){
+  let n=0;
+  DATA.forEach(v=>{
+    if(!trackComplete(v.en)||!trackComplete(v.es)) return;
+    const enAt=trackFullyCompletedAt(v.en), esAt=trackFullyCompletedAt(v.es);
+    const last=enAt>=esAt?enAt:esAt;
+    if(dateKey(last)===dk) n++;
+  });
+  return n;
+}
+function countStageCompletionsOnDate(dk, stage){
+  if(!stage||!STAGES.includes(stage)) return 0;
+  let n=0;
+  DATA.forEach(v=>TRACKS.forEach(trk=>{
+    ensureTrack(v[trk]);
+    if(DONE.has(v[trk].status[stage])&&dateKey(v[trk].completed_at[stage])===dk) n++;
+  }));
+  return n;
+}
+function collectDailySeries(days){
+  days=days||30; const map={};
+  DATA.forEach(v=>TRACKS.forEach(trk=>{ ensureTrack(v[trk]); STAGES.forEach(s=>{ const k=dateKey(v[trk].completed_at[s]); if(k) map[k]=(map[k]||0)+1; }); }));
+  const labels=[], data=[], end=new Date();
+  for(let i=days-1;i>=0;i--){
+    const d=new Date(end); d.setDate(d.getDate()-i);
+    const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    labels.push(k.slice(5));
+    data.push(map[k]||0);
+  }
+  return {labels,data};
+}
+function blankVideo(id,product,type){ return {id, project_id:PROJECT_ID, video_id:vidCode(id), product:product||"—", type:type||"T1", name:"", description:"", priority:"", flag:false, revisions:0, reason:"", notes:"", en:blankTrack(), es:blankTrack()}; }
+
+function stageDone(tr,s){ return DONE.has(tr.status[s]); }
+function trackPct(tr){ let sum=0; STAGES.forEach(s=>sum+=STATUS_PCT[tr.status[s]]||0); return sum/STAGES.length; }
+function videoPct(v){ return Math.round((trackPct(v.en)+trackPct(v.es))/2*100); }
+function trackCurrent(tr){ for(const s of STAGES){ if(!stageDone(tr,s)) return s; } return null; }
+function trackComplete(tr){ return STAGES.every(s=>stageDone(tr,s)); }
+function distAdvanced(tr){ return ["uploaded","completed"].includes(tr.status.distribution); }
+function reviewOk(tr){ return ["approved","completed"].includes(tr.status.review); }
+function isAbnormal(tr){ return distAdvanced(tr) && !reviewOk(tr); }
+function trackOverall(tr){
+  if(isAbnormal(tr)) return "abnormal";
+  if(tr.status.review==="rejected") return "rejected";
+  if(trackComplete(tr)) return "completed";
+  if(tr.status.review==="reviewing") return "reviewing";
+  return STAGES.some(s=>tr.status[s]!=="not_started") ? "in_progress" : "not_started";
+}
+/* translation status from the Spanish track */
+function transStatus(v){ if(trackComplete(v.es)) return "done"; return STAGES.some(s=>v.es.status[s]!=="not_started")?"wip":"none"; }
+
+/* ---------- seed ---------- */
+function seedTrack(level, opts, id, trk){ // level = how many leading stages are finished (0 = untouched)
+  const tr=blankTrack(); opts=opts||{};
+  for(let i=0;i<STAGES.length;i++){
+    const s=STAGES[i];
+    if(i<level) tr.status[s]= s==="review" ? "approved" : "completed";
+    else if(i===level && level>0) tr.status[s]= "in_progress";
+  }
+  if(opts.reviewing && level>=5){ tr.status.review="reviewing"; tr.status.distribution="not_started"; }
+  if(opts.rejected){ tr.status.video="completed"; tr.status.review="rejected"; tr.status.distribution="not_started"; }
+  if(opts.abnormal){ tr.status.video="completed"; tr.status.review="reviewing"; tr.status.distribution="uploaded"; }
+  // give every started track a representative "latest file" + timestamp (as the NAS sync would)
+  if(level>0 || opts.rejected || opts.abnormal){
+    const lastIdx = trackCurrent(tr)===null ? STAGES.length-1 : Math.max(0, (level||1)-1);
+    const stage = opts.abnormal ? "distribution" : (opts.rejected ? "review" : STAGES[lastIdx]);
+    const status = tr.status[stage]; const date = opts.stale ? "20260518" : "20260620";
+    const ext = {brief:"docx",script:"docx",voice:"mp3",music:"mp3",video:"mp4",review:"xlsx",distribution:"txt"}[stage]||"dat";
+    tr.latest_version = opts.v || "v01";
+    tr.last_updated_at = opts.stale ? "2026-05-18" : "2026-06-20";
+    tr.latest_file_name = `${PROJECT_ID}_${vidCode(id)}_${trk.toUpperCase()}_${stage}_${tr.latest_version}_${status}_${date}.${ext}`;
+    tr.latest_file_path = `/NAS/${PROJECT_ID}/${vidCode(id)}/${tr.latest_file_name}`;
+    STAGES.forEach(s=>{ if(DONE.has(tr.status[s])) tr.completed_at[s]=tr.last_updated_at+"T12:00"; });
+  }
+  return tr;
+}
+function seedData(){
+  const data=[]; let id=1;
+  for(let p=0;p<PRODUCTS.length;p++) for(const type of ["T1","T2"]) for(let k=0;k<5;k++){
+    let enLvl=0; if(id<=8)enLvl=7; else if(id<=18)enLvl=6; else if(id<=32)enLvl=5; else if(id<=48)enLvl=4; else if(id<=62)enLvl=2; else if(id<=74)enLvl=1;
+    let esLvl=0; if(id<=6)esLvl=7; else if(id<=12)esLvl=4; else if(id<=18)esLvl=2;
+    const enOpts={}, esOpts={};
+    if(id===9||id===10) enOpts.reviewing=true;       // pending review
+    if(id===19||id===33) enOpts.rejected=true;        // review rejected
+    if(id===20) enOpts.abnormal=true;                 // distribution before approval
+    if(id===49||id===50) enOpts.stale=true;           // stale
+    if(id<=8) { /* done EN, maybe not distributed handled by level 7 */ }
+    const v=blankVideo(id, PRODUCTS[p], type);
+    v.en=seedTrack(enLvl,enOpts,id,"en"); v.es=seedTrack(esLvl,esOpts,id,"es");
+    if(id<=4){ v.priority="high"; } else if(id<=12){ v.priority="medium"; }
+    if(id===19){ v.flag=true; v.reason="caption"; v.revisions=1; v.notes="Spanish subtitles out of sync — client asked for a re-cut."; }
+    if(id===33){ v.flag=true; v.reason="claims"; v.revisions=2; v.notes="Used both in-scope revision rounds."; }
+    // make a couple "done but not distributed"
+    if(id===5||id===6){ v.en.status.review="approved"; v.en.status.distribution="not_started"; }
+    data.push(v); id++;
+  }
+  return data;
+}
+
+/* ---------- migration from the old 4-stage / asset model ---------- */
+function migrateOld(arr){
+  return arr.map(o=>{
+    const v=blankVideo(o.id, o.product, o.type);
+    v.name=o.name||""; v.description=o.description||""; v.flag=!!o.flag; v.revisions=o.revisions||0; v.reason=o.reason||""; v.notes=o.notes||"";
+    v.priority=o.priority||""; if(o.project_id)v.project_id=o.project_id; if(o.video_id)v.video_id=o.video_id;
+    function setFromObj(tr,src){
+      if(!src||typeof src!=="object")return;
+      if(src.B) tr.status.brief = src.B.done?"completed":"not_started";
+      if(src.G){ const g=src.G; const sc="script"in g?g.script:!!g.done; tr.status.script=sc?"completed":"not_started";
+        tr.status.voice=("vo"in g?g.vo:!!g.done)?"completed":"not_started";
+        tr.status.music=("music"in g?g.music:!!g.done)?"completed":"not_started";
+        tr.status.video=("video"in g?g.video:!!g.done)?"completed":"not_started"; }
+      if(src.V) tr.status.review = src.V.done?"approved":"not_started";
+      if(src.D) tr.status.distribution = src.D.done?"completed":"not_started";
+      STAGES.forEach(s=>{ /* carry pics if present on matching key */ });
+      if(src.B&&src.B.pic)tr.pic.brief=src.B.pic; if(src.G&&src.G.pic){tr.pic.script=tr.pic.voice=tr.pic.music=tr.pic.video=src.G.pic;}
+      if(src.V&&src.V.pic)tr.pic.review=src.V.pic; if(src.D&&src.D.pic)tr.pic.distribution=src.D.pic;
+    }
+    function setFromNumeric(tr,n,isEs){ n=+n||0; // old en 0..4, old es 0..4 (es had no brief)
+      const order = isEs ? ["script","voice","music","video","review","distribution"] : STAGES;
+      // map 0..4 across (brief/generate/verify/distribute) → spread to 7
+      const map = isEs ? {0:0,1:1,2:3,3:5,4:6} : {0:0,1:1,2:5,3:6,4:7}; // rough
+      const lvl = map[Math.max(0,Math.min(4,n))]||0;
+      STAGES.forEach((s,i)=>{ if(i<lvl) tr.status[s]= s==="review"?"approved":"completed"; });
+    }
+    if(o.en && typeof o.en==="object" && (o.en.status)){ // already new format inside
+      return ensureOne(o);
+    } else if(o.en && typeof o.en==="object"){ setFromObj(v.en,o.en); setFromObj(v.es,o.es); }
+    else { setFromNumeric(v.en,o.en,false); setFromNumeric(v.es,o.es,true); }
+    return v;
+  });
+}
+function ensureOne(o){ const v=blankVideo(o.id,o.product,o.type);
+  v.name=o.name||""; v.description=o.description||""; v.flag=!!o.flag; v.revisions=o.revisions||0; v.reason=o.reason||""; v.notes=o.notes||"";
+  v.priority=o.priority||""; v.project_id=o.project_id||PROJECT_ID; v.video_id=o.video_id||vidCode(o.id);
+  TRACKS.forEach(trk=>{ const src=o[trk]; if(src&&src.status){ STAGES.forEach(s=>{ v[trk].status[s]=STATUSES.includes(src.status[s])?src.status[s]:"not_started"; v[trk].pic[s]=(src.pic&&src.pic[s])||""; });
+      v[trk].latest_file_name=src.latest_file_name||""; v[trk].latest_file_path=src.latest_file_path||""; v[trk].latest_version=src.latest_version||""; v[trk].last_updated_at=src.last_updated_at||"";
+      if(src.completed_at&&typeof src.completed_at==="object") STAGES.forEach(s=>{ v[trk].completed_at[s]=src.completed_at[s]||""; });
+      backfillCompletedAt(v[trk]); } });
+  return v;
+}
+function isNewFormat(d){ return Array.isArray(d)&&d.length&&d[0]&&d[0].en&&typeof d[0].en==="object"&&d[0].en.status; }
+function isCustomMode(){ return localStorage.getItem("bu_custom_mode")==="1"; }
+function loadLocal(){
+  try{
+    const s=localStorage.getItem("bu_data");
+    if(!s) return isCustomMode() ? [] : seedData();
+    const d=JSON.parse(s);
+    if(Array.isArray(d) && !d.length) return d;
+    if(isNewFormat(d)) return d.map(ensureOne);
+    localStorage.setItem("bu_legacy_v4",s);
+    const m=migrateOld(d); localStorage.setItem("bu_data",JSON.stringify(m)); return m;
+  }catch(e){ console.warn("load failed, seeding",e); return isCustomMode() ? [] : seedData(); }
+}
+function buildBundle(){
+  return { version:1, custom_mode:isCustomMode(), daily_goal:DAILY_VIDEO_GOAL, daily_video_goal:DAILY_VIDEO_GOAL, daily_stage_goal:DAILY_STAGE_GOAL, daily_stage:DAILY_STAGE_KEY, team:TEAM, sync_log:SYNC_LOG.slice(0,500), videos:DATA };
+}
+function bundleTs(b){ return b&&b.updated_at?Date.parse(b.updated_at)||0:0; }
+function rememberBundleTs(b){ const ts=bundleTs(b); if(ts) localStorage.setItem("bu_server_ts",String(ts)); }
+function applyBundle(b){
+  if(!b||typeof b!=="object") return;
+  if(b.custom_mode) localStorage.setItem("bu_custom_mode","1"); else localStorage.removeItem("bu_custom_mode");
+  if(typeof b.daily_video_goal==="number"&&!isNaN(b.daily_video_goal)){ DAILY_VIDEO_GOAL=Math.max(0,Math.round(b.daily_video_goal)); localStorage.setItem("bu_daily_video_goal",String(DAILY_VIDEO_GOAL)); }
+  else if(typeof b.daily_goal==="number"&&!isNaN(b.daily_goal)){ DAILY_VIDEO_GOAL=Math.max(0,Math.round(b.daily_goal)); localStorage.setItem("bu_daily_video_goal",String(DAILY_VIDEO_GOAL)); }
+  if(typeof b.daily_stage_goal==="number"&&!isNaN(b.daily_stage_goal)){ DAILY_STAGE_GOAL=Math.max(0,Math.round(b.daily_stage_goal)); localStorage.setItem("bu_daily_stage_goal",String(DAILY_STAGE_GOAL)); }
+  else if(typeof b.daily_goal==="number"&&!isNaN(b.daily_goal)){ DAILY_STAGE_GOAL=Math.max(0,Math.round(b.daily_goal)); localStorage.setItem("bu_daily_stage_goal",String(DAILY_STAGE_GOAL)); }
+  if(b.daily_stage&&STAGES.includes(b.daily_stage)){ DAILY_STAGE_KEY=b.daily_stage; localStorage.setItem("bu_daily_stage",DAILY_STAGE_KEY); }
+  if(Array.isArray(b.team)&&b.team.length){ TEAM=b.team; localStorage.setItem("bu_team",JSON.stringify(TEAM)); }
+  if(Array.isArray(b.sync_log)){ SYNC_LOG=b.sync_log; localStorage.setItem("bu_sync_log",JSON.stringify(SYNC_LOG)); }
+  const vids=Array.isArray(b.videos)?b.videos:[];
+  if(vids.length) DATA=isNewFormat(vids)?vids.map(ensureOne):migrateOld(vids);
+  else DATA=isCustomMode()?[]:seedData();
+  localStorage.setItem("bu_data",JSON.stringify(DATA));
+  rememberBundleTs(b);
+}
+let FILE_API=false, STATIC_HOST=false, saveTimer=null;
+function siteBase(){
+  if(location.protocol==="file:") return "";
+  const p=location.pathname;
+  if(/\.html$/i.test(p)) return p.slice(0,p.lastIndexOf("/")+1);
+  return p.endsWith("/")?p:p+"/";
+}
+function apiUrl(path){ const base=siteBase(); return base+(path.startsWith("/")?path.slice(1):path); }
+function validBundle(b){ return b&&typeof b==="object"&&Array.isArray(b.videos)&&typeof b.version==="number"; }
+function setSavePill(mode,msg){
+  const el=document.getElementById("savePill"); if(!el) return;
+  el.style.display="inline-block";
+  el.className="save-pill"+(mode==="err"?" err":mode==="file"?" file":"");
+  el.textContent=msg||"";
+}
+function schedulePersist(){
+  if(!FILE_API) return;
+  setSavePill("file",t("saveToFilePending"));
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(persistToFile,400);
+}
+async function persistToFile(){
+  if(!FILE_API) return;
+  try{
+    const r=await fetch(apiUrl("api/data"),{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(buildBundle()),cache:"no-store"});
+    if(!r.ok) throw new Error("http "+r.status);
+    const out=await r.json();
+    if(!out||!out.ok) throw new Error("bad response");
+    if(out.updated_at) localStorage.setItem("bu_server_ts",String(Date.parse(out.updated_at)||0));
+    setSavePill("file",t("saveToFile"));
+  }catch(e){ console.warn("file save failed",e); setSavePill("err",t("saveToFileErr")); FILE_API=false; }
+}
+function save(){
+  localStorage.setItem("bu_data",JSON.stringify(DATA));
+  schedulePersist();
+}
+async function probeFileApi(){
+  try{
+    const hr=await fetch(apiUrl("api/health"),{cache:"no-store"});
+    if(hr.ok){
+      const h=await hr.json();
+      if(h&&h.app==="lifewood-aigc-suite"){
+        const r=await fetch(apiUrl("api/data"),{cache:"no-store"});
+        if(!r.ok) return null;
+        const bundle=await r.json();
+        if(!validBundle(bundle)) return null;
+        return {bundle,live:true};
+      }
+    }
+  }catch(e){}
+  try{
+    const r=await fetch(apiUrl("dashboard-data.json"),{cache:"no-store"});
+    if(!r.ok) return null;
+    const bundle=await r.json();
+    if(!validBundle(bundle)) return null;
+    return {bundle,live:false};
+  }catch(e){ return null; }
+}
+async function fetchHostedBundle(){
+  if(FILE_API){
+    const r=await fetch(apiUrl("api/data"),{cache:"no-store"});
+    if(!r.ok) throw new Error();
+    return await r.json();
+  }
+  if(STATIC_HOST){
+    const r=await fetch(apiUrl("dashboard-data.json"),{cache:"no-store"});
+    if(!r.ok) throw new Error();
+    return await r.json();
+  }
+  throw new Error("offline");
+}
+async function refreshFromServer(){
+  if(!FILE_API&&!STATIC_HOST) return false;
+  try{
+    const bundle=await fetchHostedBundle();
+    if(!validBundle(bundle)) return false;
+    const serverTs=bundleTs(bundle), localTs=+(localStorage.getItem("bu_server_ts")||0);
+    if(serverTs&&serverTs<=localTs) return false;
+    applyBundle(bundle);
+    return true;
+  }catch(e){ return false; }
+}
+async function initData(){
+  const hosted=location.protocol==="http:"||location.protocol==="https:";
+  if(hosted){
+    const hit=await probeFileApi();
+    if(hit){
+      const {bundle,live}=hit;
+      FILE_API=live;
+      STATIC_HOST=!live;
+      const localRaw=localStorage.getItem("bu_data");
+      let localHas=false;
+      try{ localHas=localRaw&&JSON.parse(localRaw).length; }catch(_){}
+      const fileEmpty=!bundle.videos.length;
+      if(live&&fileEmpty&&localHas&&!bundle.updated_at){
+        DATA=loadLocal();
+        await persistToFile();
+      }else applyBundle(bundle);
+      setSavePill("file",live?t("saveToFile"):t("saveFromGitHub"));
+      return;
+    }
+    setSavePill("err",t("fileApiOff"));
+    DATA=loadLocal();
+    return;
+  }
+  FILE_API=false;
+  STATIC_HOST=false;
+  DATA=loadLocal();
+  setSavePill("",t("saveLocalOnly"));
+}
+async function reloadFromFile(){
+  if(!FILE_API&&!STATIC_HOST){ alert(t("reloadFileFail")); return; }
+  try{
+    applyBundle(await fetchHostedBundle());
+    SEL.clear(); render();
+    alert(t("reloadFileDone"));
+  }catch(e){ alert(t("reloadFileFail")); }
+}
+let DATA=[];
+let DAILY_VIDEO_GOAL=(function(){ try{ const n=+localStorage.getItem("bu_daily_video_goal"); if(!isNaN(n)) return Math.max(0,Math.round(n)); const leg=+localStorage.getItem("bu_daily_goal"); return isNaN(leg)?0:Math.max(0,Math.round(leg)); }catch(e){ return 0; } })();
+let DAILY_STAGE_GOAL=(function(){ try{ const n=+localStorage.getItem("bu_daily_stage_goal"); if(!isNaN(n)) return Math.max(0,Math.round(n)); const leg=+localStorage.getItem("bu_daily_goal"); return isNaN(leg)?0:Math.max(0,Math.round(leg)); }catch(e){ return 0; } })();
+let DAILY_STAGE_KEY=(function(){ try{ const s=localStorage.getItem("bu_daily_stage"); return s&&STAGES.includes(s)?s:"distribution"; }catch(e){ return "distribution"; } })();
+function setDailyVideoGoal(val){
+  DAILY_VIDEO_GOAL=Math.max(0,parseInt(String(val),10)||0);
+  localStorage.setItem("bu_daily_video_goal",String(DAILY_VIDEO_GOAL));
+  schedulePersist(); renderDailyOutput();
+}
+function setDailyStageGoal(val){
+  DAILY_STAGE_GOAL=Math.max(0,parseInt(String(val),10)||0);
+  localStorage.setItem("bu_daily_stage_goal",String(DAILY_STAGE_GOAL));
+  schedulePersist(); renderDailyOutput();
+}
+function setDailyStage(val){
+  if(val&&STAGES.includes(val)){ DAILY_STAGE_KEY=val; localStorage.setItem("bu_daily_stage",val); schedulePersist(); renderDailyOutput(); }
+}
+function dailyPanelCards(today,goal,goalSetter,unitKey,todayLabel,todayHint,firstExtra){
+  const pct=goal>0?Math.min(100,Math.round(today/goal*100)):0;
+  const remain=goal>0?Math.max(0,goal-today):0;
+  const hit=goal>0&&today>=goal;
+  const first=firstExtra||`<div class="dcard accent"><div class="dl">${todayLabel}</div><div class="dv">${today}</div><div class="dh">${todayHint}</div></div>`;
+  return first+
+    `<div class="dcard"><div class="dl">${t("dailyGoal")}</div><div class="goal-in"><input type="number" min="0" step="1" value="${goal||""}" placeholder="${esc(t("dailyGoalPh"))}" onchange="${goalSetter}(this.value)" /><span>${t(unitKey)}</span></div></div>`+
+    `<div class="dcard"><div class="dl">${t("dailyPct")}</div><div class="dv ${goal?"": "muted"}">${goal?(hit?"✓ ":"")+pct+"%":"—"}</div><div class="dh">${goal?t("dailyRemain").replace("{n}",remain):t("dailyNoGoal")}</div></div>`+
+    `<div class="dcard"><div class="dl">${t("dailyProgress")}</div><div class="daily-bar"><span style="width:${pct}%"></span></div><div class="daily-bar-label"><span>${today}${goal?"/"+goal:""}</span><span>${goal?pct+"%":""}</span></div></div>`;
+}
+
+/* ============================== stats ============================== */
+function projStats(){
+  const tracks=DATA.length*2; let done=0,prod=0,review=0,rejected=0,distributed=0,sum=0,not=0;
+  DATA.forEach(v=>TRACKS.forEach(trk=>{ const tr=v[trk]; const ov=trackOverall(tr); sum+=trackPct(tr);
+    if(ov==="completed")done++; else if(ov==="not_started")not++; else prod++;
+    if(tr.status.review==="reviewing"||trackCurrent(tr)==="review")review++;
+    if(tr.status.review==="rejected")rejected++;
+    if(stageDone(tr,"distribution"))distributed++;
+  }));
+  return {tracks,done,not,prod,review,rejected,distributed,pct:Math.round(sum/tracks*100),
+    days:Math.max(0,Math.ceil((DEADLINE-new Date())/86400000)),
+    flagged:DATA.filter(v=>v.flag).length, inRev:DATA.filter(v=>v.revisions>0).length, revMax:DATA.filter(v=>v.revisions>=2).length}; }
+function stageDoneCount(stage){ return DATA.reduce((a,v)=>a+(stageDone(v.en,stage)?1:0)+(stageDone(v.es,stage)?1:0),0); } // /200
+function stageDoneTrack(trk,stage){ return DATA.filter(v=>stageDone(v[trk],stage)).length; } // /100
+
+/* ---------- anomalies ---------- */
+function computeAnomalies(){
+  const a={naming:[],prereq:[],rejected:[],version:[],stale:[],undist:[],abnormal:[]};
+  // naming errors from log
+  SYNC_LOG.filter(e=>e.sync_status==="error").forEach(e=>a.naming.push(e.file_name||"?"));
+  // version conflicts from log: same video+track+stage with >1 version
+  const seen={};
+  SYNC_LOG.filter(e=>e.sync_status==="ok").forEach(e=>{ const k=e.video_id+"|"+e.track+"|"+e.stage; (seen[k]=seen[k]||new Set()).add(e.version); });
+  Object.keys(seen).forEach(k=>{ if(seen[k].size>1){ const vid=k.split("|")[0]; const lbl=k.split("|")[0]+" "+k.split("|")[1].toUpperCase()+"·"+(I18N[LANG].stageAbbr[k.split("|")[2]]||k.split("|")[2]); a.version.push(lbl); } });
+  DATA.forEach(v=>TRACKS.forEach(trk=>{ const tr=v[trk]; const tag=taskCode(v.id)+"-"+trk.toUpperCase();
+    // missing prerequisite: a later stage started while an earlier is not_started
+    let firstStarted=-1; for(let i=0;i<STAGES.length;i++){ if(tr.status[STAGES[i]]!=="not_started"){firstStarted=i;break;} }
+    if(firstStarted>=0){ for(let j=firstStarted+1;j<STAGES.length;j++){ if(tr.status[STAGES[j]]!=="not_started"){ // ok started later
+        // gap = an earlier (before j) is not_started
+      } }
+      let gap=false; let advanced=-1; for(let i=STAGES.length-1;i>=0;i--){ if(tr.status[STAGES[i]]!=="not_started"){advanced=i;break;} }
+      for(let i=0;i<advanced;i++){ if(tr.status[STAGES[i]]==="not_started"){gap=true;break;} }
+      if(gap) a.prereq.push(tag);
+    }
+    if(tr.status.review==="rejected") a.rejected.push(tag);
+    if(isAbnormal(tr)) a.abnormal.push(tag);
+    if(reviewOk(tr) && !stageDone(tr,"distribution")) a.undist.push(tag);
+    if(!trackComplete(tr) && tr.last_updated_at && daysSince(tr.last_updated_at)>STALE_DAYS) a.stale.push(tag);
+  }));
+  return a;
+}
+function anomTotal(a){ return a.naming.length+a.prereq.length+a.rejected.length+a.version.length+a.stale.length+a.undist.length+a.abnormal.length; }
+
+/* ============================== Charts ============================== */
+let stageChart, statusChart, langChart, typeChart, transChart, dailyChart;
+function initCharts(){
+  if(typeof Chart==="undefined") return;
+  Chart.defaults.font.family='"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif'; Chart.defaults.color="#5e7065"; Chart.defaults.animation=false;
+  stageChart=new Chart(document.getElementById("stageChart"),{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:5,stack:"s"},{label:"",data:[],backgroundColor:"#e9a020",borderRadius:5,stack:"s"}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{precision:0}}}}});
+  statusChart=new Chart(document.getElementById("statusChart"),{type:"doughnut",data:{labels:[],datasets:[{data:[],backgroundColor:[]}]},options:{plugins:{legend:{position:"right",labels:{boxWidth:12,font:{size:11}}}},cutout:"58%",maintainAspectRatio:false}});
+  langChart=new Chart(document.getElementById("langChart"),{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:4,stack:"l"},{label:"",data:[],backgroundColor:"#e3ece6",borderRadius:4,stack:"l"}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{precision:0}}}}});
+  typeChart=new Chart(document.getElementById("typeChart"),{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:4,stack:"t"},{label:"",data:[],backgroundColor:"#e3ece6",borderRadius:4,stack:"t"}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{precision:0}}}}});
+  transChart=new Chart(document.getElementById("transChart"),{type:"doughnut",data:{labels:[],datasets:[{data:[],backgroundColor:["#2e8b50","#e9a020","#c4cdc7"]}]},options:{plugins:{legend:{position:"right"}},cutout:"62%",maintainAspectRatio:false}});
+  const dc=document.getElementById("dailyChart");
+  if(dc) dailyChart=new Chart(dc,{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#3a7bd5",borderRadius:4}]},options:{plugins:{legend:{display:false}},maintainAspectRatio:false,scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
+}
+
+/* ============================== Render ============================== */
+let SEL = new Set();
+function applyStaticI18n(){
+  document.documentElement.lang=LANG==="zh"?"zh":"en";
+  document.querySelectorAll("[data-i18n]").forEach(el=>{ const k=el.getAttribute("data-i18n"); if(I18N[LANG][k]!==undefined&&typeof I18N[LANG][k]==="string") el.textContent=I18N[LANG][k]; });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{ const k=el.getAttribute("data-i18n-ph"); if(I18N[LANG][k]) el.placeholder=I18N[LANG][k]; });
+  document.querySelectorAll("[data-i18n-tip]").forEach(el=>{ const k=el.getAttribute("data-i18n-tip"); if(I18N[LANG][k]) el.title=I18N[LANG][k]; });
+  document.getElementById("btn-en").classList.toggle("active",LANG==="en"); document.getElementById("btn-zh").classList.toggle("active",LANG==="zh");
+  document.getElementById("daysLeft").textContent=Math.max(0,Math.ceil((DEADLINE-new Date())/86400000));
+  document.getElementById("deadlineDate").textContent=LANG==="zh"?"(2026年8月1日)":"(1 Aug 2026)";
+}
+function legendHtml(){ return STATUSES.map(s=>`<span class="li"><span class="sw" style="background:${STATUS_COLOR[s]}"></span>${t("statuses")[s]}</span>`).join(""); }
+function buildFilters(){
+  const ids=["fStage","fOverall","fType","fTrans","fPIC","fFlag"],cur={}; ids.forEach(i=>cur[i]=document.getElementById(i).value);
+  document.getElementById("fStage").innerHTML=`<option value="">${t("allStages")}</option>`+STAGES.map(s=>`<option value="${s}">${t("stages")[s]}</option>`).join("")+`<option value="__done">${t("completed")}</option>`;
+  document.getElementById("fOverall").innerHTML=`<option value="">${t("allOverall")}</option>`+["not_started","in_progress","reviewing","rejected","abnormal","completed"].map(s=>`<option value="${s}">${t("overall")[s]}</option>`).join("");
+  document.getElementById("fType").innerHTML=`<option value="">${t("allTypes")}</option>`+["T1","T2"].map(x=>`<option value="${x}">${t("types")[x]}</option>`).join("");
+  document.getElementById("fTrans").innerHTML=`<option value="">${t("allTrans")}</option>`+["done","wip","none"].map(x=>`<option value="${x}">${t("trans")[x]}</option>`).join("");
+  document.getElementById("fPIC").innerHTML=`<option value="">${t("allPICs")}</option>`+TEAM.map(p=>`<option value="${p}">${p}</option>`).join("");
+  document.getElementById("fFlag").innerHTML=`<option value="">${t("allFlags")}</option><option value="1">🚩 ${t("flaggedOnly")}</option><option value="0">${t("notFlagged")}</option>`;
+  ids.forEach(i=>document.getElementById(i).value=cur[i]);
+}
+function buildBatch(){
+  const bar=document.getElementById("batchbar"); bar.style.display=SEL.size>0?"flex":"none"; if(SEL.size===0)return;
+  document.getElementById("selCount").textContent=`${SEL.size} ${t("selectedWord")}`;
+  const bTrack=document.getElementById("bTrack"),ctr=bTrack.value; bTrack.innerHTML=`<option value="en">${t("english")}</option><option value="es">${t("spanish")}</option>`; bTrack.value=ctr||"en";
+  const bStage=document.getElementById("bStage"),cs=bStage.value; bStage.innerHTML=STAGES.map(s=>`<option value="${s}">${t("stages")[s]}</option>`).join(""); if(cs)bStage.value=cs;
+  const bStatus=document.getElementById("bStatus"),cst=bStatus.value; bStatus.innerHTML=STATUSES.map(s=>`<option value="${s}">${t("statuses")[s]}</option>`).join(""); if(cst)bStatus.value=cst;
+  const bPic=document.getElementById("bPic"),cp=bPic.value; bPic.innerHTML=`<option value="">${t("pending")}</option>`+TEAM.map(p=>`<option value="${p}">${p}</option>`).join(""); bPic.value=cp;
+}
+function renderBanner(){
+  const s=projStats(); const span=DEADLINE-KICKOFF; const expected=Math.round(Math.max(0,Math.min(1,(new Date()-KICKOFF)/span))*100);
+  const onTrack=s.pct>=expected-5; const date=LANG==="zh"?"2026年8月1日":"1 Aug 2026";
+  document.getElementById("banner").innerHTML=`<div class="b-pct">${s.pct}%<small>${t("completeWord")}</small></div>
+    <span class="status-pill ${onTrack?'ok':'risk'}">${onTrack?'🟢 '+t("onTrack"):'🔴 '+t("atRisk")}</span>
+    <div class="b-right"><div class="b-days">${s.days} <small>${t("toDelivery")}</small></div><div class="b-date">${date}</div></div>`;
+}
+function renderKPIs(){
+  const s=projStats();
+  const cards=[{l:"kTotal",n:s.tracks,c:"",hint:t("kTotalHint")},{l:"kDone",n:s.done,c:"accent"},{l:"kProd",n:s.prod,c:"blue"},{l:"kReview",n:s.review,c:"gold"},{l:"kRejected",n:s.rejected,c:"red"},{l:"kDistributed",n:s.distributed,c:"accent"}];
+  document.getElementById("kpis").innerHTML=cards.map(c=>`<div class="kpi ${c.c}"><div class="label">${t(c.l)}</div><div class="num">${c.n}</div>${c.hint?`<div class="hint">${c.hint}</div>`:""}</div>`).join("");
+}
+function renderDailyOutput(){
+  const el=document.getElementById("dailyOut"); if(!el) return;
+  const dk=todayStr();
+  const videoToday=countVideosCompletedOnDate(dk);
+  const videoGoal=Math.max(0,+DAILY_VIDEO_GOAL||0);
+  const stageToday=countStageCompletionsOnDate(dk,DAILY_STAGE_KEY);
+  const stageGoal=Math.max(0,+DAILY_STAGE_GOAL||0);
+  const stageOpts=STAGES.map(s=>`<option value="${s}"${s===DAILY_STAGE_KEY?" selected":""}>${esc(t("stages")[s])}</option>`).join("");
+  const stageFirst=`<div class="dcard accent"><div class="dl">${t("dailyStagePick")}</div><select class="daily-stage-sel" onchange="setDailyStage(this.value)">${stageOpts}</select><div class="dv" style="margin-top:10px">${stageToday}</div><div class="dh">${t("dailyStageTodayHint")}</div></div>`;
+  el.innerHTML=
+    `<div class="daily-panel"><div class="daily-panel-h">${t("dailyVideoSec")}</div><div class="daily-out">${dailyPanelCards(videoToday,videoGoal,"setDailyVideoGoal","dailyVideoGoalUnit",t("dailyVideoToday"),t("dailyVideoTodayHint"))}</div></div>`+
+    `<div class="daily-panel"><div class="daily-panel-h">${t("dailyStageSec")}</div><div class="daily-out">${dailyPanelCards(stageToday,stageGoal,"setDailyStageGoal","dailyStageGoalUnit",t("dailyVideoToday"),t("dailyStageTodayHint"),stageFirst)}</div></div>`;
+}
+function pcard(stage,idx){ const n=stageDoneCount(stage),den=200,pct=Math.round(n/den*100),gate=stage==="review"||stage==="distribution";
+  return `<div class="pcard ${gate?'gate':''}"><div class="pl"><span class="num">${idx+1}</span>${t("stages")[stage]}</div><div class="pv">${n} <small>/ ${den}</small></div><div class="pmini"><span style="width:${pct}%"></span></div></div>`; }
+function renderPipeline(){
+  document.getElementById("pipe").innerHTML = STAGES.map((s,i)=>pcard(s,i)).join(`<div class="parrow">›</div>`);
+  document.getElementById("legend").innerHTML=legendHtml();
+  const l2=document.getElementById("legend2"); if(l2) l2.innerHTML=legendHtml();
+}
+function renderAnoms(targetId){
+  const a=computeAnomalies();
+  const order=[["abnormal","bad"],["rejected","bad"],["naming","bad"],["prereq","warn"],["version","warn"],["stale","warn"],["undist","warn"]];
+  const html=order.map(([k,sev])=>{ const list=a[k],n=list.length,cls=n===0?"ok":sev;
+    const sample=n? list.slice(0,6).map(esc).join(", ")+(n>6?` +${n-6}`:"") : t("none2");
+    return `<div class="anom ${cls}"><div class="ah"><span class="at">${t("anom")[k]}</span><span class="ac">${n}</span></div><div class="ad">${t("anom")[k+"D"]}</div><div class="alist">${sample}</div></div>`; }).join("");
+  const el=document.getElementById(targetId); if(el) el.innerHTML=html;
+  const total=anomTotal(a); const badge=document.getElementById("anomBadge");
+  if(badge){ if(total>0){ badge.style.display="inline-block"; badge.textContent=total; } else badge.style.display="none"; }
+}
+function assetBar(label,n,den){ const pct=Math.round(n/den*100); return `<div class="abar"><span class="an">${label}</span><span class="at"><span style="width:${pct}%"></span></span><span class="av">${pct}% <small>(${n}/${den})</small></span></div>`; }
+function renderEsStageBars(){ const el=document.getElementById("esStageBars"); if(el) el.innerHTML=STAGES.map(s=>assetBar(t("stages")[s],stageDoneTrack("es",s),100)).join(""); }
+function renderIssues(){
+  const s=projStats();
+  document.getElementById("issueStats").innerHTML=
+    `<div class="stat red"><div class="l">🚩 ${t("flaggedLbl")}</div><div class="v">${s.flagged}</div></div>
+     <div class="stat gold"><div class="l">${t("inRevision")}</div><div class="v">${s.inRev}</div></div>
+     <div class="stat red"><div class="l">${t("revLimit")}</div><div class="v">${s.revMax}</div></div>`;
+}
+function renderLangBars(){
+  const n=DATA.length;
+  const enPct=Math.round(DATA.reduce((a,v)=>a+trackPct(v.en),0)/n*100), esPct=Math.round(DATA.reduce((a,v)=>a+trackPct(v.es),0)/n*100);
+  const enDone=DATA.filter(v=>trackComplete(v.en)).length, esDone=DATA.filter(v=>trackComplete(v.es)).length;
+  document.getElementById("langBars").innerHTML=
+    `<div class="lb-row"><span class="lb-name">${t("english")}</span><span class="lb-track lb-en"><span style="width:${enPct}%"></span></span><span class="lb-val">${enPct}% <small>(${enDone}/${n})</small></span></div>
+     <div class="lb-row"><span class="lb-name">${t("spanish")}</span><span class="lb-track lb-es"><span style="width:${esPct}%"></span></span><span class="lb-val">${esPct}% <small>(${esDone}/${n})</small></span></div>`;
+}
+function renderTimeline(){
+  const span=DEADLINE-KICKOFF, timePct=Math.round(Math.max(0,Math.min(1,(new Date()-KICKOFF)/span))*100);
+  document.getElementById("timeline").innerHTML=
+    `<div class="tl-marks"><span>${t("tlKickoff")}</span><span>${t("tlProduction")}</span><span>${t("tlDelivery")}</span></div>
+     <div class="tl-line"><div class="tl-fill" style="width:${timePct}%"></div><div class="tl-node" style="left:0%"></div><div class="tl-node" style="left:100%"></div>
+       <div class="tl-today" style="left:${timePct}%"><div class="lbl">${t("todayLabel")}</div><div class="pin"></div></div></div>`;
+}
+function renderTranslation(){
+  const tot=DATA.length,counts={done:0,wip:0,none:0}; DATA.forEach(v=>counts[transStatus(v)]++);
+  const covPct=Math.round(counts.done/tot*100);
+  document.getElementById("covPct").textContent=covPct+"%"; document.getElementById("covBar").style.width=covPct+"%";
+  document.getElementById("transCounts").innerHTML=["done","wip","none"].map(k=>`<span class="tc"><span class="dot ${k}"></span>${t("trans")[k]}: <b>&nbsp;${counts[k]}</b></span>`).join("");
+  if(transChart){ transChart.data.labels=["done","wip","none"].map(k=>t("trans")[k]); transChart.data.datasets[0].data=[counts.done,counts.wip,counts.none]; transChart.update(); }
+  document.getElementById("esStats").innerHTML=
+    `<div class="stat green"><div class="l">${t("trans").done}</div><div class="v">${counts.done}</div></div>
+     <div class="stat gold"><div class="l">${t("trans").wip}</div><div class="v">${counts.wip}</div></div>
+     <div class="stat"><div class="l">${t("trans").none}</div><div class="v">${counts.none}</div></div>
+     <div class="stat blue"><div class="l">${t("english")} ✓</div><div class="v">${DATA.filter(v=>trackComplete(v.en)).length}</div></div>`;
+}
+function renderCharts(){
+  if(typeof Chart==="undefined"||!stageChart) return;
+  const cats=STAGES.concat(["__done"]);
+  stageChart.data.labels=cats.map(c=>c==="__done"?t("completed"):t("stages")[c]);
+  const bucket=(tr)=>{ const c=trackCurrent(tr); return c===null?"__done":c; };
+  stageChart.data.datasets[0].label=t("english"); stageChart.data.datasets[0].data=cats.map(c=>DATA.filter(v=>bucket(v.en)===c).length);
+  stageChart.data.datasets[1].label=t("spanish"); stageChart.data.datasets[1].data=cats.map(c=>DATA.filter(v=>bucket(v.es)===c).length); stageChart.update();
+  // status distribution (overall, across 200 tracks)
+  const ovs=["not_started","in_progress","reviewing","rejected","abnormal","completed"]; const oc={}; ovs.forEach(o=>oc[o]=0);
+  DATA.forEach(v=>TRACKS.forEach(trk=>oc[trackOverall(v[trk])]++));
+  statusChart.data.labels=ovs.map(o=>t("overall")[o]); statusChart.data.datasets[0].data=ovs.map(o=>oc[o]); statusChart.data.datasets[0].backgroundColor=ovs.map(o=>OVERALL_COLOR[o]); statusChart.update();
+  const enDone=DATA.filter(v=>trackComplete(v.en)).length, esDone=DATA.filter(v=>trackComplete(v.es)).length;
+  langChart.data.labels=[t("english"),t("spanish")];
+  langChart.data.datasets[0].label=t("done"); langChart.data.datasets[0].data=[enDone,esDone];
+  langChart.data.datasets[1].label=t("remaining"); langChart.data.datasets[1].data=[DATA.length-enDone,DATA.length-esDone]; langChart.update();
+  const typeDone=x=>DATA.filter(v=>v.type===x).reduce((a,v)=>a+(trackComplete(v.en)?1:0)+(trackComplete(v.es)?1:0),0); const typeTot=x=>DATA.filter(v=>v.type===x).length*2;
+  typeChart.data.labels=[t("types").T1,t("types").T2];
+  typeChart.data.datasets[0].label=t("done"); typeChart.data.datasets[0].data=[typeDone("T1"),typeDone("T2")];
+  typeChart.data.datasets[1].label=t("remaining"); typeChart.data.datasets[1].data=[typeTot("T1")-typeDone("T1"),typeTot("T2")-typeDone("T2")]; typeChart.update();
+  if(dailyChart){ const ds=collectDailySeries(30); dailyChart.data.labels=ds.labels; dailyChart.data.datasets[0].label=t("dailyWorkload"); dailyChart.data.datasets[0].data=ds.data; dailyChart.update(); }
+}
+function renderProducts(){
+  document.getElementById("prodGrid").innerHTML=PRODUCTS.map(p=>{ const items=DATA.filter(v=>v.product===p); if(!items.length)return"";
+    const pct=Math.round(items.reduce((a,v)=>a+trackPct(v.en)+trackPct(v.es),0)/(items.length*2)*100);
+    return `<div class="prod-row"><span class="name">${p}</span><span class="mini"><span style="width:${pct}%"></span></span><span class="val">${pct}%</span></div>`; }).join("");
+}
+function renderFlagSummary(){ const s=projStats(); document.getElementById("flagSummary").innerHTML=`<span>🚩 ${t("flaggedCount")}: <b>${s.flagged}</b></span><span>${t("revLimitReached")}: <b>${s.revMax}</b></span>`; }
+function renderTrackerStats(){
+  const s=projStats(), shown=filteredRows().length, todayN=countCompletionsOnDate(todayStr());
+  document.getElementById("trackerStats").innerHTML=
+    `<div class="stat"><div class="l">${t("stTotal")}</div><div class="v">${s.tracks}</div></div>
+     <div class="stat green"><div class="l">${t("stCompleted")}</div><div class="v">${s.done}</div></div>
+     <div class="stat green"><div class="l">${t("todayCompletions")}</div><div class="v">${todayN}</div></div>
+     <div class="stat blue"><div class="l">${t("stInProgress")}</div><div class="v">${s.prod}</div></div>
+     <div class="stat red"><div class="l">${t("stRejected")}</div><div class="v">${s.rejected}</div></div>
+     <div class="stat gold"><div class="l">${t("stShowing")}</div><div class="v">${shown}</div></div>`;
+}
+function renderAnStats(){
+  const t1=DATA.filter(v=>v.type==="T1").reduce((a,v)=>a+(trackComplete(v.en)?1:0)+(trackComplete(v.es)?1:0),0);
+  const t2=DATA.filter(v=>v.type==="T2").reduce((a,v)=>a+(trackComplete(v.en)?1:0)+(trackComplete(v.es)?1:0),0);
+  const todayN=countCompletionsOnDate(todayStr());
+  document.getElementById("anStats").innerHTML=
+    `<div class="stat green"><div class="l">${t("todayCompletions")}</div><div class="v">${todayN}</div></div>
+     <div class="stat blue"><div class="l">${t("types").T1} ✓</div><div class="v">${t1} <small>/100</small></div></div>
+     <div class="stat"><div class="l">${t("types").T2} ✓</div><div class="v">${t2} <small>/100</small></div></div>`;
+}
+function stageChips(v,trk){
+  const tr=v[trk],cur=trackCurrent(tr);
+  let html=`<div class="steps-wrap"><div class="task-id">${taskCode(v.id)}-${trk.toUpperCase()}</div><div class="chips-line">`;
+  STAGES.forEach(s=>{ const st=tr.status[s]; const isCur=s===cur;
+    html+=`<span class="chip-stage ${isCur?"cur":""}" style="background:${STATUS_COLOR[st]}" title="${esc(t("stages")[s]+" — "+t("statuses")[st]+(tr.pic[s]?" · "+tr.pic[s]:"")+(tr.completed_at[s]?" · "+fmtDateTime(tr.completed_at[s]):""))}" onclick="cycleStage(${v.id},'${trk}','${s}')">${t("stageAbbr")[s]}</span>`;
+  });
+  return html+`</div></div>`;
+}
+function currentCell(v){
+  return TRACKS.map(trk=>{ const tr=v[trk]; const ov=trackOverall(tr); const cur=trackCurrent(tr);
+    const ovBadge=`<span class="ov-badge" style="background:${OVERALL_COLOR[ov]}">${t("overall")[ov]}</span>`;
+    const curTxt = cur===null ? `✓ ${t("completed")}` : `${t("stages")[cur]}${tr.pic[cur]?" · "+esc(tr.pic[cur]):` · <span class="pending">${t("pending")}</span>`}`;
+    return `<div style="margin-bottom:5px"><span class="track-tag ${trk}">${trk.toUpperCase()}</span>${ovBadge} <span style="font-size:12px">${curTxt}</span></div>`;
+  }).join("");
+}
+function completedCell(v){
+  return TRACKS.map(trk=>{ const tr=v[trk]; const full=trackFullyCompletedAt(tr), latest=trackLatestCompletedAt(tr);
+    const txt=full?`<b>${esc(fmtDateTime(full))}</b>`:(latest?esc(fmtDateTime(latest)):t("noCompletedAt"));
+    const hint=full?t("completed"):t("completedAtLabel");
+    return `<div class="latest-cell"><span class="track-tag ${trk}">${trk.toUpperCase()}</span><span style="font-size:12px" title="${esc(hint)}">${txt}</span></div>`;
+  }).join("");
+}
+function latestCell(v){
+  return TRACKS.map(trk=>{ const tr=v[trk];
+    if(!tr.latest_file_name) return `<div class="latest-cell"><span class="track-tag ${trk}">${trk.toUpperCase()}</span><span style="opacity:.6">${t("noFile")}</span></div>`;
+    return `<div class="latest-cell"><span class="track-tag ${trk}">${trk.toUpperCase()}</span>${esc(tr.latest_version)} · ${esc(fmtDate(tr.last_updated_at))}<span class="lf" title="${esc(tr.latest_file_path||tr.latest_file_name)}">${esc(tr.latest_file_name)}</span></div>`;
+  }).join("");
+}
+function issueCell(v){
+  const reasonLabel=v.reason?I18N[LANG].reasons[v.reason]:"";
+  const parts=[`<button class="flag-btn ${v.flag?"on":""}" title="${esc(t("modalTitle"))}" onclick="openModal(${v.id})">${v.flag?"🚩":"✎"}</button>`];
+  if(v.revisions>0) parts.push(`<span class="rev-badge ${v.revisions>=2?"max":""}">Rev ${v.revisions}/2</span>`);
+  if(reasonLabel) parts.push(`<span class="reason-chip" title="${esc(reasonLabel)}">${esc(reasonLabel)}</span>`);
+  if(v.notes) parts.push(`<span class="note-dot" title="${esc(v.notes)}">📝</span>`);
+  return `<div class="issue-cell">${parts.join("")}</div>`;
+}
+function filteredRows(){
+  const q=document.getElementById("search").value.trim().toLowerCase();
+  const fs=document.getElementById("fStage").value,fo=document.getElementById("fOverall").value,ft=document.getElementById("fType").value,fr=document.getElementById("fTrans").value,fp=document.getElementById("fPIC").value,ff=document.getElementById("fFlag").value;
+  const matchStage=v=>{ if(fs==="")return true; if(fs==="__done")return trackComplete(v.en)||trackComplete(v.es); return trackCurrent(v.en)===fs||trackCurrent(v.es)===fs; };
+  const matchOverall=v=>{ if(fo==="")return true; return trackOverall(v.en)===fo||trackOverall(v.es)===fo; };
+  const matchPic=v=>{ if(fp==="")return true; return TRACKS.some(trk=>STAGES.some(s=>v[trk].pic[s]===fp)); };
+  return DATA.filter(v=>(!q||(v.product+" "+(v.name||"")+" "+(v.description||"")+" "+taskCode(v.id)+" "+v.video_id+" "+(v.en.latest_file_name||"")+" "+(v.es.latest_file_name||"")).toLowerCase().includes(q))
+    && matchStage(v) && matchOverall(v) && (ft===""||v.type===ft) && (fr===""||transStatus(v)===fr) && matchPic(v) && (ff===""||(ff==="1"?v.flag:!v.flag)));
+}
+function renderTable(){
+  document.getElementById("thead").innerHTML=`<th style="width:30px"><input type="checkbox" id="selAll" onclick="toggleSelAll(this.checked)"></th>`+["colNum","colVideo","colType","colEN","colES","colCurrent","colLatest","colCompletedAt","colIssue","colProgress"].map(k=>`<th>${t(k)}</th>`).join("");
+  const rows=filteredRows();
+  document.getElementById("tbody").innerHTML=rows.map(v=>{ const pct=videoPct(v); const abn=isAbnormal(v.en)||isAbnormal(v.es);
+    return `<tr class="${v.flag?"row-flagged":(abn?"row-abn":"")}">
+      <td><input type="checkbox" ${SEL.has(v.id)?"checked":""} onclick="toggleSel(${v.id},this.checked)"></td>
+      <td><span class="task-base">${taskCode(v.id)}</span></td>
+      <td class="vid-cell" onclick="openModal(${v.id})" title="${esc(v.description)||esc(t("clickToEdit"))}">
+        <div class="vid-name">${esc(v.name||v.product)}<span class="edit-hint">✎</span></div>
+        <div class="vid-sub">${esc(v.project_id)}·${esc(v.video_id)}${v.priority?` · ${t("prios")[v.priority]}`:""}</div>
+        ${v.description?`<div class="vid-desc">${esc(v.description)}</div>`:`<div class="vid-add">+ ${t("addDetails")}</div>`}
+      </td>
+      <td><span class="pill ${v.type.toLowerCase()}">${t("types")[v.type]}</span></td>
+      <td>${stageChips(v,"en")}</td>
+      <td>${stageChips(v,"es")}</td>
+      <td>${currentCell(v)}</td>
+      <td>${latestCell(v)}</td>
+      <td>${completedCell(v)}</td>
+      <td>${issueCell(v)}</td>
+      <td><span class="row-bar"><span style="width:${pct}%"></span></span><span style="margin-left:8px">${pct}%</span></td>
+    </tr>`; }).join("");
+  const selAll=document.getElementById("selAll"); if(selAll) selAll.checked=rows.length>0&&rows.every(v=>SEL.has(v.id));
+}
+function render(){
+  applyStaticI18n(); applyAuth();
+  if(!AUTH) return;                 // data stays hidden (and unrendered) until signed in
+  buildFilters(); buildBatch();
+  renderBanner(); renderKPIs(); renderDailyOutput(); renderPipeline(); renderAnoms("anoms"); renderAnoms("anoms2"); renderEsStageBars(); renderIssues(); renderLangBars(); renderTimeline();
+  renderTranslation(); renderCharts(); renderProducts(); renderFlagSummary(); renderTrackerStats(); renderAnStats(); renderTable(); renderAdmin(); renderSyncPage();
+  document.getElementById("undoBtn").style.display=localStorage.getItem("bu_undo")?"inline-block":"none";
+  { const hm=document.getElementById("helpModal"); if(hm&&hm.classList.contains("open")) renderHelp(); }
+}
+
+/* ====== DEPLOY CONFIG ======
+   Storyboard Studio is bundled in this site (relative link). File Agent (LifewoodFileAgent) is a
+   SEPARATE backend server (runs the .exe on a machine that can reach your NAS) — a static website
+   cannot host it. Point this at wherever you run it, e.g. "https://agent.yourdomain.com" or a LAN
+   "http://192.168.1.50:5002". Leave as-is if each user runs it on their own machine. */
+const FILE_AGENT_URL = "https://ug.link/18576341573";
+function applyToolLinks(){ const a=document.getElementById("toolAgent"), u=document.getElementById("toolAgentUrl"); if(a) a.href=FILE_AGENT_URL; if(u) u.textContent=FILE_AGENT_URL; }
+
+/* ============================== Auth (team login gate) ============================== */
+const CREDS = { user:"lifewood", pass:"lifewood" };
+let AUTH = localStorage.getItem("bu_auth")==="1";
+function getPass(){ return localStorage.getItem("bu_pass") || CREDS.pass; }   // changeable, stored per browser
+function applyAuth(){
+  const locked=!AUTH;
+  const tb=document.getElementById("tabbar"), ac=document.getElementById("appContent"), ls=document.getElementById("lockScreen");
+  if(tb) tb.style.display=locked?"none":"";
+  if(ac) ac.style.display=locked?"none":"";
+  if(ls) ls.style.display=locked?"flex":"none";
+  const btn=document.getElementById("avatarBtn"), lab=document.getElementById("avatarLabel");
+  if(btn){ btn.classList.toggle("authed",AUTH); btn.title=AUTH?t("accountMenu"):t("loginTip"); }
+  if(lab) lab.textContent=AUTH?CREDS.user:t("login");
+  if(locked) closeAvatarMenu();
+}
+function goHome(){ closeAvatarMenu(); showView("overview"); try{ window.scrollTo({top:0,behavior:"smooth"}); }catch(_){ window.scrollTo(0,0); } }
+function onAvatarClick(ev){ if(ev) ev.stopPropagation(); if(AUTH) toggleAvatarMenu(); else openAuth(); }
+function toggleAvatarMenu(){ document.getElementById("avatarMenu").classList.toggle("open"); }
+function closeAvatarMenu(){ const m=document.getElementById("avatarMenu"); if(m) m.classList.remove("open"); }
+function openAuth(){ const e=document.getElementById("authErr"); if(e)e.style.display="none";
+  const u=document.getElementById("authUser"),p=document.getElementById("authPass"); if(u)u.value=""; if(p)p.value="";
+  document.getElementById("authModal").classList.add("open"); setTimeout(()=>{ try{u.focus();}catch(_){}; },40); }
+function closeAuth(){ document.getElementById("authModal").classList.remove("open"); }
+function doLogin(){ const u=(document.getElementById("authUser").value||"").trim(), p=document.getElementById("authPass").value||"";
+  if(u===CREDS.user && p===getPass()){ AUTH=true; localStorage.setItem("bu_auth","1"); closeAuth();
+    refreshFromServer().then(changed=>{ if(changed) SEL.clear(); render(); }).catch(()=>render());
+  }
+  else { document.getElementById("authErr").style.display="block"; } }
+function logout(){ closeAvatarMenu(); AUTH=false; localStorage.removeItem("bu_auth"); render(); }
+/* change password (stored locally; default stays 'lifewood' for new browsers) */
+function openChangePass(){ closeAvatarMenu(); const e=document.getElementById("passErr"); if(e){e.style.display="none";e.textContent="";}
+  ["curPass","newPass","confirmPass"].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=""; });
+  document.getElementById("passModal").classList.add("open"); setTimeout(()=>{ try{document.getElementById("curPass").focus();}catch(_){}; },40); }
+function closePass(){ document.getElementById("passModal").classList.remove("open"); }
+function doChangePass(){ const cur=document.getElementById("curPass").value||"", nw=document.getElementById("newPass").value||"", cf=document.getElementById("confirmPass").value||"";
+  const err=document.getElementById("passErr"); const fail=m=>{ err.textContent=m; err.style.display="block"; };
+  if(cur!==getPass()) return fail(t("passWrongCur"));
+  if(!nw) return fail(t("passEmpty"));
+  if(nw!==cf) return fail(t("passMismatch"));
+  localStorage.setItem("bu_pass", nw); closePass(); alert(t("passChanged")); }
+document.addEventListener("click", function(e){ const w=document.querySelector(".avatar-wrap"); if(w && !w.contains(e.target)) closeAvatarMenu(); });
+/* help / user guide */
+function openHelp(){ closeAvatarMenu(); renderHelp(); document.getElementById("helpModal").classList.add("open"); }
+function closeHelp(){ document.getElementById("helpModal").classList.remove("open"); }
+function renderHelp(){
+  const body=document.getElementById("helpBody"); if(!body) return;
+  const ex=(t("helpNamingExamples")||[]).join("<br>");
+  const chips=STATUSES.map(s=>`<span class="help-chip" style="background:${STATUS_COLOR[s]}">${t("statuses")[s]}</span>`).join("");
+  const rules=(t("rules")||[]).map(r=>`<li>${r}</li>`).join("");
+  const pages=(t("helpPages")||[]).map(p=>`<li><b>${p[0]}</b> — ${p[1]}</li>`).join("");
+  const faq=(t("helpFaq")||[]).map(p=>`<div class="faq-q">${p[0]}</div><div class="faq-a">${p[1]}</div>`).join("");
+  body.innerHTML=
+    `<div class="help-sec"><h4>📁 ${t("helpNamingH")}</h4><p>${t("helpNamingP")}</p>`+
+      `<div class="help-code">${t("helpNamingFmt")}<br>${ex}</div>`+
+      `<p style="margin:8px 0 4px">${t("helpStagesLine")}</p>`+
+      `<div style="font-size:12px;color:var(--muted);margin-bottom:4px">${t("helpStatusLabel")}</div><div class="help-chips">${chips}</div>`+
+      `<p style="font-size:12px;color:var(--muted)">${t("helpNamingNote")}</p></div>`+
+    `<div class="help-sec"><h4>🔄 ${t("helpRulesH")}</h4><ul class="help-list">${rules}</ul></div>`+
+    `<div class="help-sec"><h4>🧭 ${t("helpPagesH")}</h4><ul class="help-list">${pages}</ul></div>`+
+    `<div class="help-sec"><h4>❓ ${t("helpFaqH")}</h4>${faq}</div>`;
+}
+
+/* ============================== Actions ============================== */
+function cycleStage(id,trk,stage){ const v=DATA.find(x=>x.id===id); if(!v)return; const cur=v[trk].status[stage]; const i=STATUSES.indexOf(cur); const neu=STATUSES[(i+1)%STATUSES.length]; applyStatusChange(v[trk],stage,neu,cur); v[trk].status[stage]=neu; v[trk].last_updated_at=todayStr(); save(); render(); }
+function setLang(l){ LANG=l; localStorage.setItem("bu_lang",l); render(); }
+function toggleSel(id,on){ if(on)SEL.add(id); else SEL.delete(id); buildBatch(); }
+function toggleSelAll(on){ const rows=filteredRows(); if(on)rows.forEach(v=>SEL.add(v.id)); else rows.forEach(v=>SEL.delete(v.id)); render(); }
+function clearSel(){ SEL.clear(); render(); }
+function batchStatus(){ const trk=document.getElementById("bTrack").value,stage=document.getElementById("bStage").value,status=document.getElementById("bStatus").value;
+  DATA.forEach(v=>{ if(!SEL.has(v.id))return; const old=v[trk].status[stage]; applyStatusChange(v[trk],stage,status,old); v[trk].status[stage]=status; v[trk].last_updated_at=todayStr(); }); save(); render(); }
+function batchAssign(){ const trk=document.getElementById("bTrack").value,stage=document.getElementById("bStage").value,pic=document.getElementById("bPic").value;
+  DATA.forEach(v=>{ if(!SEL.has(v.id))return; v[trk].pic[stage]=pic; }); save(); render(); }
+
+/* ============================== File sync simulator ============================== */
+const STAGE_ALIASES={brief:"brief",script:"script",voice:"voice",voiceover:"voice",vo:"voice",music:"music",video:"video",vid:"video",review:"review",verify:"review",qa:"review",distribution:"distribution",distribute:"distribution",dist:"distribution"};
+function parseFileName(fn){
+  const file=fn.trim(); if(!file) return null;
+  const dot=file.lastIndexOf("."); const ext=dot>=0?file.slice(dot+1):""; const base=dot>=0?file.slice(0,dot):file;
+  const parts=base.split("_");
+  let project_id,video_id,track="en",stage,version,status,date;
+  if(parts.length===7 && /^(en|es)$/i.test(parts[2])){ [project_id,video_id,track,stage,version,status,date]=parts; track=track.toLowerCase(); }
+  else if(parts.length===6){ [project_id,video_id,stage,version,status,date]=parts; }
+  else return {file_name:file, error:"errTokens"};
+  const ns=STAGE_ALIASES[(stage||"").toLowerCase()]; if(!ns) return {file_name:file, project_id,video_id,track, error:"errStage"};
+  status=(status||"").toLowerCase(); if(!STATUSES.includes(status)) return {file_name:file, project_id,video_id,track,stage:ns, error:"errStatus"};
+  if(!/^v\d+$/i.test(version||"")) return {file_name:file, project_id,video_id,track,stage:ns,status, error:"errVersion"};
+  if(!/^\d{8}$/.test(date||"")) return {file_name:file, project_id,video_id,track,stage:ns,status, error:"errDate"};
+  return {file_name:file, project_id, video_id, track, stage:ns, version:version.toLowerCase(), status, date, ext};
+}
+function logEntry(p, sync_status, error_message){
+  SYNC_LOG.unshift({synced_at:new Date().toISOString(), project_id:p.project_id||"", video_id:p.video_id||"", track:p.track||"", stage:p.stage||"", status:p.status||"", version:p.version||"", file_name:p.file_name||"", file_path:p.file_path||"", sync_status, error_message:error_message||""});
+}
+function applySync(p){ // returns {ok, msg, created, reset}
+  const num=parseInt(String(p.video_id).replace(/\D/g,""),10);
+  if(!num){ return {ok:false, msg:t("errVid")}; }
+  let v=DATA.find(x=>x.id===num); let created=false;
+  if(!v){ v=blankVideo(num,"—",num%2?"T1":"T2"); v.project_id=p.project_id||PROJECT_ID; v.video_id=p.video_id; DATA.push(v); DATA.sort((a,b)=>a.id-b.id); created=true; }
+  const tr=v[p.track]; let reset=false;
+  // Rule 4: a newer production version invalidates a prior review approval
+  const isProd=["script","voice","music","video"].includes(p.stage);
+  if(isProd && verNum(p.version)>verNum(tr.latest_version) && (p.status==="uploaded"||p.status==="completed")){
+    if(["approved","reviewing","completed"].includes(tr.status.review)){ tr.status.review="not_started"; if(tr.completed_at) tr.completed_at.review=""; reset=true; }
+    if(["uploaded","completed"].includes(tr.status.distribution)){ tr.status.distribution="not_started"; if(tr.completed_at) tr.completed_at.distribution=""; reset=true; }
+  }
+  const oldStatus=tr.status[p.stage];
+  tr.status[p.stage]=p.status;
+  const at=p.date?`${p.date.slice(0,4)}-${p.date.slice(4,6)}-${p.date.slice(6,8)}T12:00`:nowDT();
+  applyStatusChange(tr,p.stage,p.status,oldStatus,at);
+  tr.latest_file_name=p.file_name;
+  p.file_path="/NAS/"+(p.project_id||PROJECT_ID)+"/"+p.video_id+"/"+p.file_name;
+  tr.latest_file_path=p.file_path;
+  if(verNum(p.version)>=verNum(tr.latest_version)) tr.latest_version=p.version;
+  tr.last_updated_at=p.date? (p.date.slice(0,4)+"-"+p.date.slice(4,6)+"-"+p.date.slice(6,8)) : todayStr();
+  return {ok:true, created, reset};
+}
+function runSync(){
+  const lines=document.getElementById("syncInput").value.split("\n").map(s=>s.trim()).filter(Boolean);
+  const out=[];
+  lines.forEach(line=>{ const p=parseFileName(line); if(!p)return;
+    if(p.error){ logEntry(p,"error",t(p.error)); out.push(`<div class="ln err">${t("syncErr").replace("{file}",esc(p.file_name)).replace("{msg}",t(p.error))}</div>`); return; }
+    const r=applySync(p);
+    if(!r.ok){ logEntry(p,"error",r.msg); out.push(`<div class="ln err">${t("syncErr").replace("{file}",esc(p.file_name)).replace("{msg}",r.msg)}</div>`); return; }
+    logEntry(p,"ok","");
+    let msg=t("syncOk").replace("{file}",esc(p.file_name)).replace("{vid}",esc(p.video_id)).replace("{track}",p.track.toUpperCase()).replace("{stage}",t("stages")[p.stage]).replace("{status}",t("statuses")[p.status]);
+    if(r.created) msg+=` · ${t("created")}`; if(r.reset) msg+=` · ${t("versionReset")}`;
+    out.push(`<div class="ln ok">${msg}</div>`);
+  });
+  saveLog(); save(); render();
+  document.getElementById("syncResult").innerHTML=out.join("");
+}
+function clearLog(){ SYNC_LOG=[]; saveLog(); render(); document.getElementById("syncResult").innerHTML=""; }
+function renderSyncPage(){
+  const conv=document.getElementById("convBox"); if(!conv) return;
+  conv.innerHTML = `<b>project_id</b>_<b>video_id</b>_[<b>lang</b>]_<b>stage</b>_<b>version</b>_<b>status</b>_<b>date</b>.ext<br>`+
+    `AIGC001_VID023_EN_script_v01_uploaded_20260622.docx<br>`+
+    `AIGC001_VID023_EN_video_v02_uploaded_20260622.mp4<br>`+
+    `AIGC001_VID023_ES_review_v02_approved_20260623.xlsx`;
+  document.getElementById("rulesBox").innerHTML = t("rules").map(r=>`<div style="margin-bottom:10px">${r}</div>`).join("");
+  const ex=document.getElementById("exBtns");
+  const examples=[
+    "AIGC001_VID007_EN_review_v01_approved_20260622.docx",
+    "AIGC001_VID007_EN_distribution_v01_completed_20260623.mp4",
+    "AIGC001_VID040_ES_script_v01_uploaded_20260622.docx",
+    "AIGC001_VID020_EN_video_v02_uploaded_20260622.mp4",
+    "AIGC001_VID099_EN_distribution_v01_completed_20260622.mp4",
+    "BADNAME_no_convention.mp4"
+  ];
+  ex.innerHTML = examples.map(e=>`<button class="btn ex-btn" onclick="addExample('${e}')">${e}</button>`).join("");
+  // log table
+  const body=document.getElementById("logBody");
+  if(!SYNC_LOG.length){ body.innerHTML=`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:18px">${t("logEmpty")}</td></tr>`; }
+  else body.innerHTML=SYNC_LOG.slice(0,200).map(e=>`<tr>
+      <td class="mono">${esc(e.synced_at.replace("T"," ").slice(0,19))}</td>
+      <td class="mono">${esc(e.project_id)}</td><td class="mono">${esc(e.video_id)}</td>
+      <td>${e.track?`<span class="track-tag ${e.track}">${e.track.toUpperCase()}</span>`:""}</td>
+      <td>${e.stage?esc(t("stages")[e.stage]||e.stage):""}</td>
+      <td>${e.status?`<span class="chip-stage" style="background:${STATUS_COLOR[e.status]||'#999'};cursor:default">${esc(t("statuses")[e.status]||e.status)}</span>`:""}</td>
+      <td class="mono">${esc(e.version)}</td>
+      <td class="mono" title="${esc(e.file_path||e.file_name)}" style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(e.file_name)}</td>
+      <td><span class="log-result ${e.sync_status==="ok"?"ok":"err"}">${e.sync_status==="ok"?"OK":esc(e.error_message||"ERR")}</span></td>
+    </tr>`).join("");
+}
+function addExample(s){ const ta=document.getElementById("syncInput"); ta.value=(ta.value?ta.value.replace(/\s*$/,"")+"\n":"")+s; }
+
+/* ============================== enter data ============================== */
+function nextVideoId(){ return DATA.length ? Math.max(...DATA.map(v=>v.id))+1 : 1; }
+function updateEntryCount(){
+  const el=document.getElementById("entryCount"); if(!el) return;
+  el.textContent=t("enterCount").replace("{n}", DATA.length);
+}
+function fillEntryForm(){
+  document.getElementById("productList").innerHTML=PRODUCTS.map(p=>`<option value="${esc(p)}">`).join("");
+  const pr=I18N[LANG].prios;
+  document.getElementById("ePrio").innerHTML=Object.keys(pr).map(k=>`<option value="${k}">${pr[k]}</option>`).join("");
+  const ts=I18N[LANG].types;
+  document.getElementById("eType").innerHTML=["T1","T2"].map(k=>`<option value="${k}">${ts[k]||k}</option>`).join("");
+  updateEntryCount();
+}
+function openEntryModal(){
+  fillEntryForm();
+  const sub=document.querySelector("#entryModal .msub");
+  if(sub) sub.textContent=(isCustomMode()&&DATA.length>0)?t("enterDataSubMore"):t("enterDataSub");
+  document.getElementById("entryModal").classList.add("open");
+  document.getElementById("eProduct").focus();
+}
+function closeEntryModal(){ document.getElementById("entryModal").classList.remove("open"); }
+function deleteVideos(ids){
+  const set=new Set(ids);
+  DATA=DATA.filter(v=>!set.has(v.id));
+  ids.forEach(id=>SEL.delete(id));
+  save(); render();
+}
+function deleteEditingVideo(){
+  if(!editingId) return;
+  if(!confirm(t("confirmDelete").replace("{id}",taskCode(editingId)))) return;
+  deleteVideos([editingId]); closeModal();
+}
+function batchDeleteVideos(){
+  if(!SEL.size) return;
+  if(!confirm(t("confirmDeleteBatch").replace("{n}",SEL.size))) return;
+  deleteVideos([...SEL]);
+}
+function startEnterData(){
+  if(isCustomMode() && DATA.length>0){ openEntryModal(); return; }
+  if(DATA.length>0){
+    if(!confirm(t("confirmEnterData").replace("{n}", DATA.length))) return;
+    localStorage.setItem("bu_undo", JSON.stringify(DATA));
+    downloadBackup("bucked-up-backup-before-enter.json");
+    DATA=[]; SEL.clear();
+  }
+  localStorage.setItem("bu_custom_mode","1");
+  save(); render();
+  openEntryModal();
+}
+function addEntryVideo(){
+  const product=(document.getElementById("eProduct").value||"").trim();
+  if(!product){ alert(t("enterProductRequired")); document.getElementById("eProduct").focus(); return; }
+  const type=document.getElementById("eType").value||"T1";
+  const name=(document.getElementById("eName").value||"").trim();
+  const desc=(document.getElementById("eDesc").value||"").trim();
+  const prio=document.getElementById("ePrio").value;
+  const v=blankVideo(nextVideoId(), product, type);
+  v.name=name; v.description=desc; v.priority=prio;
+  DATA.push(v); save();
+  document.getElementById("eName").value=""; document.getElementById("eDesc").value="";
+  updateEntryCount(); render();
+  document.getElementById("eName").focus();
+}
+
+/* ============================== modal ============================== */
+let editingId=null;
+function picOptions(sel){ return `<option value="">${t("pending")}</option>`+TEAM.map(p=>`<option value="${p}" ${p===sel?"selected":""}>${p}</option>`).join(""); }
+function statusOptions(sel){ return STATUSES.map(s=>`<option value="${s}" ${s===sel?"selected":""}>${t("statuses")[s]}</option>`).join(""); }
+function buildStepEditor(v){
+  const block=trk=>{ const tr=v[trk]; const latest=tr.latest_file_name?`${esc(tr.latest_version)} · ${esc(fmtDate(tr.last_updated_at))} · ${esc(tr.latest_file_name)}`:t("noFile");
+    let h=`<div class="se-track"><div class="se-h"><span class="track-tag ${trk}">${trk.toUpperCase()}</span>${trk==="en"?t("english"):t("spanish")}<span class="se-latest">${latest}</span></div>`;
+    STAGES.forEach(s=>{ const st=tr.status[s];
+      h+=`<div class="se-row"><span class="se-dot" style="background:${STATUS_COLOR[st]}"></span><span class="se-name">${t("stages")[s]}</span>`+
+        `<select class="se-status" data-tr="${trk}" data-stage="${s}">${statusOptions(st)}</select>`+
+        `<select class="se-pic" data-tr="${trk}" data-stage="${s}">${picOptions(tr.pic[s])}</select>`+
+        `<input class="se-done" type="datetime-local" data-tr="${trk}" data-stage="${s}" value="${toDatetimeLocal(tr.completed_at[s])}" ${DONE.has(st)?"":"disabled"} title="${esc(t("completedAtLabel"))}" /></div>`;
+    });
+    return h+`</div>`; };
+  document.getElementById("mSteps").innerHTML=block("en")+block("es");
+}
+function openModal(id){ const v=DATA.find(x=>x.id===id); if(!v)return; editingId=id;
+  document.getElementById("mSub").textContent=`${v.project_id}·${v.video_id} · ${taskCode(v.id)}-EN / -ES`;
+  document.getElementById("mProduct").value=v.product||"";
+  const ts=I18N[LANG].types;
+  document.getElementById("mType").innerHTML=["T1","T2"].map(k=>`<option value="${k}">${ts[k]||k}</option>`).join("");
+  document.getElementById("mType").value=v.type||"T1";
+  document.getElementById("mName").value=v.name||""; document.getElementById("mDesc").value=v.description||"";
+  const pr=I18N[LANG].prios; document.getElementById("mPrio").innerHTML=Object.keys(pr).map(k=>`<option value="${k}" ${k===(v.priority||"")?"selected":""}>${pr[k]}</option>`).join("");
+  buildStepEditor(v);
+  document.getElementById("mFlag").checked=!!v.flag; document.getElementById("mRev").value=String(v.revisions||0);
+  const r=I18N[LANG].reasons; document.getElementById("mReason").innerHTML=Object.keys(r).map(k=>`<option value="${k}" ${k===(v.reason||"")?"selected":""}>${r[k]}</option>`).join("");
+  document.getElementById("mNotes").value=v.notes||""; document.getElementById("modal").classList.add("open");
+}
+function closeModal(){ document.getElementById("modal").classList.remove("open"); editingId=null; }
+function saveModal(){ const v=DATA.find(x=>x.id===editingId); if(!v){closeModal();return;}
+  v.product=(document.getElementById("mProduct").value||"").trim()||"—";
+  v.type=document.getElementById("mType").value||"T1";
+  v.name=document.getElementById("mName").value.trim(); v.description=document.getElementById("mDesc").value.trim();
+  v.priority=document.getElementById("mPrio").value;
+  document.querySelectorAll("#mSteps .se-status").forEach(s=>{ const trk=s.dataset.tr, stage=s.dataset.stage, old=v[trk].status[stage], neu=s.value; applyStatusChange(v[trk],stage,neu,old); v[trk].status[stage]=neu; });
+  document.querySelectorAll("#mSteps .se-done").forEach(inp=>{ const trk=inp.dataset.tr, stage=inp.dataset.stage; if(DONE.has(v[trk].status[stage])){ const dt=fromDatetimeLocal(inp.value); v[trk].completed_at[stage]=dt||v[trk].completed_at[stage]||nowDT(); } });
+  document.querySelectorAll("#mSteps .se-pic").forEach(s=>{ v[s.dataset.tr].pic[s.dataset.stage]=s.value; });
+  TRACKS.forEach(trk=>{ v[trk].last_updated_at=todayStr(); });
+  v.flag=document.getElementById("mFlag").checked; v.revisions=+document.getElementById("mRev").value;
+  v.reason=document.getElementById("mReason").value; v.notes=document.getElementById("mNotes").value.trim();
+  save(); closeModal(); render();
+}
+
+/* ============================== backup / reset ============================== */
+function resetData(){ if(confirm(t("confirmReset"))){ localStorage.setItem("bu_undo",JSON.stringify(DATA)); downloadBackup("bucked-up-backup-before-reset.json");
+  DATA.forEach(v=>{ TRACKS.forEach(trk=>{ STAGES.forEach(s=>{ v[trk].status[s]="not_started"; v[trk].pic[s]=""; if(v[trk].completed_at) v[trk].completed_at[s]=""; }); v[trk].latest_file_name="";v[trk].latest_file_path="";v[trk].latest_version="";v[trk].last_updated_at=""; }); v.flag=false;v.revisions=0;v.reason="";v.notes="";v.priority=""; });
+  save(); render(); alert(t("resetDone")); } }
+function restoreUndo(){ const s=localStorage.getItem("bu_undo"); if(!s){alert(t("noUndo"));return;} DATA=JSON.parse(s).map(ensureOne); localStorage.removeItem("bu_undo"); save(); render(); }
+function downloadBackup(name){ exportBundleJSON(name); }
+function exportJSON(){ exportBundleJSON("bucked-up-dashboard-backup.json"); }
+function exportBundleJSON(name){ const blob=new Blob([JSON.stringify(buildBundle(),null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href); }
+function exportSlice(){ const rows=SEL.size>0?DATA.filter(v=>SEL.has(v.id)):filteredRows(); const blob=new Blob([JSON.stringify(rows,null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`bucked-up-slice-${rows.length}.json`; a.click(); URL.revokeObjectURL(a.href); }
+function importJSON(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader();
+  r.onload=()=>{ try{ const d=JSON.parse(r.result);
+    if(d&&Array.isArray(d.videos)){ applyBundle(d); localStorage.setItem("bu_custom_mode","1"); save(); render(); }
+    else if(Array.isArray(d)&&d.every(x=>"id"in x&&"en"in x&&"es"in x)){ DATA=isNewFormat(d)?d.map(ensureOne):migrateOld(d); localStorage.setItem("bu_custom_mode","1"); save(); render(); }
+    else throw new Error();
+  }catch(err){ alert(t("importBad")); } };
+  r.readAsText(f); e.target.value=""; }
+function mergeJSON(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader();
+  r.onload=()=>{ try{ let arr=JSON.parse(r.result); if(!Array.isArray(arr))throw new Error(); arr=arr.filter(x=>x&&("id"in x)&&("en"in x)&&("es"in x)); if(!arr.length)throw new Error();
+    arr=isNewFormat(arr)?arr.map(ensureOne):migrateOld(arr); let n=0; arr.forEach(inc=>{ const i=DATA.findIndex(v=>v.id===inc.id); if(i>=0)DATA[i]=inc; else DATA.push(inc); n++; });
+    DATA.sort((a,b)=>a.id-b.id); save(); render(); alert(t("mergeDone").replace("{n}",n)); }catch(err){ alert(t("importBad")); } };
+  r.readAsText(f); e.target.value=""; }
+
+/* ============================== Admin ============================== */
+function renderAdmin(){
+  const aStage=document.getElementById("aStage"); if(!aStage) return;
+  const cs=aStage.value; aStage.innerHTML=STAGES.map(s=>`<option value="${s}">${t("stages")[s]}</option>`).join(""); if(cs)aStage.value=cs;
+  const aTrack=document.getElementById("aTrack"),ct=aTrack.value; aTrack.innerHTML=`<option value="both">${t("trackBoth")}</option><option value="en">${t("english")}</option><option value="es">${t("spanish")}</option>`; if(ct)aTrack.value=ct;
+  const aPic=document.getElementById("aPic"),cp=aPic.value; aPic.innerHTML=`<option value="">${t("pending")}</option>`+TEAM.map(p=>`<option value="${p}">${p}</option>`).join(""); if(cp)aPic.value=cp;
+  document.getElementById("adminTeam").innerHTML =
+    TEAM.map((p,i)=>`<div class="team-row"><input type="text" value="${esc(p)}" onchange="adminRenamePic(${i},this.value)"><button class="btn warn" title="${esc(t("removePicT"))}" onclick="adminRemovePic(${i})">✕</button></div>`).join("")
+    + `<div class="team-row"><input type="text" id="newPic" placeholder="${esc(t("newPicPh"))}" onkeydown="if(event.key==='Enter')adminAddPic()"><button class="btn" onclick="adminAddPic()">+ ${t("addPic")}</button></div>`;
+  const pr=I18N[LANG].prios;
+  document.getElementById("adminBody").innerHTML = [...DATA].sort((a,b)=>a.id-b.id).map(v=>`<tr>
+    <td><span class="task-base">${taskCode(v.id)}</span><div class="vid-sub">${esc(v.video_id)}</div></td>
+    <td>${esc(v.product)}</td>
+    <td><span class="pill ${v.type.toLowerCase()}">${t("types")[v.type]}</span></td>
+    <td><select onchange="adminSet(${v.id},'priority',this.value)">${Object.keys(pr).map(k=>`<option value="${k}" ${k===(v.priority||"")?"selected":""}>${pr[k]}</option>`).join("")}</select></td>
+    <td><input type="text" value="${esc(v.name)}" placeholder="${esc(t("namePh"))}" oninput="adminSet(${v.id},'name',this.value)"></td>
+    <td><input type="text" value="${esc(v.description)}" placeholder="${esc(t("descPh"))}" oninput="adminSet(${v.id},'description',this.value)"></td>
+  </tr>`).join("");
+}
+function adminSet(id,field,val){ const v=DATA.find(x=>x.id===id); if(v){ v[field]=val; save(); if(field==="priority")render(); } }
+function adminBulkPic(){
+  const stage=document.getElementById("aStage").value, track=document.getElementById("aTrack").value, pic=document.getElementById("aPic").value;
+  const trks=track==="both"?TRACKS:[track];
+  DATA.forEach(v=>trks.forEach(trk=>{ v[trk].pic[stage]=pic; }));
+  save(); render(); alert(t("picApplied"));
+}
+function adminBulkNames(){
+  const lines=document.getElementById("aNames").value.split("\n").map(s=>s.trim());
+  const sorted=[...DATA].sort((a,b)=>a.id-b.id); let n=0;
+  lines.forEach((line,i)=>{ if(line && sorted[i]){ sorted[i].name=line; n++; } });
+  save(); render(); alert(t("namesApplied").replace("{n}",n));
+}
+function adminAddPic(){ const el=document.getElementById("newPic"); const v=(el.value||"").trim(); if(v && !TEAM.includes(v)){ TEAM.push(v); saveTeam(); render(); } }
+function adminRenamePic(i,val){ val=(val||"").trim(); const old=TEAM[i]; if(!val||val===old)return;
+  TEAM[i]=val; saveTeam();
+  DATA.forEach(v=>TRACKS.forEach(trk=>STAGES.forEach(s=>{ if(v[trk].pic[s]===old) v[trk].pic[s]=val; })));
+  save(); render();
+}
+function adminRemovePic(i){ const old=TEAM[i]; TEAM.splice(i,1); saveTeam();
+  DATA.forEach(v=>TRACKS.forEach(trk=>STAGES.forEach(s=>{ if(v[trk].pic[s]===old) v[trk].pic[s]=""; })));
+  save(); render();
+}
+
+/* ============================== views ============================== */
+function showView(name){
+  document.querySelectorAll(".view").forEach(v=>v.style.display="none");
+  const el=document.getElementById("view-"+name); if(el)el.style.display="";
+  document.querySelectorAll(".tab[data-view]").forEach(tb=>tb.classList.toggle("active",tb.dataset.view===name));
+  localStorage.setItem("bu_view",name);
+  render();
+  [stageChart,statusChart,langChart,typeChart,transChart,dailyChart].forEach(c=>{ try{ if(c)c.resize(); }catch(e){} });
+}
+
+/* boot */
+async function boot(){
+  try{ initCharts(); }catch(e){ console.warn("charts unavailable:",e); }
+  applyToolLinks();
+  await initData();
+  render();
+  showView(localStorage.getItem("bu_view")||"overview");
+  document.addEventListener("visibilitychange",()=>{
+    if(document.visibilityState==="visible"&&AUTH&&(FILE_API||STATIC_HOST)) refreshFromServer().then(changed=>{ if(changed){ SEL.clear(); render(); } });
+  });
+}
+boot();
+</script>
+</body>
+</html>

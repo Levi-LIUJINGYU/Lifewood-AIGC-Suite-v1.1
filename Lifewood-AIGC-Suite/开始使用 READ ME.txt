@@ -1,0 +1,76 @@
+﻿============================================================
+  Lifewood AIGC Suite
+  看板 (Dashboard) + 工作流程 (Workflow) + 分镜工作室 (Storyboard Studio)
+============================================================
+
+------------------------------------------------------------
+  最简单 / EASIEST  (完整功能，含分镜 AI / full features incl. Storyboard AI)
+------------------------------------------------------------
+1. 解压本压缩包（右键 → 全部解压）。
+   Extract this ZIP first (right-click -> Extract All).
+
+2. 双击  "Start Lifewood AIGC.bat"
+   Double-click  "Start Lifewood AIGC.bat"
+   - 浏览器会自动打开 http://localhost:8765
+     A browser opens automatically at http://localhost:8765
+   - 需要 Node.js（免费）：https://nodejs.org  （选 LTS 版）。没装会有提示。
+     Needs Node.js (free): https://nodejs.org (LTS). If it's missing, the window tells you.
+   - 使用期间保持那个黑色小窗口开着；关闭它（或按 Ctrl+C）即停止。
+     Keep the small black window open while using it; close it (or Ctrl+C) to stop.
+
+3. 登录 / Sign in:   账号/account  lifewood    密码/password  lifewood
+
+------------------------------------------------------------
+  没有 Node.js / 只想快速看看  ·  NO Node.js / quick look
+------------------------------------------------------------
+- 直接打开  index.html  即可。看板与工作流程完全可用。
+  Just open  index.html  in your browser. The dashboard & workflow work fully.
+- 分镜工作室的 AI 生成必须用上面的启动器（浏览器会拦截 file:// 页面发出的 AI 请求）。
+  Storyboard's AI generation only works via the launcher above (browsers block AI
+  calls from file:// pages).
+
+------------------------------------------------------------
+  主页上的按钮 / Buttons on the home page
+------------------------------------------------------------
+- 分镜工作室 / Storyboard Studio  -> 打开内置工具（每人在 ⚙ 设置里填自己的 AI 密钥）。
+                                     opens the bundled tool (each person enters their own AI key in Settings).
+- 文件代理 / File Agent           -> https://ug.link/18576341573 （NAS 文件代理，可访问时打开）。
+                                     the NAS file agent (opens if reachable from your network).
+- 每个页面左下角的  🏠 主页 / Home  按钮都能回到看板首页。
+  The  🏠 home  button (bottom-left) on every page returns to the dashboard.
+
+------------------------------------------------------------
+  团队共享 / TEAM SHARING  (同一网址，数据自动同步)
+------------------------------------------------------------
+1. 在一台电脑上双击  "Start Lifewood AIGC.bat"  并保持黑色窗口开着。
+   On ONE computer, double-click  "Start Lifewood AIGC.bat"  and keep that window open.
+
+2. 黑色窗口会显示局域网网址，例如：
+   http://192.168.1.100:8765/index.html
+   The black window shows a LAN URL, e.g.:
+   http://192.168.1.100:8765/index.html
+
+3. 把该网址发给同事（需在同一 Wi‑Fi / 局域网）。
+   Share that URL with teammates (same Wi‑Fi / LAN).
+
+4. 所有人打开该网址、用 lifewood / lifewood 登录。
+   Everyone opens that URL and signs in with lifewood / lifewood.
+
+5. 任何人在页面上做的修改会自动保存到服务器的 dashboard-data.json，
+   其他人刷新页面或重新登录即可看到最新版本。
+   Edits auto-save to dashboard-data.json on the server; others see updates
+   after refreshing or signing in again.
+
+------------------------------------------------------------
+  说明 / Notes
+------------------------------------------------------------
+- 通过启动器访问时，数据保存在服务器，全团队共享。
+  When using the launcher, data is saved on the server and shared by the team.
+- 直接打开 index.html（不经过启动器）时，数据仍只存在本浏览器。
+  Opening index.html directly (without the launcher) still saves data only in this browser.
+- 登录是一个简单的共享口令（密码就在文件里），只能挡住随意查看，并非强安全。
+  The login is a simple shared gate (the password is in the file) — it only deters
+  casual viewing; it is not strong security.
+
+  有问题请联系 Gavin（AIGC 团队）。 Questions: contact Gavin (AIGC team).
+============================================================

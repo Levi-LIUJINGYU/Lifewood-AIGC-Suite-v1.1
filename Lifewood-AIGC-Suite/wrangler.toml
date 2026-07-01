@@ -1,0 +1,10 @@
+# Cloudflare Pages — see CLOUDFLARE.md for setup.
+name = "lifewood-aigc-suite"
+pages_build_output_dir = "."
+compatibility_date = "2024-06-01"
+
+# Create KV: Dashboard → Workers & Pages → KV → Create
+# Then paste the namespace id below and bind DASHBOARD_KV in Pages → Settings → Functions.
+[[kv_namespaces]]
+binding = "DASHBOARD_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bucked Up AIGC — Production Workflow</title>
+<style>
+  :root{
+    --green-900:#0e3a23; --green-800:#14401f; --green-700:#1b5e34; --green-500:#2e8b50;
+    --green-100:#e7f1e9; --gold:#e9a020; --gold-soft:#fbe9c8; --ink:#16241b; --muted:#5e7065;
+    --line:#dde7e0; --bg:#f4f7f4; --card:#fff; --shadow:0 1px 3px rgba(16,40,25,.08);
+    --s-not:#c4cdc7; --s-prog:#3a7bd5; --s-up:#5aa873; --s-rev:#e9a020; --s-appr:#2e8b50; --s-rej:#d9534f; --s-done:#14401f;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;}
+  .wrap{max-width:1320px;margin:0 auto;padding:0 20px 60px;}
+
+  header{background:var(--green-900);color:#fff;padding:16px 0;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,0,0,.15);}
+  .header-in{max-width:1320px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .brand{background:#fff;border-radius:9px;padding:7px 13px;display:inline-flex;align-items:center;height:44px;box-shadow:0 1px 4px rgba(0,0,0,.22);}
+  .brand img{height:28px;display:block;}
+  .brand-fallback{display:inline-flex;align-items:center;gap:9px;}
+  .brand-fallback svg{height:30px;display:block;}
+  .brand-fallback .wm{font-weight:800;font-size:23px;letter-spacing:.2px;color:var(--green-800);}
+  .title-block h1{font-size:17px;margin:0;font-weight:700;}
+  .title-block .sub{font-size:12px;color:#a9c6b3;}
+  .spacer{flex:1;}
+  .navlink{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+    color:#eaf3ec;text-decoration:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;}
+  .navlink:hover{background:rgba(255,255,255,.2);}
+  .lang-toggle{display:flex;background:rgba(255,255,255,.12);border-radius:8px;overflow:hidden;}
+  .lang-toggle button{background:none;border:none;color:#cfe0d5;padding:7px 14px;cursor:pointer;font-size:13px;font-weight:600;}
+  .lang-toggle button.active{background:var(--gold);color:var(--green-900);}
+
+  .intro{margin:24px 0 8px;}
+  .intro h2{margin:0 0 4px;font-size:20px;}
+  .intro p{margin:0;color:var(--muted);font-size:13px;line-height:1.6;}
+
+  .summary{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 6px;}
+  .sm{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;box-shadow:var(--shadow);min-width:120px;}
+  .sm .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:600;}
+  .sm .v{font-size:22px;font-weight:800;}
+  .sm.gold .v{color:var(--gold);} .sm.green .v{color:var(--green-700);} .sm.blue .v{color:#2456a6;}
+
+  .sec-title{font-size:13px;font-weight:700;color:var(--green-800);text-transform:uppercase;letter-spacing:.6px;margin:30px 0 14px;display:flex;align-items:center;gap:8px;}
+  .sec-title::before{content:"";width:4px;height:16px;background:var(--gold);border-radius:2px;}
+
+  /* data-flow diagram */
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;}
+  .fnode{flex:1;min-width:140px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);}
+  .fnode .ic{font-size:18px;} .fnode .ft{font-weight:700;font-size:13px;margin-top:4px;color:var(--green-800);} .fnode .fd{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5;}
+  .fnode.hot{border-color:var(--gold);background:#fffdf7;}
+  .farrow{display:grid;place-items:center;font-size:22px;color:var(--gold);font-weight:700;}
+  @media(max-width:980px){.farrow{transform:rotate(90deg);width:100%;}}
+
+  /* pipeline (7 stages) */
+  .pipeline{display:flex;align-items:stretch;flex-wrap:wrap;gap:6px;}
+  .step{flex:1;min-width:185px;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;}
+  .step .band{height:7px;}
+  .step .body{padding:14px;display:flex;flex-direction:column;gap:9px;height:100%;}
+  .step .nbox{display:flex;align-items:center;gap:9px;}
+  .step .num{width:26px;height:26px;border-radius:50%;background:var(--green-100);color:var(--green-800);font-weight:800;display:grid;place-items:center;flex:none;font-size:13px;}
+  .step h3{margin:0;font-size:15px;}
+  .step .gate{margin-left:auto;font-size:10px;font-weight:700;color:#9a6510;background:var(--gold-soft);padding:3px 7px;border-radius:20px;}
+  .step .count{font-size:26px;font-weight:800;line-height:1;}
+  .step .count small{font-size:12px;color:var(--muted);font-weight:600;}
+  .step .key{font-family:ui-monospace,Consolas,monospace;font-size:11px;color:var(--muted);}
+  .step .desc{font-size:12px;color:var(--muted);line-height:1.5;flex:1;}
+  .step .picrow{display:flex;align-items:center;gap:8px;border-top:1px dashed var(--line);padding-top:9px;}
+  .step .picrow label{font-size:11px;font-weight:700;color:var(--green-800);text-transform:uppercase;letter-spacing:.3px;}
+  .step select{flex:1;padding:6px 8px;border:1px solid var(--line);border-radius:7px;font-size:13px;font-family:inherit;background:#fff;color:var(--ink);font-weight:600;}
+  .step .dod{font-size:11px;color:var(--green-700);background:var(--green-100);border-radius:7px;padding:6px 8px;}
+  .arrow{display:grid;place-items:center;font-size:22px;color:var(--gold);font-weight:700;padding:0 2px;}
+  @media(max-width:980px){.arrow{transform:rotate(90deg);width:100%;padding:2px 0;}}
+
+  /* status legend */
+  .statuses{display:flex;flex-wrap:wrap;gap:8px;}
+  .stbadge{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 11px;font-size:12px;font-weight:600;box-shadow:var(--shadow);}
+  .stbadge .sw{width:12px;height:12px;border-radius:4px;}
+
+  .loop{margin-top:14px;background:#fff;border:1px dashed var(--gold);border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;}
+  .loop .ic{font-size:22px;} .loop b{color:#9a6510;} .loop .txt{font-size:13px;color:var(--ink);line-height:1.5;}
+
+  /* naming convention */
+  .conv{font-family:ui-monospace,Consolas,monospace;font-size:13px;background:#0e3a23;color:#cfe9d6;border-radius:10px;padding:14px 16px;line-height:1.9;overflow:auto;box-shadow:var(--shadow);}
+  .conv b{color:var(--gold);} .conv .c2{color:#9fd6ff;}
+
+  /* rules */
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .rule{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--green-500);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow);font-size:13px;line-height:1.55;}
+  .rule b{color:var(--green-800);} .rule code{background:var(--green-100);border-radius:5px;padding:1px 5px;font-size:12px;}
+  @media(max-width:820px){.rules{grid-template-columns:1fr;}}
+
+  /* localization */
+  .loc{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;}
+  .track{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow);}
+  .track h4{margin:0 0 10px;font-size:14px;display:flex;align-items:center;gap:8px;}
+  .track .flag{font-size:18px;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;}
+  .chip{background:var(--green-100);color:var(--green-800);border-radius:20px;padding:4px 11px;font-size:12px;font-weight:600;}
+  .chip.en{background:#e4eefb;color:#2456a6;} .chip.es{background:var(--gold-soft);color:#9a6510;}
+  .gate-arrow{font-size:26px;color:var(--green-500);text-align:center;}
+  .track .note{font-size:11px;color:var(--muted);margin-top:10px;}
+  @media(max-width:820px){.loc{grid-template-columns:1fr;}.gate-arrow{transform:rotate(90deg);}}
+
+  .roles{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);}
+  .roles th,.roles td{text-align:left;padding:10px 14px;border-top:1px solid var(--line);font-size:13px;}
+  .roles thead th{background:var(--green-100);color:var(--green-800);border-top:none;font-weight:700;}
+  .footer-note{font-size:12px;color:var(--muted);margin-top:22px;text-align:center;}
+
+  /* Avatar / login */
+  .avatar-btn{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#eaf3ec;
+    padding:5px 12px 5px 6px;border-radius:24px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;margin-left:6px;}
+  .avatar-btn:hover{background:rgba(255,255,255,.2);}
+  .avatar-btn .av-ic{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;flex:none;}
+  .avatar-btn .av-ic svg{width:17px;height:17px;display:block;}
+  .avatar-btn.authed{background:var(--gold);border-color:var(--gold);color:var(--green-900);}
+  .avatar-btn.authed .av-ic{background:rgba(14,40,25,.18);}
+  .header-actions{display:flex;align-items:center;gap:10px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end;}
+  .avatar-wrap{position:relative;display:inline-block;}
+  .avatar-menu{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.20);min-width:170px;overflow:hidden;z-index:80;}
+  .avatar-menu.open{display:block;}
+  .avatar-menu .menu-item{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;text-align:left;padding:11px 14px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;font-family:inherit;}
+  .avatar-menu .menu-item:hover{background:var(--green-100);}
+  .avatar-menu .menu-item+.menu-item{border-top:1px solid var(--line);}
+  .avatar-menu .menu-item.danger{color:#b23b2e;}
+  /* Help modal */
+  .help-modal{width:min(680px,94vw);max-height:90vh;overflow:auto;}
+  .help-sec{margin-bottom:18px;}
+  .help-sec h4{margin:0 0 8px;font-size:14px;color:var(--green-800);}
+  .help-sec p{margin:0 0 8px;font-size:13px;color:var(--ink);line-height:1.6;}
+  .help-code{font-family:ui-monospace,Consolas,monospace;font-size:12px;background:#0e3a23;color:#cfe9d6;border-radius:8px;padding:10px 12px;line-height:1.7;overflow:auto;}
+  .help-code b{color:var(--gold);}
+  .help-chips{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 8px;}
+  .help-chip{font-size:11px;font-weight:700;color:#fff;border-radius:5px;padding:2px 7px;}
+  .help-list{margin:0;padding:0;list-style:none;}
+  .help-list li{font-size:13px;line-height:1.6;padding:6px 0;border-top:1px solid var(--line);}
+  .help-list li:first-child{border-top:none;}
+  .help-list li b{color:var(--green-800);} .help-list code{background:var(--green-100);border-radius:4px;padding:1px 5px;font-size:12px;}
+  .faq-q{font-weight:700;color:var(--green-800);font-size:13px;margin-top:10px;}
+  .faq-a{font-size:13px;color:var(--ink);line-height:1.6;margin-top:2px;}
+  .home-fab{position:fixed;left:18px;bottom:18px;z-index:90;display:inline-flex;align-items:center;gap:7px;background:#1b5e34;color:#fff;border:none;border-radius:24px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(16,40,25,.28);text-decoration:none;font-family:inherit;}
+  .home-fab:hover{background:#14401f;transform:translateY(-1px);}
+  .home-fab .hf-ic{font-size:15px;line-height:1;}
+  /* overlay + modal */
+  .overlay{position:fixed;inset:0;background:rgba(14,40,25,.45);display:none;align-items:center;justify-content:center;z-index:100;}
+  .overlay.open{display:flex;}
+  .modal{background:#fff;border-radius:14px;width:min(400px,92vw);padding:22px 24px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+  .modal h3{margin:0 0 4px;font-size:17px;} .modal .msub{font-size:13px;color:var(--muted);margin-bottom:16px;}
+  .auth-field{margin-bottom:14px;}
+  .auth-field label{display:block;font-size:12px;font-weight:700;color:var(--green-800);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
+  .auth-field input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:14px;font-family:inherit;color:var(--ink);background:#fff;}
+  .auth-field input:focus{outline:2px solid var(--green-500);outline-offset:-1px;}
+  .auth-err{display:none;background:#fbeae7;color:#b23b2e;border-radius:8px;padding:9px 12px;font-size:13px;font-weight:600;margin-bottom:12px;}
+  .btn{padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink);font-family:inherit;}
+  .btn:hover{background:var(--green-100);} .btn.primary{background:var(--green-700);color:#fff;border-color:var(--green-700);} .btn.primary:hover{background:var(--green-800);}
+  .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;}
+  .lockscreen{display:none;min-height:62vh;align-items:center;justify-content:center;padding:40px 20px;}
+  .lock-card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);max-width:440px;width:100%;padding:34px 32px;text-align:center;}
+  .lock-card .lock-ic{width:64px;height:64px;border-radius:50%;background:var(--green-100);display:grid;place-items:center;margin:0 auto 16px;}
+  .lock-card .lock-ic svg{width:30px;height:30px;}
+  .lock-card h2{margin:0 0 6px;font-size:20px;color:var(--green-800);}
+  .lock-card p{margin:0 0 20px;color:var(--muted);font-size:14px;line-height:1.5;}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-in">
+    <span class="brand">
+      <img src="logo.png" alt="lifewood" onerror="this.style.display='none';document.getElementById('logoFallback').style.display='inline-flex';" />
+      <span id="logoFallback" class="brand-fallback" style="display:none;">
+        <svg viewBox="0 0 40 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="20,0 40,18 40,46 20,64 0,46 0,18" fill="#f5a93c"/></svg>
+        <span class="wm">lifewood</span>
+      </span>
+    </span>
+    <div class="title-block">
+      <h1 data-i18n="title">Production Workflow</h1>
+      <div class="sub" data-i18n="sub">Bucked Up AIGC · Brief → Script → Voice → Music → Video → Review → Distribution</div>
+    </div>
+    <div class="header-actions">
+      <a class="navlink" href="index.html" data-i18n="navDash">← Dashboard</a>
+      <div class="lang-toggle">
+        <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+        <button id="btn-zh" onclick="setLang('zh')">中文</button>
+      </div>
+      <div class="avatar-wrap">
+        <button class="avatar-btn" id="avatarBtn" onclick="onAvatarClick(event)" title="">
+          <span class="av-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg></span>
+          <span class="av-label" id="avatarLabel">Login</span>
+        </button>
+        <div class="avatar-menu" id="avatarMenu">
+          <button class="menu-item" onclick="openHelp()">❓ <span data-i18n="helpTitle">Help / User guide</span></button>
+          <button class="menu-item" onclick="openChangePass()">🔑 <span data-i18n="changePass">Change password</span></button>
+          <button class="menu-item danger" onclick="logout()">⎋ <span data-i18n="logout">Sign out</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Lock screen -->
+<div class="lockscreen" id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1b5e34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+    <h2 data-i18n="lockTitle">Workflow locked</h2>
+    <p data-i18n="lockMsg">Please sign in with the team account to view the workflow.</p>
+    <button class="btn primary" onclick="openAuth()" data-i18n="login">Login</button>
+  </div>
+</div>
+
+<!-- Login modal -->
+<div class="overlay" id="authModal" onclick="if(event.target===this)closeAuth()">
+  <div class="modal">
+    <h3 data-i18n="authTitle">Sign in to view data</h3>
+    <div class="msub" data-i18n="authSub">Enter the team account to unlock.</div>
+    <div class="auth-err" id="authErr" data-i18n="authBad">Wrong account or password.</div>
+    <div class="auth-field"><label data-i18n="authUser">Account</label><input type="text" id="authUser" autocomplete="username" data-i18n-ph="authUserPh" placeholder="account" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <div class="auth-field"><label data-i18n="authPass">Password</label><input type="password" id="authPass" autocomplete="current-password" data-i18n-ph="authPassPh" placeholder="password" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <div class="modal-actions"><button class="btn" onclick="closeAuth()" data-i18n="cancel">Cancel</button><button class="btn primary" onclick="doLogin()" data-i18n="authBtn">Sign in</button></div>
+  </div>
+</div>
+
+<!-- Change password modal -->
+<div class="overlay" id="passModal" onclick="if(event.target===this)closePass()">
+  <div class="modal">
+    <h3 data-i18n="changePass">Change password</h3>
+    <div class="msub" data-i18n="changePassSub">Set a new team password for this browser.</div>
+    <div class="auth-err" id="passErr"></div>
+    <div class="auth-field"><label data-i18n="curPass">Current password</label><input type="password" id="curPass" autocomplete="current-password" /></div>
+    <div class="auth-field"><label data-i18n="newPass">New password</label><input type="password" id="newPass" autocomplete="new-password" /></div>
+    <div class="auth-field"><label data-i18n="confirmPass">Confirm new password</label><input type="password" id="confirmPass" autocomplete="new-password" onkeydown="if(event.key==='Enter')doChangePass()" /></div>
+    <div class="modal-actions"><button class="btn" onclick="closePass()" data-i18n="cancel">Cancel</button><button class="btn primary" onclick="doChangePass()" data-i18n="saveBtn">Save</button></div>
+  </div>
+</div>
+
+<!-- Help / user guide modal -->
+<div class="overlay" id="helpModal" onclick="if(event.target===this)closeHelp()">
+  <div class="modal help-modal">
+    <h3 data-i18n="helpTitle">Help / User guide</h3>
+    <div id="helpBody"></div>
+    <div class="modal-actions"><button class="btn primary" onclick="closeHelp()" data-i18n="close">Close</button></div>
+  </div>
+</div>
+
+<div class="wrap" id="appContent">
+  <a class="home-fab" href="index.html" title="主页 / Home"><span class="hf-ic">🏠</span><span data-i18n="home">Home</span></a>
+  <div class="intro">
+    <h2 data-i18n="introH">How a video gets made — and how the NAS keeps the dashboard live</h2>
+    <p data-i18n="introP"></p>
+  </div>
+
+  <div class="summary" id="summary"></div>
+
+  <div class="sec-title" data-i18n="flowTitle">Data flow · NAS sync drives the dashboard</div>
+  <div class="flow" id="flow"></div>
+
+  <div class="sec-title" data-i18n="pipelineTitle">The 7-stage pipeline</div>
+  <div class="pipeline" id="pipeline"></div>
+
+  <div class="sec-title" data-i18n="statusTitle">Stage status model</div>
+  <div class="statuses" id="statuses"></div>
+
+  <div class="loop">
+    <span class="ic">↩</span>
+    <div class="txt" id="loopText"></div>
+  </div>
+
+  <div class="sec-title" data-i18n="convTitle">File naming convention (drives the updates)</div>
+  <div class="conv" id="convBox"></div>
+
+  <div class="sec-title" data-i18n="rulesTitle">Sync update rules</div>
+  <div class="rules" id="rulesBox"></div>
+
+  <div class="sec-title" data-i18n="locTitle">English → Spanish localization</div>
+  <div class="loc">
+    <div class="track">
+      <h4><span class="flag">🇬🇧</span> <span data-i18n="enTrack">English original</span></h4>
+      <div class="chips" id="enChips"></div>
+      <div class="note" data-i18n="enNote"></div>
+    </div>
+    <div class="gate-arrow">→</div>
+    <div class="track">
+      <h4><span class="flag">🇪🇸</span> <span data-i18n="esTrack">Spanish version</span></h4>
+      <div class="chips" id="esChips"></div>
+      <div class="note" data-i18n="esNote"></div>
+    </div>
+  </div>
+
+  <div class="sec-title" data-i18n="rolesTitle">Who owns what</div>
+  <table class="roles">
+    <thead><tr><th data-i18n="rPerson">Person</th><th data-i18n="rRole">Role</th><th data-i18n="rOwns">Owns</th></tr></thead>
+    <tbody id="rolesBody"></tbody>
+  </table>
+
+  <div class="footer-note" data-i18n="footer">PIC assignments are saved locally and shared with the dashboard. Stage counts reflect the current video_progress data in this browser.</div>
+</div>
+
+<script>
+/* ---------- shared with index.html via localStorage ---------- */
+const TEAM = (function(){ try{ const s=JSON.parse(localStorage.getItem("bu_team")); return (Array.isArray(s)&&s.length)?s:["Gavin","Ian","Eva","Pierce","Vena"]; }catch(e){ return ["Gavin","Ian","Eva","Pierce","Vena"]; } })();
+const STAGES = ["brief","script","voice","music","video","review","distribution"];
+const STATUSES = ["not_started","in_progress","uploaded","reviewing","approved","rejected","completed"];
+const DONE = new Set(["approved","completed"]);
+const STATUS_COLOR = {not_started:"#c4cdc7",in_progress:"#3a7bd5",uploaded:"#5aa873",reviewing:"#e9a020",approved:"#2e8b50",rejected:"#d9534f",completed:"#14401f"};
+const STAGE_BAND = ["#9ccaa8","#7bb98f","#5aa873","#46976a","#2e8b50","#e9a020","#14401f"]; // brief..distribution
+function loadData(){ try{ return JSON.parse(localStorage.getItem("bu_data"))||[]; }catch(e){ return []; } }
+function siteBase(){
+  if(location.protocol==="file:") return "";
+  const p=location.pathname;
+  if(/\.html$/i.test(p)) return p.slice(0,p.lastIndexOf("/")+1);
+  return p.endsWith("/")?p:p+"/";
+}
+function apiUrl(path){ const base=siteBase(); return base+(path.startsWith("/")?path.slice(1):path); }
+async function syncFromServer(){
+  const hosted=location.protocol==="http:"||location.protocol==="https:";
+  if(!hosted) return false;
+  try{
+    let bundle=null;
+    const hr=await fetch(apiUrl("api/health"),{cache:"no-store"});
+    if(hr.ok){
+      const h=await hr.json();
+      if(h&&h.app==="lifewood-aigc-suite"){
+        const r=await fetch(apiUrl("api/data"),{cache:"no-store"});
+        if(r.ok) bundle=await r.json();
+      }
+    }
+    if(!bundle){
+      const r=await fetch(apiUrl("dashboard-data.json"),{cache:"no-store"});
+      if(!r.ok) return false;
+      bundle=await r.json();
+    }
+    if(!bundle||!Array.isArray(bundle.videos)) return false;
+    const serverTs=bundle.updated_at?Date.parse(bundle.updated_at)||0:0;
+    const localTs=+(localStorage.getItem("bu_server_ts")||0);
+    if(serverTs&&serverTs<=localTs) return false;
+    localStorage.setItem("bu_data", JSON.stringify(bundle.videos));
+    if(Array.isArray(bundle.team)&&bundle.team.length) localStorage.setItem("bu_team", JSON.stringify(bundle.team));
+    if(serverTs) localStorage.setItem("bu_server_ts", String(serverTs));
+    return true;
+  }catch(e){ return false; }
+}
+let PICS = (function(){ try{ return JSON.parse(localStorage.getItem("bu_pics"))||{}; }catch(e){ return {}; } })();
+function savePICS(){ localStorage.setItem("bu_pics", JSON.stringify(PICS)); }
+
+/* ---------- i18n ---------- */
+const I18N = {
+  en:{
+    title:"Production Workflow", sub:"Bucked Up AIGC · Brief → Script → Voice → Music → Video → Review → Distribution",
+    navDash:"← Dashboard",
+    login:"Login", logout:"Sign out", cancel:"Cancel", home:"Home", authTitle:"Sign in to view data", authSub:"Enter the team account to unlock.",
+    authUser:"Account", authPass:"Password", authUserPh:"account", authPassPh:"password", authBtn:"Sign in", authBad:"Wrong account or password.",
+    lockTitle:"Workflow locked", lockMsg:"Please sign in with the team account to view the workflow.",
+    loginTip:"Sign in", accountMenu:"Account menu", logoutTip:"Signed in as lifewood — click to sign out", logoutConfirm:"Sign out? You'll need the team account to view data again.",
+    saveBtn:"Save", changePass:"Change password", changePassSub:"Set a new team password for this browser.", curPass:"Current password", newPass:"New password", confirmPass:"Confirm new password",
+    passWrongCur:"Current password is incorrect.", passEmpty:"New password cannot be empty.", passMismatch:"New passwords do not match.", passChanged:"Password changed. Use it next time you sign in.",
+    helpTitle:"Help / User guide", close:"Close",
+    helpNamingH:"File naming — quick reference",
+    helpNamingP:"You don't update the dashboard by hand — when a file syncs to the NAS, its name updates the matching video and stage. Format:",
+    helpNamingFmt:"<b>project_id</b>_<b>video_id</b>_[<b>lang</b>]_<b>stage</b>_<b>version</b>_<b>status</b>_<b>date</b>.ext",
+    helpNamingExamples:["AIGC001_VID023_EN_script_v01_uploaded_20260622.docx","AIGC001_VID023_EN_video_v02_reviewing_20260622.mp4","AIGC001_VID023_ES_review_v02_approved_20260623.xlsx"],
+    helpStagesLine:"Brief → Script → Voice → Music → Video → Review → Distribution",
+    helpStatusLabel:"Statuses:",
+    helpNamingNote:"lang (EN/ES) is optional — a 6-field name defaults to EN. Stage aliases: vo/voiceover→voice, verify/qa→review, dist→distribution. A name that breaks the rule is logged as a naming error and does NOT change progress.",
+    helpRulesH:"The four sync rules",
+    helpPagesH:"What each page does",
+    helpPages:[
+      ["Overview","Headline metrics (total / completed / in production / pending review / rejected / distributed), the 7-stage pipeline, anomaly alerts, charts and timeline."],
+      ["Video tracker","Every video's EN and ES stage statuses, current stage, latest file and progress. Click a stage chip to cycle its status; use batch actions, filters, and Export / Import / Merge."],
+      ["File sync","The naming convention, a sync simulator (paste filenames to see updates), the video_file_sync_log, and the full anomaly list."],
+      ["Spanish status","Spanish translation coverage and per-stage completion."],
+      ["Analytics","Completion by video type and by product."],
+      ["Admin","Bulk-assign PICs, bulk-fill names, set priority, and manage team members."],
+      ["Workflow","The 7-stage pipeline diagram, the NAS data flow, the status model, naming convention, sync rules and roles."]
+    ],
+    helpFaqH:"FAQ",
+    helpFaq:[
+      ["I can't see any data.","Sign in first with the team account (default lifewood / lifewood). Data stays hidden until you do."],
+      ["Where is my data stored?","In this browser only (localStorage). Each computer keeps its own copy — there is no automatic sync."],
+      ["How do we work as a team?","Each person clicks Export slice and sends it to one keeper, who clicks Merge, then Export backup to send the combined file back. See SHARING.md."],
+      ["If I change the password, does it change for everyone?","No — it only applies on this browser. The default stays lifewood for everyone you shared the file with."],
+      ["A distribution file appeared but review was not approved.","The video is flagged Abnormal (Rule 3). Uploading a new version also resets Review automatically (Rule 4)."],
+      ["A filename was wrong.","It is recorded in the sync log and shown under Anomaly alerts; it does not change any progress."],
+      ["I lost data / want to start over.","Reset auto-downloads a backup and keeps a one-click Undo; you can also Import a backup to restore."]
+    ],
+    introH:"How a video gets made — and how the NAS keeps the dashboard live",
+    introP:"Every video moves through seven stages, first in English then localized to Spanish. The team does NOT change how they work — when a file syncs to the NAS, the sync system parses its name and updates one video_progress row. The dashboard only reads that table. Assign a person in charge (PIC) per stage; counts update live from the dashboard data.",
+    flowTitle:"Data flow · NAS sync drives the dashboard", pipelineTitle:"The 7-stage pipeline",
+    statusTitle:"Stage status model", convTitle:"File naming convention (drives the updates)",
+    rulesTitle:"Sync update rules", locTitle:"English → Spanish localization", rolesTitle:"Who owns what",
+    smTotal:"Total tracks", smTotalHint:"100 videos × EN + ES", smNot:"Not started", smProg:"In production", smReview:"In review", smDone:"Completed", smPct:"Overall",
+    pic:"PIC", doneWhen:"Done when:", unassigned:"— Unassigned —", atStage:"at this stage",
+    loopText:"Client may request changes <b>up to twice (2 rounds in scope)</b>. A failed review or a client revision sends the video back to production — log the reason &amp; notes in the dashboard. Per <b>Rule 4</b>, a re-uploaded version automatically resets the review status, so a stale approval never makes a video look done. At 2/2, further changes are out of scope (Gavin confirms with the client).",
+    flow:[
+      {ic:"🎬",t:"Produce / upload",d:"Team produces a file and uploads it as usual."},
+      {ic:"🔄",t:"File sync system",d:"Existing system identifies, validates & names the file.",hot:false},
+      {ic:"🗄️",t:"Sync to NAS",d:"File lands in the NAS at its path.",hot:false},
+      {ic:"🔎",t:"Parse filename",d:"Extract project / video / stage / version / status / date.",hot:true},
+      {ic:"📋",t:"Upsert video_progress",d:"One row per (project_id, video_id) — the only new step.",hot:true},
+      {ic:"📊",t:"Dashboard reads table",d:"No NAS scanning — the dashboard just reads video_progress."}
+    ],
+    statuses:{not_started:"Not started",in_progress:"In progress",uploaded:"Uploaded",reviewing:"Reviewing",approved:"Approved",rejected:"Rejected",completed:"Completed"},
+    convLines:[
+      'project_id _ video_id _ [lang] _ stage _ version _ status _ date . ext',
+      'AIGC001_VID023_EN_script_v01_uploaded_20260622.docx',
+      'AIGC001_VID023_EN_voice_v01_uploaded_20260622.mp3',
+      'AIGC001_VID023_EN_video_v02_reviewing_20260622.mp4',
+      'AIGC001_VID023_EN_review_v02_approved_20260623.xlsx',
+      'AIGC001_VID023_ES_distribution_v01_completed_20260624.txt'
+    ],
+    rules:[
+      "<b>Rule 1 — one record per video.</b> Keyed by <code>project_id + video_id</code>. Any number of files & versions still map to a single video_progress row.",
+      "<b>Rule 2 — every file updates its stage.</b> Set that stage's status, recompute current stage & progress %, and store the latest file name / path / version / time.",
+      "<b>Rule 3 — review gates distribution.</b> Distribution may not complete unless review is <code>approved</code>. A distribution file appearing first → mark the video <b>abnormal</b>.",
+      "<b>Rule 4 — new version resets review.</b> When a newer version uploads, reset review to <code>not_started</code> — a prior approval doesn't apply to the new cut."
+    ],
+    enTrack:"English original", esTrack:"Spanish version",
+    enNote:"Produced first. Must pass human review (approved) before localization starts.",
+    esNote:"Re-do script, voice, music & video for Spanish; re-run review (translation accuracy checked). Tracked as its own video_progress row.",
+    rPerson:"Person", rRole:"Role", rOwns:"Owns",
+    steps:[
+      {n:"Brief", d:"Confirm product, audience, key claims, CTA & assets. Claims approved before scripting. Set name & description.", dod:"Brief agreed & claims cleared"},
+      {n:"Script", d:"Write & finalize the script / storyboard. Hook, body, CTA. On-brand messaging.", dod:"Script approved, ready to voice"},
+      {n:"Voice", d:"Record or AI-generate the voiceover; time it to the script.", dod:"Voiceover exported & synced"},
+      {n:"Music", d:"Select / generate background music & SFX; mix levels under the voice.", dod:"Audio bed mixed to spec"},
+      {n:"Video", d:"AI-assisted visuals → edit → captions. Apply brand (logo, colors, 9:16 1080×1920).", dod:"On-brand cut exported, captioned"},
+      {n:"Review", d:"Human QA gate — claims & accuracy, brand, subtitles, technical (9:16, length, audio).", dod:"All checks pass + Gavin approves"},
+      {n:"Distribution", d:"Export master + platform versions, deliver to client (TikTok / Reels / Shorts), archive.", dod:"Delivered to client & archived"}
+    ],
+    qaGate:"QA gate",
+    roles:[
+      ["Gavin","Project lead","Client liaison, brief sign-off, final review approval, scope/revision calls"],
+      ["Ian","R&D / Design","Concept, scriptwriting, storyboard, visual direction, prompt/model setup"],
+      ["Eva","Video","AI generation, editing, captions, export, platform formatting"],
+      ["Pierce","Production support","Scripting support, Spanish localization, subtitle QA"],
+      ["Vena","IT","File sync system, NAS naming, video_progress table, dashboard data, backups"]
+    ]
+  },
+  zh:{
+    title:"生产工作流程", sub:"Bucked Up AIGC · 简报 → 脚本 → 配音 → 音乐 → 视频 → 审核 → 分发",
+    navDash:"← 返回看板",
+    login:"登录", logout:"退出登录", cancel:"取消", home:"主页", authTitle:"登录以查看数据", authSub:"输入团队账号以解锁。",
+    authUser:"账号", authPass:"密码", authUserPh:"账号", authPassPh:"密码", authBtn:"登录", authBad:"账号或密码错误。",
+    lockTitle:"工作流程已锁定", lockMsg:"请使用团队账号登录后查看工作流程。",
+    loginTip:"登录", accountMenu:"账号菜单", logoutTip:"已登录：lifewood —— 点击展开菜单", logoutConfirm:"确定退出登录？再次查看数据需要重新输入团队账号。",
+    saveBtn:"保存", changePass:"修改密码", changePassSub:"为本浏览器设置新的团队密码。", curPass:"当前密码", newPass:"新密码", confirmPass:"确认新密码",
+    passWrongCur:"当前密码不正确。", passEmpty:"新密码不能为空。", passMismatch:"两次输入的新密码不一致。", passChanged:"密码已修改，下次登录请使用新密码。",
+    helpTitle:"帮助 / 使用指南", close:"关闭",
+    helpNamingH:"命名规则速查",
+    helpNamingP:"你不需要手动更新看板 —— 当文件同步到 NAS 后，文件名会自动更新对应视频与阶段。格式：",
+    helpNamingFmt:"<b>项目ID</b>_<b>视频ID</b>_[<b>语言</b>]_<b>阶段</b>_<b>版本</b>_<b>状态</b>_<b>日期</b>.后缀",
+    helpNamingExamples:["AIGC001_VID023_EN_script_v01_uploaded_20260622.docx","AIGC001_VID023_EN_video_v02_reviewing_20260622.mp4","AIGC001_VID023_ES_review_v02_approved_20260623.xlsx"],
+    helpStagesLine:"简报 → 脚本 → 配音 → 音乐 → 视频 → 审核 → 分发",
+    helpStatusLabel:"状态：",
+    helpNamingNote:"语言(EN/ES)可省略 —— 6 段式默认按 EN 处理。阶段别名：vo/voiceover→配音，verify/qa→审核，dist→分发。不符合规则的文件名会记入命名错误日志，且不更新进度。",
+    helpRulesH:"四条同步规则",
+    helpPagesH:"各页面说明",
+    helpPages:[
+      ["概览","总览指标（总数 / 已完成 / 制作中 / 待审核 / 被退回 / 已分发）、7 阶段管线、异常提醒、图表与时间线。"],
+      ["视频追踪","每条视频的英语与西语阶段状态、当前阶段、最新文件与进度。点状态块可切换状态；支持批量操作、筛选、导出 / 导入 / 合并。"],
+      ["文件同步","命名规则、同步模拟器（粘贴文件名查看更新效果）、video_file_sync_log 日志、完整异常清单。"],
+      ["西语状态","西班牙语翻译覆盖率与各阶段完成情况。"],
+      ["数据分析","按视频类型、按产品的完成情况。"],
+      ["管理","批量指派负责人、批量填写名称、设置优先级、维护团队成员。"],
+      ["工作流程","7 阶段流程图、NAS 数据流、状态模型、命名规则、同步规则与职责分工。"]
+    ],
+    helpFaqH:"常见问题",
+    helpFaq:[
+      ["看不到数据？","请先用团队账号登录（默认 lifewood / lifewood）。未登录前数据不显示。"],
+      ["数据保存在哪里？","只存在本浏览器（localStorage）。每台电脑各存各的，不会自动同步。"],
+      ["怎么和同事协作？","各自点「导出部分」发给一位管理员，管理员点「合并」，再「导出备份」把汇总文件发回给大家。详见 SHARING.md。"],
+      ["改了密码同事也会变吗？","不会 —— 只在本浏览器生效。你分享出去的文件，默认密码仍是 lifewood。"],
+      ["分发文件出现了但审核没通过？","该视频会标记为「异常」（规则 3）；并且上传新版本会自动重置「审核」（规则 4）。"],
+      ["文件名写错了？","会记入同步日志并在「异常提醒」中显示，不会更新任何进度。"],
+      ["数据丢了 / 想重来？","重置前会自动下载备份并保留一键撤销；也可用「导入」恢复备份。"]
+    ],
+    introH:"一条视频如何完成 —— 以及 NAS 如何让看板保持实时",
+    introP:"每条视频都经过七个阶段 —— 先做英语版，再本地化为西班牙语。团队无需改变工作方式：当文件同步到 NAS 后，同步系统解析文件名并更新一条 video_progress 记录。看板只读取该表。为每个阶段指派负责人（PIC），数量与看板数据实时同步。",
+    flowTitle:"数据流 · NAS 同步驱动看板", pipelineTitle:"七阶段流程管线",
+    statusTitle:"阶段状态模型", convTitle:"文件命名规则（驱动更新）",
+    rulesTitle:"同步更新规则", locTitle:"英语 → 西班牙语本地化", rolesTitle:"职责分工",
+    smTotal:"轨道总数", smTotalHint:"100 个视频 × 英 + 西", smNot:"未开始", smProg:"制作中", smReview:"审核中", smDone:"已完成", smPct:"总体进度",
+    pic:"负责人", doneWhen:"完成标准：", unassigned:"— 未指派 —", atStage:"个在此阶段",
+    loopText:"客户最多可提出 <b>两次修改（范围内 2 轮）</b>。审核未通过或客户提出修改时，视频退回制作 —— 在看板记录原因与备注。根据 <b>规则 4</b>，重新上传新版本会自动重置审核状态，旧的审核通过不会让视频看起来已完成。达到 2/2 后，进一步修改属于范围外（由 Gavin 与客户确认）。",
+    flow:[
+      {ic:"🎬",t:"制作 / 上传",d:"团队照常产出文件并上传。"},
+      {ic:"🔄",t:"文件同步系统",d:"现有系统识别、校验并命名文件。",hot:false},
+      {ic:"🗄️",t:"同步到 NAS",d:"文件按路径落入 NAS。",hot:false},
+      {ic:"🔎",t:"解析文件名",d:"提取 项目/视频/阶段/版本/状态/日期。",hot:true},
+      {ic:"📋",t:"upsert video_progress",d:"每个 (project_id, video_id) 一行 —— 唯一新增的一步。",hot:true},
+      {ic:"📊",t:"看板读取表单",d:"不扫描 NAS —— 看板只读取 video_progress。"}
+    ],
+    statuses:{not_started:"未开始",in_progress:"进行中",uploaded:"已上传",reviewing:"审核中",approved:"已通过",rejected:"被退回",completed:"已完成"},
+    convLines:[
+      '项目ID _ 视频ID _ [语言] _ 阶段 _ 版本 _ 状态 _ 日期 . 后缀',
+      'AIGC001_VID023_EN_script_v01_uploaded_20260622.docx',
+      'AIGC001_VID023_EN_voice_v01_uploaded_20260622.mp3',
+      'AIGC001_VID023_EN_video_v02_reviewing_20260622.mp4',
+      'AIGC001_VID023_EN_review_v02_approved_20260623.xlsx',
+      'AIGC001_VID023_ES_distribution_v01_completed_20260624.txt'
+    ],
+    rules:[
+      "<b>规则 1 — 每个视频一条记录。</b> 以 <code>project_id + video_id</code> 为唯一键。再多文件与版本也只对应一条 video_progress。",
+      "<b>规则 2 — 每个文件更新其阶段。</b> 设置该阶段状态，重新计算当前阶段与总进度，并记录最新文件名 / 路径 / 版本 / 时间。",
+      "<b>规则 3 — 审核管控分发。</b> 审核 <code>approved</code> 前不得完成分发。若分发文件先出现 → 标记视频为 <b>异常</b>。",
+      "<b>规则 4 — 新版本重置审核。</b> 上传新版本时，把审核重置为 <code>not_started</code> —— 旧的审核通过不适用于新版本。"
+    ],
+    enTrack:"英语原版", esTrack:"西班牙语版本",
+    enNote:"先制作。必须通过人工审核（approved）后才开始本地化。",
+    esNote:"为西语重做脚本、配音、音乐与视频；再次审核（额外检查翻译准确性）。作为独立的 video_progress 记录追踪。",
+    rPerson:"成员", rRole:"角色", rOwns:"负责",
+    steps:[
+      {n:"简报", d:"确认产品、受众、核心宣称、行动号召与素材。宣称须在写脚本前获批。设定名称与描述。", dod:"简报达成共识、宣称已确认"},
+      {n:"脚本", d:"撰写并定稿脚本/分镜。开场、主体、CTA。符合品牌调性。", dod:"脚本通过，可进入配音"},
+      {n:"配音", d:"录制或 AI 生成配音；与脚本对齐时间轴。", dod:"配音导出并对齐"},
+      {n:"音乐", d:"选择/生成背景音乐与音效；与人声混音。", dod:"音频床按规格混音完成"},
+      {n:"视频", d:"AI 辅助画面 → 剪辑 → 字幕。套用品牌（logo、配色、9:16 1080×1920）。", dod:"符合品牌的成片导出并配字幕"},
+      {n:"审核", d:"人工质检关卡 —— 宣称与准确性、品牌、字幕、技术规格（9:16、时长、音频）。", dod:"全部通过且 Gavin 批准"},
+      {n:"分发", d:"导出母版与各平台版本，交付客户（TikTok / Reels / Shorts），归档。", dod:"已交付客户并归档"}
+    ],
+    qaGate:"质检关卡",
+    roles:[
+      ["Gavin","项目负责人","客户对接、简报签核、最终审核批准、范围/修改决策"],
+      ["Ian","研发 / 设计","概念、脚本、分镜、视觉方向、提示词/模型设置"],
+      ["Eva","视频","AI 生成、剪辑、字幕、导出、平台格式"],
+      ["Pierce","制作支持","脚本支持、西班牙语本地化、字幕质检"],
+      ["Vena","IT","文件同步系统、NAS 命名、video_progress 表、看板数据、备份"]
+    ]
+  }
+};
+let LANG = localStorage.getItem("bu_lang") || "en";
+const t = k => I18N[LANG][k];
+
+function setLang(l){ LANG=l; localStorage.setItem("bu_lang",l); render(); }
+function setPIC(stage,val){ if(val) PICS[stage]=val; else delete PICS[stage]; savePICS(); }
+function picSelect(stage){
+  const opts=`<option value="">${t("unassigned")}</option>`+TEAM.map(p=>`<option value="${p}" ${PICS[stage]===p?"selected":""}>${p}</option>`).join("");
+  return `<select onchange="setPIC(${stage},this.value)">${opts}</select>`;
+}
+
+/* normalize a track to the 7-stage status model (robust to old formats) */
+function normTrack(v,trk){
+  const src=v[trk];
+  const o={}; STAGES.forEach(s=>o[s]="not_started");
+  if(src && src.status){ STAGES.forEach(s=>{ if(STATUSES.includes(src.status[s])) o[s]=src.status[s]; }); return o; }
+  if(src && typeof src==="object"){ // old object/asset model
+    if(src.B&&src.B.done)o.brief="completed";
+    if(src.G){ const g=src.G; o.script=("script"in g?g.script:g.done)?"completed":"not_started"; o.voice=("vo"in g?g.vo:g.done)?"completed":"not_started"; o.music=("music"in g?g.music:g.done)?"completed":"not_started"; o.video=("video"in g?g.video:g.done)?"completed":"not_started"; }
+    if(src.V&&src.V.done)o.review="approved"; if(src.D&&src.D.done)o.distribution="completed";
+    return o;
+  }
+  // old numeric
+  const n=trk==="en"?(+v.en||0):(+v.es||0); const map={0:0,1:1,2:5,3:6,4:7};
+  const lvl=map[Math.max(0,Math.min(4,n))]||0; STAGES.forEach((s,i)=>{ if(i<lvl)o[s]= s==="review"?"approved":"completed"; });
+  return o;
+}
+const stageDone=(o,s)=>DONE.has(o[s]);
+const trackComplete=o=>STAGES.every(s=>stageDone(o,s));
+const trackCurrent=o=>{ for(const s of STAGES){ if(!stageDone(o,s))return s; } return null; };
+const trackOverall=o=>{ const distAdv=["uploaded","completed"].includes(o.distribution), revOk=["approved","completed"].includes(o.review);
+  if(distAdv&&!revOk)return "abnormal"; if(o.review==="rejected")return "rejected"; if(trackComplete(o))return "completed";
+  if(o.review==="reviewing")return "reviewing"; return STAGES.some(s=>o[s]!=="not_started")?"in_progress":"not_started"; };
+
+/* ---------- auth (shared team login gate, same bu_auth/bu_pass keys as the dashboard) ---------- */
+const CREDS = { user:"lifewood", pass:"lifewood" };
+let AUTH = localStorage.getItem("bu_auth")==="1";
+function getPass(){ return localStorage.getItem("bu_pass") || CREDS.pass; }
+function applyAuth(){
+  const locked=!AUTH;
+  const ac=document.getElementById("appContent"), ls=document.getElementById("lockScreen");
+  if(ac) ac.style.display=locked?"none":"";
+  if(ls) ls.style.display=locked?"flex":"none";
+  const btn=document.getElementById("avatarBtn"), lab=document.getElementById("avatarLabel");
+  if(btn){ btn.classList.toggle("authed",AUTH); btn.title=AUTH?t("accountMenu"):t("loginTip"); }
+  if(lab) lab.textContent=AUTH?CREDS.user:t("login");
+  if(locked) closeAvatarMenu();
+}
+function onAvatarClick(ev){ if(ev) ev.stopPropagation(); if(AUTH) toggleAvatarMenu(); else openAuth(); }
+function toggleAvatarMenu(){ document.getElementById("avatarMenu").classList.toggle("open"); }
+function closeAvatarMenu(){ const m=document.getElementById("avatarMenu"); if(m) m.classList.remove("open"); }
+function openAuth(){ const e=document.getElementById("authErr"); if(e)e.style.display="none";
+  const u=document.getElementById("authUser"),p=document.getElementById("authPass"); if(u)u.value=""; if(p)p.value="";
+  document.getElementById("authModal").classList.add("open"); setTimeout(()=>{ try{u.focus();}catch(_){}; },40); }
+function closeAuth(){ document.getElementById("authModal").classList.remove("open"); }
+function doLogin(){ const u=(document.getElementById("authUser").value||"").trim(), p=document.getElementById("authPass").value||"";
+  if(u===CREDS.user && p===getPass()){ AUTH=true; localStorage.setItem("bu_auth","1"); closeAuth();
+    syncFromServer().then(()=>render()).catch(()=>render());
+  }
+  else { document.getElementById("authErr").style.display="block"; } }
+function logout(){ closeAvatarMenu(); AUTH=false; localStorage.removeItem("bu_auth"); render(); }
+function openChangePass(){ closeAvatarMenu(); const e=document.getElementById("passErr"); if(e){e.style.display="none";e.textContent="";}
+  ["curPass","newPass","confirmPass"].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=""; });
+  document.getElementById("passModal").classList.add("open"); setTimeout(()=>{ try{document.getElementById("curPass").focus();}catch(_){}; },40); }
+function closePass(){ document.getElementById("passModal").classList.remove("open"); }
+function doChangePass(){ const cur=document.getElementById("curPass").value||"", nw=document.getElementById("newPass").value||"", cf=document.getElementById("confirmPass").value||"";
+  const err=document.getElementById("passErr"); const fail=m=>{ err.textContent=m; err.style.display="block"; };
+  if(cur!==getPass()) return fail(t("passWrongCur"));
+  if(!nw) return fail(t("passEmpty"));
+  if(nw!==cf) return fail(t("passMismatch"));
+  localStorage.setItem("bu_pass", nw); closePass(); alert(t("passChanged")); }
+document.addEventListener("click", function(e){ const w=document.querySelector(".avatar-wrap"); if(w && !w.contains(e.target)) closeAvatarMenu(); });
+/* help / user guide */
+function openHelp(){ closeAvatarMenu(); renderHelp(); document.getElementById("helpModal").classList.add("open"); }
+function closeHelp(){ document.getElementById("helpModal").classList.remove("open"); }
+function renderHelp(){
+  const body=document.getElementById("helpBody"); if(!body) return;
+  const ex=(t("helpNamingExamples")||[]).join("<br>");
+  const chips=STATUSES.map(s=>`<span class="help-chip" style="background:${STATUS_COLOR[s]}">${t("statuses")[s]}</span>`).join("");
+  const rules=(t("rules")||[]).map(r=>`<li>${r}</li>`).join("");
+  const pages=(t("helpPages")||[]).map(p=>`<li><b>${p[0]}</b> — ${p[1]}</li>`).join("");
+  const faq=(t("helpFaq")||[]).map(p=>`<div class="faq-q">${p[0]}</div><div class="faq-a">${p[1]}</div>`).join("");
+  body.innerHTML=
+    `<div class="help-sec"><h4>📁 ${t("helpNamingH")}</h4><p>${t("helpNamingP")}</p>`+
+      `<div class="help-code">${t("helpNamingFmt")}<br>${ex}</div>`+
+      `<p style="margin:8px 0 4px">${t("helpStagesLine")}</p>`+
+      `<div style="font-size:12px;color:var(--muted);margin-bottom:4px">${t("helpStatusLabel")}</div><div class="help-chips">${chips}</div>`+
+      `<p style="font-size:12px;color:var(--muted)">${t("helpNamingNote")}</p></div>`+
+    `<div class="help-sec"><h4>🔄 ${t("helpRulesH")}</h4><ul class="help-list">${rules}</ul></div>`+
+    `<div class="help-sec"><h4>🧭 ${t("helpPagesH")}</h4><ul class="help-list">${pages}</ul></div>`+
+    `<div class="help-sec"><h4>❓ ${t("helpFaqH")}</h4>${faq}</div>`;
+}
+
+function render(){
+  document.documentElement.lang = LANG==="zh"?"zh":"en";
+  document.querySelectorAll("[data-i18n]").forEach(el=>{ const k=el.getAttribute("data-i18n"); if(typeof I18N[LANG][k]==="string") el.textContent=I18N[LANG][k]; });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{ const k=el.getAttribute("data-i18n-ph"); if(I18N[LANG][k]) el.placeholder=I18N[LANG][k]; });
+  document.getElementById("btn-en").classList.toggle("active",LANG==="en");
+  document.getElementById("btn-zh").classList.toggle("active",LANG==="zh");
+  applyAuth();
+  if(!AUTH) return;                 // workflow data stays hidden until signed in
+  document.getElementById("loopText").innerHTML = t("loopText");
+
+  const data=loadData().map(v=>({en:normTrack(v,"en"),es:normTrack(v,"es")}));
+  const tracks=data.length*2;
+  const at=stage=>data.reduce((a,d)=>a+(trackCurrent(d.en)===stage?1:0)+(trackCurrent(d.es)===stage?1:0),0);
+  const notStarted=data.reduce((a,d)=>a+(trackOverall(d.en)==="not_started"?1:0)+(trackOverall(d.es)==="not_started"?1:0),0);
+  const doneN=data.reduce((a,d)=>a+(trackComplete(d.en)?1:0)+(trackComplete(d.es)?1:0),0);
+  const reviewN=data.reduce((a,d)=>a+(trackCurrent(d.en)==="review"||d.en.review==="reviewing"?1:0)+(trackCurrent(d.es)==="review"||d.es.review==="reviewing"?1:0),0);
+  const STATUS_PCT={not_started:0,in_progress:0.4,uploaded:0.7,reviewing:0.75,rejected:0.15,approved:1,completed:1};
+  const pct = tracks? Math.round(data.reduce((a,d)=>{ const tp=o=>STAGES.reduce((x,s)=>x+STATUS_PCT[o[s]],0)/STAGES.length; return a+tp(d.en)+tp(d.es); },0)/tracks*100):0;
+
+  document.getElementById("summary").innerHTML = [
+    {l:"smTotal",v:tracks,c:"",hint:t("smTotalHint")},
+    {l:"smNot",v:notStarted,c:""},
+    {l:"smProg",v:tracks-notStarted-doneN,c:"blue"},
+    {l:"smReview",v:reviewN,c:"gold"},
+    {l:"smDone",v:doneN,c:"green"},
+    {l:"smPct",v:pct+"%",c:"gold"}
+  ].map(s=>`<div class="sm ${s.c}"><div class="l">${t(s.l)}</div><div class="v">${s.v}</div>${s.hint?`<div class="l" style="text-transform:none;font-weight:500">${s.hint}</div>`:""}</div>`).join("");
+
+  // data-flow diagram
+  document.getElementById("flow").innerHTML = t("flow").map(f=>`<div class="fnode ${f.hot?'hot':''}"><div class="ic">${f.ic}</div><div class="ft">${f.t}</div><div class="fd">${f.d}</div></div>`).join('<div class="farrow">→</div>');
+
+  // pipeline — each card = how many tracks are currently AT that stage
+  const steps=t("steps");
+  document.getElementById("pipeline").innerHTML = steps.map((st,i)=>{
+    const stage=STAGES[i], isQA = stage==="review", isDist = stage==="distribution";
+    return `<div class="step">
+      <div class="band" style="background:${STAGE_BAND[i]}"></div>
+      <div class="body">
+        <div class="nbox"><span class="num">${i+1}</span><h3>${st.n}</h3>${isQA?`<span class="gate">🛡 ${t("qaGate")}</span>`:""}</div>
+        <div class="count">${at(stage)} <small>${t("atStage")}</small></div>
+        <div class="key">${stage}_status</div>
+        <div class="desc">${st.d}</div>
+        <div class="dod"><b>${t("doneWhen")}</b> ${st.dod}</div>
+        <div class="picrow"><label>${t("pic")}</label>${picSelect(i+1)}</div>
+      </div>
+    </div>`;
+  }).join('<div class="arrow">→</div>');
+
+  // status model
+  document.getElementById("statuses").innerHTML = STATUSES.map(s=>`<span class="stbadge"><span class="sw" style="background:${STATUS_COLOR[s]}"></span>${t("statuses")[s]} <span style="color:var(--muted);font-weight:500">· ${s}</span></span>`).join("");
+
+  // naming convention
+  document.getElementById("convBox").innerHTML = t("convLines").map((l,i)=> i===0
+    ? `<div><b>${l}</b></div>`
+    : `<div>${l.replace(/(_(EN|ES)_)/,'<span class="c2">$1</span>')}</div>`).join("");
+
+  // rules
+  document.getElementById("rulesBox").innerHTML = t("rules").map(r=>`<div class="rule">${r}</div>`).join("");
+
+  // localization chips
+  const stepNames=steps.map(s=>s.n);
+  document.getElementById("enChips").innerHTML = stepNames.map((n,i)=>`<span class="chip en">${i+1}. ${n}</span>`).join('');
+  document.getElementById("esChips").innerHTML = [1,2,3,4,5,6].map(i=>`<span class="chip es">${stepNames[i]}</span>`).join('');
+
+  // roles
+  document.getElementById("rolesBody").innerHTML = t("roles").map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("");
+  { const hm=document.getElementById("helpModal"); if(hm&&hm.classList.contains("open")) renderHelp(); }
+}
+syncFromServer().then(()=>render());
+</script>
+</body>
+</html>
