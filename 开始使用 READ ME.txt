@@ -40,34 +40,12 @@
   The  🏠 home  button (bottom-left) on every page returns to the dashboard.
 
 ------------------------------------------------------------
-  团队共享 / TEAM SHARING  (同一网址，数据自动同步)
-------------------------------------------------------------
-1. 在一台电脑上双击  "Start Lifewood AIGC.bat"  并保持黑色窗口开着。
-   On ONE computer, double-click  "Start Lifewood AIGC.bat"  and keep that window open.
-
-2. 黑色窗口会显示局域网网址，例如：
-   http://192.168.1.100:8765/index.html
-   The black window shows a LAN URL, e.g.:
-   http://192.168.1.100:8765/index.html
-
-3. 把该网址发给同事（需在同一 Wi‑Fi / 局域网）。
-   Share that URL with teammates (same Wi‑Fi / LAN).
-
-4. 所有人打开该网址、用 lifewood / lifewood 登录。
-   Everyone opens that URL and signs in with lifewood / lifewood.
-
-5. 任何人在页面上做的修改会自动保存到服务器的 dashboard-data.json，
-   其他人刷新页面或重新登录即可看到最新版本。
-   Edits auto-save to dashboard-data.json on the server; others see updates
-   after refreshing or signing in again.
-
-------------------------------------------------------------
   说明 / Notes
 ------------------------------------------------------------
-- 通过启动器访问时，数据保存在服务器，全团队共享。
-  When using the launcher, data is saved on the server and shared by the team.
-- 直接打开 index.html（不经过启动器）时，数据仍只存在本浏览器。
-  Opening index.html directly (without the launcher) still saves data only in this browser.
+- 数据保存在每个人自己的浏览器（localStorage），不会在人与人之间自动同步。
+  要合并大家的进度，请用 导出 / 导入 / 合并（详见 SHARING.md）。
+  Data is saved in each person's own browser (localStorage); it does NOT auto-sync
+  between people. To combine progress, use Export / Import / Merge (see SHARING.md).
 - 登录是一个简单的共享口令（密码就在文件里），只能挡住随意查看，并非强安全。
   The login is a simple shared gate (the password is in the file) — it only deters
   casual viewing; it is not strong security.

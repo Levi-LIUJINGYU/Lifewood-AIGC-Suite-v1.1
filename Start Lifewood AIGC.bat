@@ -16,6 +16,5 @@ if errorlevel 1 (
 echo Stopping any previous Lifewood server on port 8765...
 for /f "tokens=5" %%P in ('netstat -aon ^| findstr ":8765" ^| findstr "LISTENING"') do taskkill /F /PID %%P >nul 2>&1
 echo Starting Lifewood AIGC Suite... a browser tab will open at http://localhost:8765
-echo Share the LAN URL shown below with your team for shared data.
 node "%~dp0serve.cjs"
 pause

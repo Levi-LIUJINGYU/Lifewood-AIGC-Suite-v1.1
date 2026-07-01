@@ -1,0 +1,15 @@
+{
+  "name": "lifewood-aigc-suite",
+  "compatibility_date": "2026-07-01",
+  "main": "./_worker.js",
+  "assets": {
+    "directory": "./",
+    "not_found_handling": "none"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "DASHBOARD_KV",
+      "id": "PASTE_YOUR_KV_NAMESPACE_ID_HERE"
+    }
+  ]
+}

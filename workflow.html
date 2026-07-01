@@ -304,41 +304,6 @@ const DONE = new Set(["approved","completed"]);
 const STATUS_COLOR = {not_started:"#c4cdc7",in_progress:"#3a7bd5",uploaded:"#5aa873",reviewing:"#e9a020",approved:"#2e8b50",rejected:"#d9534f",completed:"#14401f"};
 const STAGE_BAND = ["#9ccaa8","#7bb98f","#5aa873","#46976a","#2e8b50","#e9a020","#14401f"]; // brief..distribution
 function loadData(){ try{ return JSON.parse(localStorage.getItem("bu_data"))||[]; }catch(e){ return []; } }
-function siteBase(){
-  if(location.protocol==="file:") return "";
-  const p=location.pathname;
-  if(/\.html$/i.test(p)) return p.slice(0,p.lastIndexOf("/")+1);
-  return p.endsWith("/")?p:p+"/";
-}
-function apiUrl(path){ const base=siteBase(); return base+(path.startsWith("/")?path.slice(1):path); }
-async function syncFromServer(){
-  const hosted=location.protocol==="http:"||location.protocol==="https:";
-  if(!hosted) return false;
-  try{
-    let bundle=null;
-    const hr=await fetch(apiUrl("api/health"),{cache:"no-store"});
-    if(hr.ok){
-      const h=await hr.json();
-      if(h&&h.app==="lifewood-aigc-suite"){
-        const r=await fetch(apiUrl("api/data"),{cache:"no-store"});
-        if(r.ok) bundle=await r.json();
-      }
-    }
-    if(!bundle){
-      const r=await fetch(apiUrl("dashboard-data.json"),{cache:"no-store"});
-      if(!r.ok) return false;
-      bundle=await r.json();
-    }
-    if(!bundle||!Array.isArray(bundle.videos)) return false;
-    const serverTs=bundle.updated_at?Date.parse(bundle.updated_at)||0:0;
-    const localTs=+(localStorage.getItem("bu_server_ts")||0);
-    if(serverTs&&serverTs<=localTs) return false;
-    localStorage.setItem("bu_data", JSON.stringify(bundle.videos));
-    if(Array.isArray(bundle.team)&&bundle.team.length) localStorage.setItem("bu_team", JSON.stringify(bundle.team));
-    if(serverTs) localStorage.setItem("bu_server_ts", String(serverTs));
-    return true;
-  }catch(e){ return false; }
-}
 let PICS = (function(){ try{ return JSON.parse(localStorage.getItem("bu_pics"))||{}; }catch(e){ return {}; } })();
 function savePICS(){ localStorage.setItem("bu_pics", JSON.stringify(PICS)); }
 
@@ -582,9 +547,7 @@ function openAuth(){ const e=document.getElementById("authErr"); if(e)e.style.di
   document.getElementById("authModal").classList.add("open"); setTimeout(()=>{ try{u.focus();}catch(_){}; },40); }
 function closeAuth(){ document.getElementById("authModal").classList.remove("open"); }
 function doLogin(){ const u=(document.getElementById("authUser").value||"").trim(), p=document.getElementById("authPass").value||"";
-  if(u===CREDS.user && p===getPass()){ AUTH=true; localStorage.setItem("bu_auth","1"); closeAuth();
-    syncFromServer().then(()=>render()).catch(()=>render());
-  }
+  if(u===CREDS.user && p===getPass()){ AUTH=true; localStorage.setItem("bu_auth","1"); closeAuth(); render(); }
   else { document.getElementById("authErr").style.display="block"; } }
 function logout(){ closeAvatarMenu(); AUTH=false; localStorage.removeItem("bu_auth"); render(); }
 function openChangePass(){ closeAvatarMenu(); const e=document.getElementById("passErr"); if(e){e.style.display="none";e.textContent="";}
@@ -687,7 +650,7 @@ function render(){
   document.getElementById("rolesBody").innerHTML = t("roles").map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("");
   { const hm=document.getElementById("helpModal"); if(hm&&hm.classList.contains("open")) renderHelp(); }
 }
-syncFromServer().then(()=>render());
+render();
 </script>
 </body>
 </html>

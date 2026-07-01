@@ -714,15 +714,14 @@ const I18N = {
     noUndo:"No saved progress to restore.", mergeDone:"Merged {n} videos from the file into your data.",
     resetDone:"Progress reset. A backup file was downloaded, and you can click “Undo reset” to restore.",
     footer:"Data is saved locally in this browser. In production the NAS sync writes the video_progress table and the dashboard reads it. Use “Export backup” to share or move data between computers.",
-    footerFile:"When started via Start Lifewood AIGC.bat, all changes auto-save to dashboard-data.json on the server. Anyone on the same URL sees the latest data after signing in.",
+    footerFile:"When started via Start Lifewood AIGC.bat, all changes are saved to dashboard-data.json in this folder. You can also edit that file directly (reload the page afterward).",
     deleteVideo:"Delete video", batchDelete:"Delete selected",
     confirmDelete:"Delete video {id} and all its progress? This cannot be undone.",
     confirmDeleteBatch:"Delete {n} selected video(s)? This cannot be undone.",
     reloadFile:"Reload file", reloadFileDone:"Reloaded from dashboard-data.json.",
     reloadFileFail:"Could not load dashboard-data.json — is the local server running?",
-    saveToFile:"Saved · server", saveToFilePending:"Saving…", saveToFileErr:"Save failed", saveLocalOnly:"Browser only (open via Start Lifewood AIGC.bat for shared server save)",
-    saveFromGitHub:"Data from GitHub · edits saved in this browser only", reloadGitHub:"Reload from GitHub",
-    fileApiOff:"Server not connected — double-click Start Lifewood AIGC.bat and open the URL it shows (do not open index.html directly)",
+    saveToFile:"Saved · dashboard-data.json", saveToFilePending:"Saving…", saveToFileErr:"Save failed", saveLocalOnly:"Browser only (open via Start Lifewood AIGC.bat for JSON file)",
+    fileApiOff:"JSON file offline — close this tab, double-click Start Lifewood AIGC.bat, use http://localhost:8765",
     flaggedCount:"Flagged with issues", revLimitReached:"Revision limit reached",
     colNum:"ID", colVideo:"Video", colType:"Type", colEN:"English stages", colES:"Spanish stages",
     colCurrent:"Current · state", colLatest:"Latest file", colCompletedAt:"Completed at", colIssue:"Issue", colProgress:"Progress",
@@ -774,8 +773,8 @@ const I18N = {
     helpFaqH:"FAQ",
     helpFaq:[
       ["I can't see any data.","Sign in first with the team account (default lifewood / lifewood). Data stays hidden until you do."],
-      ["Where is my data stored?","When using Start Lifewood AIGC.bat, data is saved on the server (dashboard-data.json) and shared with everyone on the same URL. Opening index.html directly stores data only in this browser."],
-      ["How do we work as a team?","One person runs Start Lifewood AIGC.bat and shares the LAN URL shown in the black window. Everyone opens that link, signs in, and edits — changes sync automatically. For offline use, see Export / Merge in SHARING.md."],
+      ["Where is my data stored?","In this browser only (localStorage). Each computer keeps its own copy — there is no automatic sync."],
+      ["How do we work as a team?","Each person clicks Export slice and sends it to one keeper, who clicks Merge, then Export backup to send the combined file back. See SHARING.md."],
       ["If I change the password, does it change for everyone?","No — it only applies on this browser. The default stays lifewood for everyone you shared the file with."],
       ["A distribution file appeared but review was not approved.","The video is flagged Abnormal (Rule 3). Uploading a new version also resets Review automatically (Rule 4)."],
       ["A filename was wrong.","It is recorded in the sync log and shown under Anomaly alerts; it does not change any progress."],
@@ -873,15 +872,14 @@ const I18N = {
     reasons:{"":"— 无 —", brand:"品牌调性/信息", claims:"产品宣称/准确性", info:"产品信息错误", audio:"音频/配音", caption:"字幕错误", translation:"翻译问题", pacing:"节奏/时长", visual:"画面质量", naming:"文件命名错误", other:"其他"},
     confirmReset:"重置所有视频 —— 清除每个阶段状态、负责人、标记、修改、原因、备注和文件信息？\n\n系统会先备份当前数据（下载备份文件并保留一键撤销），可安全恢复。",
     footer:"数据保存在本浏览器。生产环境中 NAS 同步会写入 video_progress 表，看板从中读取。使用「导出备份」在电脑间共享或迁移。",
-    footerFile:"通过 Start Lifewood AIGC.bat 启动时，所有修改会自动保存到服务器的 dashboard-data.json。同一网址登录的所有人都能看到最新数据。",
+    footerFile:"通过 Start Lifewood AIGC.bat 启动时，所有修改会自动保存到本目录的 dashboard-data.json。也可直接编辑该文件（编辑后请刷新页面）。",
     deleteVideo:"删除视频", batchDelete:"删除选中",
     confirmDelete:"确定删除视频 {id} 及其全部进度？此操作不可撤销。",
     confirmDeleteBatch:"确定删除选中的 {n} 条视频？此操作不可撤销。",
     reloadFile:"重新加载文件", reloadFileDone:"已从 dashboard-data.json 重新加载。",
     reloadFileFail:"无法加载 dashboard-data.json —— 请确认本地服务已启动。",
-    saveToFile:"已保存 · 服务器", saveToFilePending:"保存中…", saveToFileErr:"保存失败", saveLocalOnly:"仅浏览器缓存（请用 Start Lifewood AIGC.bat 启动以共享服务器保存）",
-    saveFromGitHub:"数据来自 GitHub · 修改仅保存在本浏览器", reloadGitHub:"从 GitHub 重新加载",
-    fileApiOff:"未连接服务器 —— 请双击 Start Lifewood AIGC.bat，使用窗口里显示的网址（不要直接打开 index.html）",
+    saveToFile:"已保存 · dashboard-data.json", saveToFilePending:"保存中…", saveToFileErr:"保存失败", saveLocalOnly:"仅浏览器缓存（请用 Start Lifewood AIGC.bat 打开以使用 JSON 文件）",
+    fileApiOff:"JSON 文件未连接 —— 请关闭本页，双击 Start Lifewood AIGC.bat，访问 http://localhost:8765",
     importBad:"无法读取该文件 — 请确认这是从本看板导出的备份。",
     login:"登录", logout:"退出登录", authTitle:"登录以查看数据", authSub:"输入团队账号以解锁看板。",
     authUser:"账号", authPass:"密码", authUserPh:"账号", authPassPh:"密码", authBtn:"登录", authBad:"账号或密码错误。",
@@ -911,8 +909,8 @@ const I18N = {
     helpFaqH:"常见问题",
     helpFaq:[
       ["看不到数据？","请先用团队账号登录（默认 lifewood / lifewood）。未登录前数据不显示。"],
-      ["数据保存在哪里？","使用 Start Lifewood AIGC.bat 时，数据保存在服务器（dashboard-data.json），同一网址的所有人共享。直接打开 index.html 则只存在本浏览器。"],
-      ["怎么和同事协作？","由一人运行 Start Lifewood AIGC.bat，把黑色窗口里显示的局域网网址发给同事；大家打开该链接、登录后即可编辑，修改自动同步。离线场景见 SHARING.md 的导出/合并。"],
+      ["数据保存在哪里？","只存在本浏览器（localStorage）。每台电脑各存各的，不会自动同步。"],
+      ["怎么和同事协作？","各自点「导出部分」发给一位管理员，管理员点「合并」，再「导出备份」把汇总文件发回给大家。详见 SHARING.md。"],
       ["改了密码同事也会变吗？","不会 —— 只在本浏览器生效。你分享出去的文件，默认密码仍是 lifewood。"],
       ["分发文件出现了但审核没通过？","该视频会标记为「异常」（规则 3）；并且上传新版本会自动重置「审核」（规则 4）。"],
       ["文件名写错了？","会记入同步日志并在「异常提醒」中显示，不会更新任何进度。"],
@@ -1172,8 +1170,6 @@ function loadLocal(){
 function buildBundle(){
   return { version:1, custom_mode:isCustomMode(), daily_goal:DAILY_VIDEO_GOAL, daily_video_goal:DAILY_VIDEO_GOAL, daily_stage_goal:DAILY_STAGE_GOAL, daily_stage:DAILY_STAGE_KEY, team:TEAM, sync_log:SYNC_LOG.slice(0,500), videos:DATA };
 }
-function bundleTs(b){ return b&&b.updated_at?Date.parse(b.updated_at)||0:0; }
-function rememberBundleTs(b){ const ts=bundleTs(b); if(ts) localStorage.setItem("bu_server_ts",String(ts)); }
 function applyBundle(b){
   if(!b||typeof b!=="object") return;
   if(b.custom_mode) localStorage.setItem("bu_custom_mode","1"); else localStorage.removeItem("bu_custom_mode");
@@ -1188,17 +1184,8 @@ function applyBundle(b){
   if(vids.length) DATA=isNewFormat(vids)?vids.map(ensureOne):migrateOld(vids);
   else DATA=isCustomMode()?[]:seedData();
   localStorage.setItem("bu_data",JSON.stringify(DATA));
-  rememberBundleTs(b);
 }
-let FILE_API=false, STATIC_HOST=false, saveTimer=null;
-function siteBase(){
-  if(location.protocol==="file:") return "";
-  const p=location.pathname;
-  if(/\.html$/i.test(p)) return p.slice(0,p.lastIndexOf("/")+1);
-  return p.endsWith("/")?p:p+"/";
-}
-function apiUrl(path){ const base=siteBase(); return base+(path.startsWith("/")?path.slice(1):path); }
-function validBundle(b){ return b&&typeof b==="object"&&Array.isArray(b.videos)&&typeof b.version==="number"; }
+let FILE_API=false, saveTimer=null;
 function setSavePill(mode,msg){
   const el=document.getElementById("savePill"); if(!el) return;
   el.style.display="inline-block";
@@ -1214,11 +1201,10 @@ function schedulePersist(){
 async function persistToFile(){
   if(!FILE_API) return;
   try{
-    const r=await fetch(apiUrl("api/data"),{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(buildBundle()),cache:"no-store"});
+    const r=await fetch("/api/data",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(buildBundle()),cache:"no-store"});
     if(!r.ok) throw new Error("http "+r.status);
     const out=await r.json();
     if(!out||!out.ok) throw new Error("bad response");
-    if(out.updated_at) localStorage.setItem("bu_server_ts",String(Date.parse(out.updated_at)||0));
     setSavePill("file",t("saveToFile"));
   }catch(e){ console.warn("file save failed",e); setSavePill("err",t("saveToFileErr")); FILE_API=false; }
 }
@@ -1228,67 +1214,32 @@ function save(){
 }
 async function probeFileApi(){
   try{
-    const hr=await fetch(apiUrl("api/health"),{cache:"no-store"});
-    if(hr.ok){
-      const h=await hr.json();
-      if(h&&h.app==="lifewood-aigc-suite"){
-        const r=await fetch(apiUrl("api/data"),{cache:"no-store"});
-        if(!r.ok) return null;
-        const bundle=await r.json();
-        if(!validBundle(bundle)) return null;
-        return {bundle,live:true};
-      }
-    }
-  }catch(e){}
-  try{
-    const r=await fetch(apiUrl("dashboard-data.json"),{cache:"no-store"});
+    const hr=await fetch("/api/health",{cache:"no-store"});
+    if(!hr.ok) return null;
+    const h=await hr.json();
+    if(!h||h.app!=="lifewood-aigc-suite") return null;
+    const r=await fetch("/api/data",{cache:"no-store"});
     if(!r.ok) return null;
     const bundle=await r.json();
-    if(!validBundle(bundle)) return null;
-    return {bundle,live:false};
+    if(!bundle||typeof bundle!=="object"||!Array.isArray(bundle.videos)||typeof bundle.version!=="number") return null;
+    return bundle;
   }catch(e){ return null; }
 }
-async function fetchHostedBundle(){
-  if(FILE_API){
-    const r=await fetch(apiUrl("api/data"),{cache:"no-store"});
-    if(!r.ok) throw new Error();
-    return await r.json();
-  }
-  if(STATIC_HOST){
-    const r=await fetch(apiUrl("dashboard-data.json"),{cache:"no-store"});
-    if(!r.ok) throw new Error();
-    return await r.json();
-  }
-  throw new Error("offline");
-}
-async function refreshFromServer(){
-  if(!FILE_API&&!STATIC_HOST) return false;
-  try{
-    const bundle=await fetchHostedBundle();
-    if(!validBundle(bundle)) return false;
-    const serverTs=bundleTs(bundle), localTs=+(localStorage.getItem("bu_server_ts")||0);
-    if(serverTs&&serverTs<=localTs) return false;
-    applyBundle(bundle);
-    return true;
-  }catch(e){ return false; }
-}
 async function initData(){
-  const hosted=location.protocol==="http:"||location.protocol==="https:";
-  if(hosted){
-    const hit=await probeFileApi();
-    if(hit){
-      const {bundle,live}=hit;
-      FILE_API=live;
-      STATIC_HOST=!live;
+  const onHttp=/^https?:$/.test(location.protocol);
+  if(onHttp){
+    const bundle=await probeFileApi();
+    if(bundle){
+      FILE_API=true;
       const localRaw=localStorage.getItem("bu_data");
       let localHas=false;
       try{ localHas=localRaw&&JSON.parse(localRaw).length; }catch(_){}
       const fileEmpty=!bundle.videos.length;
-      if(live&&fileEmpty&&localHas&&!bundle.updated_at){
+      if(fileEmpty&&localHas&&!bundle.updated_at){
         DATA=loadLocal();
         await persistToFile();
       }else applyBundle(bundle);
-      setSavePill("file",live?t("saveToFile"):t("saveFromGitHub"));
+      setSavePill("file",t("saveToFile"));
       return;
     }
     setSavePill("err",t("fileApiOff"));
@@ -1296,17 +1247,31 @@ async function initData(){
     return;
   }
   FILE_API=false;
-  STATIC_HOST=false;
   DATA=loadLocal();
   setSavePill("",t("saveLocalOnly"));
 }
 async function reloadFromFile(){
-  if(!FILE_API&&!STATIC_HOST){ alert(t("reloadFileFail")); return; }
+  if(!FILE_API){ alert(t("reloadFileFail")); return; }
   try{
-    applyBundle(await fetchHostedBundle());
+    const r=await fetch("/api/data");
+    if(!r.ok) throw new Error();
+    applyBundle(await r.json());
     SEL.clear(); render();
     alert(t("reloadFileDone"));
   }catch(e){ alert(t("reloadFileFail")); }
+}
+async function silentReloadFromFile(){
+  if(!FILE_API||editingId!=null||document.visibilityState==="hidden") return;
+  try{
+    const r=await fetch("/api/data",{cache:"no-store"});
+    if(!r.ok) return;
+    applyBundle(await r.json());
+    render();
+  }catch(e){ /* stay on last known-good data; next tick will retry */ }
+}
+function startAutoRefresh(){
+  if(!FILE_API) return;
+  setInterval(silentReloadFromFile,8000);
 }
 let DATA=[];
 let DAILY_VIDEO_GOAL=(function(){ try{ const n=+localStorage.getItem("bu_daily_video_goal"); if(!isNaN(n)) return Math.max(0,Math.round(n)); const leg=+localStorage.getItem("bu_daily_goal"); return isNaN(leg)?0:Math.max(0,Math.round(leg)); }catch(e){ return 0; } })();
@@ -1657,9 +1622,7 @@ function openAuth(){ const e=document.getElementById("authErr"); if(e)e.style.di
   document.getElementById("authModal").classList.add("open"); setTimeout(()=>{ try{u.focus();}catch(_){}; },40); }
 function closeAuth(){ document.getElementById("authModal").classList.remove("open"); }
 function doLogin(){ const u=(document.getElementById("authUser").value||"").trim(), p=document.getElementById("authPass").value||"";
-  if(u===CREDS.user && p===getPass()){ AUTH=true; localStorage.setItem("bu_auth","1"); closeAuth();
-    refreshFromServer().then(changed=>{ if(changed) SEL.clear(); render(); }).catch(()=>render());
-  }
+  if(u===CREDS.user && p===getPass()){ AUTH=true; localStorage.setItem("bu_auth","1"); closeAuth(); render(); }
   else { document.getElementById("authErr").style.display="block"; } }
 function logout(){ closeAvatarMenu(); AUTH=false; localStorage.removeItem("bu_auth"); render(); }
 /* change password (stored locally; default stays 'lifewood' for new browsers) */
@@ -1988,9 +1951,7 @@ async function boot(){
   await initData();
   render();
   showView(localStorage.getItem("bu_view")||"overview");
-  document.addEventListener("visibilitychange",()=>{
-    if(document.visibilityState==="visible"&&AUTH&&(FILE_API||STATIC_HOST)) refreshFromServer().then(changed=>{ if(changed){ SEL.clear(); render(); } });
-  });
+  startAutoRefresh();
 }
 boot();
 </script>

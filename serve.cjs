@@ -1,6 +1,6 @@
 /* Zero-dependency local server for the Lifewood AIGC Suite.
    Serves static files + reads/writes dashboard-data.json for persistent CRUD. */
-const http = require('http'), fs = require('fs'), path = require('path'), os = require('os'), { exec } = require('child_process');
+const http = require('http'), fs = require('fs'), path = require('path'), { exec } = require('child_process');
 const dir = __dirname, port = 8765, file = 'index.html';
 const DATA_FILE = path.join(dir, 'dashboard-data.json');
 const types = {
@@ -37,12 +37,11 @@ function readDataFile(cb) {
 }
 
 function writeDataFile(obj, cb) {
-  const saved = Object.assign({ version: 1, updated_at: new Date().toISOString() }, obj);
-  const payload = JSON.stringify(saved, null, 2);
+  const payload = JSON.stringify(Object.assign({ version: 1, updated_at: new Date().toISOString() }, obj), null, 2);
   const tmp = DATA_FILE + '.tmp';
   fs.writeFile(tmp, payload, 'utf8', e => {
     if (e) return cb(e);
-    fs.rename(tmp, DATA_FILE, err => cb(err, saved));
+    fs.rename(tmp, DATA_FILE, cb);
   });
 }
 
@@ -66,22 +65,11 @@ function apiPutData(req, res) {
     catch (e) { return sendJson(res, 400, { error: 'invalid JSON' }); }
     if (!body || typeof body !== 'object') return sendJson(res, 400, { error: 'expected object' });
     if (!Array.isArray(body.videos)) return sendJson(res, 400, { error: 'videos must be an array' });
-    writeDataFile(body, (e, saved) => {
+    writeDataFile(body, e => {
       if (e) return sendJson(res, 500, { error: e.message });
-      sendJson(res, 200, { ok: true, count: body.videos.length, updated_at: saved.updated_at });
+      sendJson(res, 200, { ok: true, count: body.videos.length });
     });
   }).catch(e => sendJson(res, 500, { error: e.message }));
-}
-
-function lanUrls() {
-  const urls = [];
-  const ifs = os.networkInterfaces();
-  for (const name of Object.keys(ifs)) {
-    for (const info of ifs[name] || []) {
-      if (info.family === 'IPv4' && !info.internal) urls.push('http://' + info.address + ':' + port + '/' + file);
-    }
-  }
-  return urls;
 }
 
 http.createServer((req, res) => {
@@ -100,21 +88,15 @@ http.createServer((req, res) => {
     res.writeHead(200, { 'content-type': types[path.extname(fp).toLowerCase()] || 'application/octet-stream', 'cache-control': 'no-store' });
     res.end(data);
   });
-}).listen(port, '0.0.0.0', () => {
-  const local = 'http://localhost:' + port + '/' + file;
-  const team = lanUrls();
-  console.log('\n  Lifewood AIGC Suite is running.\n');
-  console.log('  On this computer:  ' + local);
-  if (team.length) {
-    console.log('\n  Team access (same Wi‑Fi / LAN — share one of these URLs):');
-    team.forEach(u => console.log('    ' + u));
-  }
-  console.log('\n  Data file:  dashboard-data.json  (auto-saved when anyone edits)');
-  console.log('  Sign in:  lifewood / lifewood');
-  console.log('  Keep this window open. Close it (or Ctrl+C) to stop the server.\n');
+}).listen(port, '127.0.0.1', () => {
+  const url = 'http://localhost:' + port + '/' + file;
+  console.log('\n  Lifewood AIGC Suite is running at:\n  ' + url);
+  console.log('\n  Data file:  dashboard-data.json  (auto-saved when you edit the dashboard)');
+  console.log('\n  Sign in:  lifewood / lifewood');
+  console.log('  Leave this window open while you use it. Close it (or press Ctrl+C) to stop.\n');
   try {
-    if (process.platform === 'win32') exec('start "" "' + local + '"');
-    else if (process.platform === 'darwin') exec('open "' + local + '"');
-    else exec('xdg-open "' + local + '"');
+    if (process.platform === 'win32') exec('start "" "' + url + '"');
+    else if (process.platform === 'darwin') exec('open "' + url + '"');
+    else exec('xdg-open "' + url + '"');
   } catch (_) {}
 }).on('error', e => { console.error('Could not start server:', e.message, '\nIf port ' + port + ' is busy, close the other window and try again.'); });

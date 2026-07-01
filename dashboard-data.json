@@ -1,11 +1,8 @@
 {
   "version": 1,
-  "updated_at": "2026-07-01T01:36:33.932Z",
+  "updated_at": "2026-06-30T10:07:17.687Z",
   "custom_mode": true,
   "daily_goal": 20,
-  "daily_video_goal": 20,
-  "daily_stage_goal": 20,
-  "daily_stage": "distribution",
   "team": [
     "Gavin",
     "Ian",
@@ -104,86 +101,6 @@
       "name": "5",
       "description": "58",
       "priority": "high",
-      "flag": false,
-      "revisions": 0,
-      "reason": "",
-      "notes": "",
-      "en": {
-        "status": {
-          "brief": "not_started",
-          "script": "not_started",
-          "voice": "not_started",
-          "music": "not_started",
-          "video": "not_started",
-          "review": "not_started",
-          "distribution": "not_started"
-        },
-        "pic": {
-          "brief": "",
-          "script": "",
-          "voice": "",
-          "music": "",
-          "video": "",
-          "review": "",
-          "distribution": ""
-        },
-        "completed_at": {
-          "brief": "",
-          "script": "",
-          "voice": "",
-          "music": "",
-          "video": "",
-          "review": "",
-          "distribution": ""
-        },
-        "latest_file_name": "",
-        "latest_file_path": "",
-        "latest_version": "",
-        "last_updated_at": ""
-      },
-      "es": {
-        "status": {
-          "brief": "not_started",
-          "script": "not_started",
-          "voice": "not_started",
-          "music": "not_started",
-          "video": "not_started",
-          "review": "not_started",
-          "distribution": "not_started"
-        },
-        "pic": {
-          "brief": "",
-          "script": "",
-          "voice": "",
-          "music": "",
-          "video": "",
-          "review": "",
-          "distribution": ""
-        },
-        "completed_at": {
-          "brief": "",
-          "script": "",
-          "voice": "",
-          "music": "",
-          "video": "",
-          "review": "",
-          "distribution": ""
-        },
-        "latest_file_name": "",
-        "latest_file_path": "",
-        "latest_version": "",
-        "last_updated_at": ""
-      }
-    },
-    {
-      "id": 3,
-      "project_id": "AIGC001",
-      "video_id": "VID003",
-      "product": "RUT Testosterone Booster",
-      "type": "T1",
-      "name": "111",
-      "description": "111",
-      "priority": "medium",
       "flag": false,
       "revisions": 0,
       "reason": "",
