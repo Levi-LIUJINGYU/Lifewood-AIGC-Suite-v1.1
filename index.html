@@ -276,8 +276,11 @@
   .flag-check input{width:auto;transform:scale(1.2);} .flag-check .ftxt{font-size:13px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink);}
   .rev-note{font-size:11px;color:var(--muted);margin-top:5px;}
   .se-track{border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:10px;}
-  .se-h{font-size:12px;font-weight:700;color:var(--green-800);margin-bottom:8px;display:flex;align-items:center;gap:7px;}
-  .se-h .se-latest{margin-left:auto;font-weight:500;color:var(--muted);font-family:ui-monospace,Consolas,monospace;font-size:11px;}
+  .se-h{font-size:12px;font-weight:700;color:var(--green-800);margin-bottom:8px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+  .se-h .se-lang{font-weight:700;}
+  .se-batch{display:flex;gap:6px;flex:1;justify-content:flex-end;min-width:0;}
+  .se-batch select{padding:5px 8px;border:1px solid var(--line);border-radius:7px;font-size:11px;font-family:inherit;background:#fff;max-width:130px;}
+  .se-h .se-latest{margin-left:auto;font-weight:500;color:var(--muted);font-family:ui-monospace,Consolas,monospace;font-size:11px;flex:0 0 100%;text-align:right;}
   .se-row{display:grid;grid-template-columns:18px 1fr 120px 110px 148px;align-items:center;gap:8px;padding:4px 0;}
   .se-row .se-dot{width:11px;height:11px;border-radius:3px;}
   .se-row .se-name{font-size:13px;font-weight:600;}
@@ -739,6 +742,8 @@ const I18N = {
     nameLabel:"Video name", namePh:"e.g. Creatine — energy hook", descLabel:"Description", descPh:"What this video covers…",
     prioLabel:"Priority", clickToEdit:"Click to edit name & details", addDetails:"Add details",
     modalTitle:"Video details", stepsPicTitle:"Stages, status & PIC",
+    modalBatchStatus:"Batch status", modalBatchPic:"Batch PIC",
+    modalBatchPh:"— all stages —",
     flagLabel:"Flag this video — needs redoing / has an issue",
     revLabel:"Client revision rounds used", revNote:"Client may request changes up to twice (2 rounds in scope).",
     reasonLabel:"Reason — what's the problem?", notesLabel:"Notes", notesPh:"Add any details…", cancel:"Cancel", saveBtn:"Save",
@@ -866,6 +871,8 @@ const I18N = {
     nameLabel:"视频名称", namePh:"例如：肌酸 — 能量开场", descLabel:"描述", descPh:"该视频内容…",
     prioLabel:"优先级", clickToEdit:"点击编辑名称和详情", addDetails:"添加详情",
     modalTitle:"视频详情", stepsPicTitle:"阶段、状态与负责人",
+    modalBatchStatus:"批量状态", modalBatchPic:"批量负责人",
+    modalBatchPh:"— 全部阶段 —",
     flagLabel:"标记此视频 — 需重做 / 有问题",
     revLabel:"客户已用修改轮次", revNote:"客户最多可提出两次修改（范围内 2 轮）。",
     reasonLabel:"原因 — 问题是什么？", notesLabel:"备注", notesPh:"补充任何细节…", cancel:"取消", saveBtn:"保存",
@@ -1829,12 +1836,33 @@ function addEntryVideo(){
 let editingId=null;
 function picOptions(sel){ return `<option value="">${t("pending")}</option>`+TEAM.map(p=>`<option value="${p}" ${p===sel?"selected":""}>${p}</option>`).join(""); }
 function statusOptions(sel){ return STATUSES.map(s=>`<option value="${s}" ${s===sel?"selected":""}>${t("statuses")[s]}</option>`).join(""); }
+function syncModalRowStatus(sel){
+  const row=sel.closest(".se-row"); if(!row) return;
+  const st=sel.value;
+  const dot=row.querySelector(".se-dot"); if(dot) dot.style.background=STATUS_COLOR[st]||"#c4cdc7";
+  const doneInp=row.querySelector(".se-done");
+  if(doneInp){ doneInp.disabled=!DONE.has(st); if(DONE.has(st)&&!doneInp.value) doneInp.value=toDatetimeLocal(nowDT()); }
+}
+function modalBatchStatus(trk,status){
+  if(!status) return;
+  document.querySelectorAll(`#mSteps .se-status[data-tr="${trk}"]`).forEach(sel=>{ sel.value=status; syncModalRowStatus(sel); });
+  const batch=document.querySelector(`#mSteps .se-batch-status[data-tr="${trk}"]`); if(batch) batch.value="";
+}
+function modalBatchPic(trk,pic){
+  document.querySelectorAll(`#mSteps .se-pic[data-tr="${trk}"]`).forEach(sel=>{ sel.value=pic; });
+  const batch=document.querySelector(`#mSteps .se-batch-pic[data-tr="${trk}"]`); if(batch) batch.value="";
+}
 function buildStepEditor(v){
+  const batchBar=trk=>`<div class="se-batch" onclick="event.stopPropagation()">`+
+    `<select class="se-batch-status" data-tr="${trk}" title="${esc(t("modalBatchStatus"))}" onchange="modalBatchStatus('${trk}',this.value)">`+
+    `<option value="">${esc(t("modalBatchStatus"))}</option>${statusOptions("")}</select>`+
+    `<select class="se-batch-pic" data-tr="${trk}" title="${esc(t("modalBatchPic"))}" onchange="modalBatchPic('${trk}',this.value)">`+
+    `<option value="">${esc(t("modalBatchPic"))}</option>${picOptions("")}</select></div>`;
   const block=trk=>{ const tr=v[trk]; const latest=tr.latest_file_name?`${esc(tr.latest_version)} · ${esc(fmtDate(tr.last_updated_at))} · ${esc(tr.latest_file_name)}`:t("noFile");
-    let h=`<div class="se-track"><div class="se-h"><span class="track-tag ${trk}">${trk.toUpperCase()}</span>${trk==="en"?t("english"):t("spanish")}<span class="se-latest">${latest}</span></div>`;
+    let h=`<div class="se-track"><div class="se-h"><span class="track-tag ${trk}">${trk.toUpperCase()}</span><span class="se-lang">${trk==="en"?t("english"):t("spanish")}</span>${batchBar(trk)}<span class="se-latest">${latest}</span></div>`;
     STAGES.forEach(s=>{ const st=tr.status[s];
       h+=`<div class="se-row"><span class="se-dot" style="background:${STATUS_COLOR[st]}"></span><span class="se-name">${t("stages")[s]}</span>`+
-        `<select class="se-status" data-tr="${trk}" data-stage="${s}">${statusOptions(st)}</select>`+
+        `<select class="se-status" data-tr="${trk}" data-stage="${s}" onchange="syncModalRowStatus(this)">${statusOptions(st)}</select>`+
         `<select class="se-pic" data-tr="${trk}" data-stage="${s}">${picOptions(tr.pic[s])}</select>`+
         `<input class="se-done" type="datetime-local" data-tr="${trk}" data-stage="${s}" value="${toDatetimeLocal(tr.completed_at[s])}" ${DONE.has(st)?"":"disabled"} title="${esc(t("completedAtLabel"))}" /></div>`;
     });
