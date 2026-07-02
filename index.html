@@ -424,7 +424,7 @@
     <div class="sec-title" data-i18n="anomSec">Anomaly alerts</div>
     <div class="anoms" id="anoms"></div>
     <div class="ov-grid" style="margin-top:18px">
-      <div class="card"><h4 data-i18n="byStep">Stages done by language</h4><div class="chart-box" style="height:230px"><canvas id="stageChart"></canvas></div></div>
+      <div class="card"><h4 data-i18n="byStep">Stage completions vs daily target</h4><div class="chart-box" style="height:230px"><canvas id="stageChart"></canvas></div></div>
       <div class="ov-right">
         <div class="card"><h4 data-i18n="statusDist">Status distribution (200 tracks)</h4><div class="chart-box" style="height:200px"><canvas id="statusChart"></canvas></div></div>
         <div class="card"><h4 data-i18n="byLangProgress">Delivery progress by language</h4><div class="langbars" id="langBars"></div></div>
@@ -693,7 +693,8 @@ const I18N = {
     dailyProgress:"Progress bar",
     toolsSec:"Related tools", tool1Name:"File Agent (LifewoodFileAgent)", tool1Desc:"NAS file sync & project registry", tool2Name:"Storyboard Studio", tool2Desc:"AI storyboard & script generator", home:"Home",
     toolsHint:"Storyboard Studio is bundled in this site and opens directly. File Agent is a separate backend (LifewoodFileAgent.exe + your NAS) — set its address via FILE_AGENT_URL in index.html before publishing.",
-    byStep:"Stages done by language", byLangProgress:"Delivery progress by language", issuesSec:"Issues & revisions",
+    byStep:"Stage completions vs daily target", byLangProgress:"Delivery progress by language", issuesSec:"Issues & revisions",
+    chartDone:"Done", chartPlan:"Daily target",
     timelineTitle:"Project timeline", spanishTitle:"Spanish translation status", covSub:"of videos translated to Spanish",
     esStageSec:"Spanish stages complete (of 100)", byLangCompletion:"Completion by language", analytics:"Analytics",
     completionByType:"Completion by type", byProduct:"Progress by product (EN + ES)", tracker:"Video tracker",
@@ -830,7 +831,8 @@ const I18N = {
     dailyProgress:"完成进度",
     toolsSec:"相关工具", tool1Name:"文件代理 (LifewoodFileAgent)", tool1Desc:"NAS 文件同步与项目登记", tool2Name:"分镜工作室", tool2Desc:"AI 分镜 / 脚本生成", home:"主页",
     toolsHint:"分镜工作室已内置于本站点，可直接打开。文件代理是独立后端（LifewoodFileAgent.exe + 你的 NAS）—— 发布前请在 index.html 的 FILE_AGENT_URL 中设置其地址。",
-    byStep:"各阶段完成数（按语言）", byLangProgress:"按语言交付进度", issuesSec:"问题与修改",
+    byStep:"各阶段完成数 vs 计划", byLangProgress:"按语言交付进度", issuesSec:"问题与修改",
+    chartDone:"完成", chartPlan:"计划",
     timelineTitle:"项目时间线", spanishTitle:"西班牙语翻译状态", covSub:"的视频已翻译为西班牙语",
     esStageSec:"西班牙语各阶段完成数（共 100）", byLangCompletion:"按语言完成情况", analytics:"数据分析",
     completionByType:"按类型完成情况", byProduct:"按产品进度（英 + 西）", tracker:"视频追踪表",
@@ -1292,10 +1294,10 @@ function setDailyVideoGoal(val){
 function setDailyStageGoal(val){
   DAILY_STAGE_GOAL=Math.max(0,parseInt(String(val),10)||0);
   localStorage.setItem("bu_daily_stage_goal",String(DAILY_STAGE_GOAL));
-  schedulePersist(); renderDailyOutput();
+  schedulePersist(); renderDailyOutput(); renderCharts();
 }
 function setDailyStage(val){
-  if(val&&STAGES.includes(val)){ DAILY_STAGE_KEY=val; localStorage.setItem("bu_daily_stage",val); schedulePersist(); renderDailyOutput(); }
+  if(val&&STAGES.includes(val)){ DAILY_STAGE_KEY=val; localStorage.setItem("bu_daily_stage",val); schedulePersist(); renderDailyOutput(); renderCharts(); }
 }
 function dailyPanelCards(today,goal,goalSetter,unitKey,todayLabel,todayHint,firstExtra){
   const pct=goal>0?Math.min(100,Math.round(today/goal*100)):0;
@@ -1356,7 +1358,7 @@ let stageChart, statusChart, langChart, typeChart, transChart, dailyChart;
 function initCharts(){
   if(typeof Chart==="undefined") return;
   Chart.defaults.font.family='"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif'; Chart.defaults.color="#5e7065"; Chart.defaults.animation=false;
-  stageChart=new Chart(document.getElementById("stageChart"),{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:5,stack:"s"},{label:"",data:[],backgroundColor:"#e9a020",borderRadius:5,stack:"s"}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{precision:0}}}}});
+  stageChart=new Chart(document.getElementById("stageChart"),{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:5},{label:"",data:[],backgroundColor:"#c8d9ce",borderRadius:5}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:false},y:{stacked:false,beginAtZero:true,ticks:{precision:0}}}}});
   statusChart=new Chart(document.getElementById("statusChart"),{type:"doughnut",data:{labels:[],datasets:[{data:[],backgroundColor:[]}]},options:{plugins:{legend:{position:"right",labels:{boxWidth:12,font:{size:11}}}},cutout:"58%",maintainAspectRatio:false}});
   langChart=new Chart(document.getElementById("langChart"),{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:4,stack:"l"},{label:"",data:[],backgroundColor:"#e3ece6",borderRadius:4,stack:"l"}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{precision:0}}}}});
   typeChart=new Chart(document.getElementById("typeChart"),{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:4,stack:"t"},{label:"",data:[],backgroundColor:"#e3ece6",borderRadius:4,stack:"t"}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{precision:0}}}}});
@@ -1475,9 +1477,10 @@ function renderTranslation(){
 }
 function renderCharts(){
   if(typeof Chart==="undefined"||!stageChart) return;
+  const goal=Math.max(0,+DAILY_STAGE_GOAL||0);
   stageChart.data.labels=STAGES.map(s=>t("stages")[s]);
-  stageChart.data.datasets[0].label=t("english"); stageChart.data.datasets[0].data=STAGES.map(s=>stageDoneTrack("en",s));
-  stageChart.data.datasets[1].label=t("spanish"); stageChart.data.datasets[1].data=STAGES.map(s=>stageDoneTrack("es",s)); stageChart.update();
+  stageChart.data.datasets[0].label=t("chartDone"); stageChart.data.datasets[0].data=STAGES.map(s=>stageDoneCount(s));
+  stageChart.data.datasets[1].label=t("chartPlan"); stageChart.data.datasets[1].data=STAGES.map(()=>goal); stageChart.update();
   // status distribution (overall, across 200 tracks)
   const ovs=["not_started","in_progress","reviewing","rejected","abnormal","completed"]; const oc={}; ovs.forEach(o=>oc[o]=0);
   DATA.forEach(v=>TRACKS.forEach(trk=>oc[trackOverall(v[trk])]++));
