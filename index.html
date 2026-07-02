@@ -1355,10 +1355,29 @@ function anomTotal(a){ return a.naming.length+a.prereq.length+a.rejected.length+
 
 /* ============================== Charts ============================== */
 let stageChart, statusChart, langChart, typeChart, transChart, dailyChart;
+const barValueLabelsPlugin={
+  id:"barValueLabels",
+  afterDatasetsDraw(chart){
+    const ctx=chart.ctx;
+    ctx.save();
+    ctx.font='600 11px "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign="center"; ctx.textBaseline="bottom";
+    chart.data.datasets.forEach((ds,di)=>{
+      const meta=chart.getDatasetMeta(di);
+      meta.data.forEach((bar,idx)=>{
+        const val=ds.data[idx];
+        if(val==null||val===0) return;
+        ctx.fillStyle=di===0?"#14401f":"#4a6354";
+        ctx.fillText(String(val), bar.x, bar.y-4);
+      });
+    });
+    ctx.restore();
+  }
+};
 function initCharts(){
   if(typeof Chart==="undefined") return;
   Chart.defaults.font.family='"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif'; Chart.defaults.color="#5e7065"; Chart.defaults.animation=false;
-  stageChart=new Chart(document.getElementById("stageChart"),{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:5},{label:"",data:[],backgroundColor:"#c8d9ce",borderRadius:5}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:false},y:{stacked:false,beginAtZero:true,ticks:{precision:0}}}}});
+  stageChart=new Chart(document.getElementById("stageChart"),{type:"bar",plugins:[barValueLabelsPlugin],data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:5},{label:"",data:[],backgroundColor:"#c8d9ce",borderRadius:5}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:false},y:{stacked:false,beginAtZero:true,ticks:{precision:0}}}}});
   statusChart=new Chart(document.getElementById("statusChart"),{type:"doughnut",data:{labels:[],datasets:[{data:[],backgroundColor:[]}]},options:{plugins:{legend:{position:"right",labels:{boxWidth:12,font:{size:11}}}},cutout:"58%",maintainAspectRatio:false}});
   langChart=new Chart(document.getElementById("langChart"),{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:4,stack:"l"},{label:"",data:[],backgroundColor:"#e3ece6",borderRadius:4,stack:"l"}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{precision:0}}}}});
   typeChart=new Chart(document.getElementById("typeChart"),{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:4,stack:"t"},{label:"",data:[],backgroundColor:"#e3ece6",borderRadius:4,stack:"t"}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{precision:0}}}}});
