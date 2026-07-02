@@ -1500,8 +1500,11 @@ function renderTranslation(){
 function renderCharts(){
   if(typeof Chart==="undefined"||!stageChart) return;
   const goal=Math.max(0,+DAILY_STAGE_GOAL||0);
+  const doneData=STAGES.map(s=>stageDoneCount(s));
+  const peak=Math.max(goal,...doneData,1);
+  stageChart.options.scales.y.max=Math.max(Math.ceil(peak*1.25),peak+2);
   stageChart.data.labels=STAGES.map(s=>t("stages")[s]);
-  stageChart.data.datasets[0].label=t("chartDone"); stageChart.data.datasets[0].data=STAGES.map(s=>stageDoneCount(s));
+  stageChart.data.datasets[0].label=t("chartDone"); stageChart.data.datasets[0].data=doneData;
   stageChart.data.datasets[1].label=t("chartPlan"); stageChart.data.datasets[1].data=STAGES.map(()=>goal); stageChart.update();
   // status distribution (overall, across 200 tracks)
   const ovs=["not_started","in_progress","reviewing","rejected","abnormal","completed"]; const oc={}; ovs.forEach(o=>oc[o]=0);
