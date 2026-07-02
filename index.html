@@ -1377,10 +1377,35 @@ const barValueLabelsPlugin={
     ctx.restore();
   }
 };
+function renderStageChart(){
+  const el=document.getElementById("stageChart");
+  if(!el||typeof Chart==="undefined") return;
+  const goal=Math.max(0,+DAILY_STAGE_GOAL||0);
+  const doneData=STAGES.map(s=>stageDoneCount(s));
+  const peak=Math.max(goal,...doneData,1);
+  const yMax=Math.max(Math.ceil(peak*1.25),peak+2);
+  if(stageChart) stageChart.destroy();
+  stageChart=new Chart(el,{
+    type:"bar",
+    plugins:[barValueLabelsPlugin],
+    data:{
+      labels:STAGES.map(s=>t("stages")[s]),
+      datasets:[
+        {label:t("chartPlan"),data:STAGES.map(()=>goal),backgroundColor:"#c8d9ce",borderRadius:5},
+        {label:t("chartDone"),data:doneData,backgroundColor:"#2e8b50",borderRadius:5}
+      ]
+    },
+    options:{
+      plugins:{legend:{position:"bottom",labels:{sort:(a,b)=>{const p=t("chartPlan");if(a.text===p)return-1;if(b.text===p)return 1;return 0;}}}},
+      maintainAspectRatio:false,
+      datasets:{bar:{categoryPercentage:0.72,barPercentage:0.9}},
+      scales:{x:{stacked:false,grid:{display:false}},y:{beginAtZero:true,max:yMax,ticks:{precision:0}}}
+    }
+  });
+}
 function initCharts(){
   if(typeof Chart==="undefined") return;
   Chart.defaults.font.family='"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif'; Chart.defaults.color="#5e7065"; Chart.defaults.animation=false;
-  stageChart=new Chart(document.getElementById("stageChart"),{type:"bar",plugins:[barValueLabelsPlugin],data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#c8d9ce",borderRadius:5,barPercentage:0.75},{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:5,barPercentage:0.75}]},options:{parsing:{xAxisKey:"x",yAxisKey:"y"},plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{type:"linear",offset:true,min:-0.5,max:STAGES.length-0.5,ticks:{stepSize:1,callback:v=>{const s=STAGES[v];return s?t("stages")[s]:"";}}},y:{stacked:false,beginAtZero:true,ticks:{precision:0}}}}});
   statusChart=new Chart(document.getElementById("statusChart"),{type:"doughnut",data:{labels:[],datasets:[{data:[],backgroundColor:[]}]},options:{plugins:{legend:{position:"right",labels:{boxWidth:12,font:{size:11}}}},cutout:"58%",maintainAspectRatio:false}});
   langChart=new Chart(document.getElementById("langChart"),{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:4,stack:"l"},{label:"",data:[],backgroundColor:"#e3ece6",borderRadius:4,stack:"l"}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{precision:0}}}}});
   typeChart=new Chart(document.getElementById("typeChart"),{type:"bar",data:{labels:[],datasets:[{label:"",data:[],backgroundColor:"#2e8b50",borderRadius:4,stack:"t"},{label:"",data:[],backgroundColor:"#e3ece6",borderRadius:4,stack:"t"}]},options:{plugins:{legend:{position:"bottom"}},maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{precision:0}}}}});
@@ -1498,19 +1523,8 @@ function renderTranslation(){
      <div class="stat blue"><div class="l">${t("english")} ✓</div><div class="v">${DATA.filter(v=>trackComplete(v.en)).length}</div></div>`;
 }
 function renderCharts(){
-  if(typeof Chart==="undefined"||!stageChart) return;
-  const goal=Math.max(0,+DAILY_STAGE_GOAL||0);
-  const doneData=STAGES.map(s=>stageDoneCount(s));
-  const peak=Math.max(goal,...doneData,1);
-  stageChart.options.scales.y.max=Math.max(Math.ceil(peak*1.25),peak+2);
-  stageChart.options.scales.x.max=STAGES.length-0.5;
-  stageChart.data.labels=[];
-  stageChart.data.datasets[0].label=t("chartPlan");
-  stageChart.data.datasets[0].backgroundColor="#c8d9ce";
-  stageChart.data.datasets[0].data=STAGES.map((s,i)=>({x:i-0.22,y:goal}));
-  stageChart.data.datasets[1].label=t("chartDone");
-  stageChart.data.datasets[1].backgroundColor="#2e8b50";
-  stageChart.data.datasets[1].data=STAGES.map((s,i)=>({x:i+0.22,y:doneData[i]})); stageChart.update();
+  if(typeof Chart==="undefined") return;
+  renderStageChart();
   // status distribution (overall, across 200 tracks)
   const ovs=["not_started","in_progress","reviewing","rejected","abnormal","completed"]; const oc={}; ovs.forEach(o=>oc[o]=0);
   DATA.forEach(v=>TRACKS.forEach(trk=>oc[trackOverall(v[trk])]++));
