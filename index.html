@@ -1360,15 +1360,18 @@ const barValueLabelsPlugin={
   afterDatasetsDraw(chart){
     const ctx=chart.ctx;
     ctx.save();
-    ctx.font='600 11px "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif';
-    ctx.textAlign="center"; ctx.textBaseline="bottom";
+    ctx.font='700 12px "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign="center"; ctx.textBaseline="middle";
+    const labelColors=["#ffffff","#0e3a23"];
     chart.data.datasets.forEach((ds,di)=>{
       const meta=chart.getDatasetMeta(di);
       meta.data.forEach((bar,idx)=>{
         const val=ds.data[idx];
         if(val==null||val===0) return;
-        ctx.fillStyle=di===0?"#14401f":"#4a6354";
-        ctx.fillText(String(val), bar.x, bar.y-4);
+        const h=Math.abs(bar.base-bar.y);
+        if(h<14) return;
+        ctx.fillStyle=labelColors[di]||"#16241b";
+        ctx.fillText(String(val), bar.x, (bar.y+bar.base)/2);
       });
     });
     ctx.restore();
