@@ -424,7 +424,7 @@
     <div class="sec-title" data-i18n="anomSec">Anomaly alerts</div>
     <div class="anoms" id="anoms"></div>
     <div class="ov-grid" style="margin-top:18px">
-      <div class="card"><h4 data-i18n="byStep">Tracks by current stage</h4><div class="chart-box" style="height:230px"><canvas id="stageChart"></canvas></div></div>
+      <div class="card"><h4 data-i18n="byStep">Stages done by language</h4><div class="chart-box" style="height:230px"><canvas id="stageChart"></canvas></div></div>
       <div class="ov-right">
         <div class="card"><h4 data-i18n="statusDist">Status distribution (200 tracks)</h4><div class="chart-box" style="height:200px"><canvas id="statusChart"></canvas></div></div>
         <div class="card"><h4 data-i18n="byLangProgress">Delivery progress by language</h4><div class="langbars" id="langBars"></div></div>
@@ -693,7 +693,7 @@ const I18N = {
     dailyProgress:"Progress bar",
     toolsSec:"Related tools", tool1Name:"File Agent (LifewoodFileAgent)", tool1Desc:"NAS file sync & project registry", tool2Name:"Storyboard Studio", tool2Desc:"AI storyboard & script generator", home:"Home",
     toolsHint:"Storyboard Studio is bundled in this site and opens directly. File Agent is a separate backend (LifewoodFileAgent.exe + your NAS) — set its address via FILE_AGENT_URL in index.html before publishing.",
-    byStep:"Tracks by current stage", byLangProgress:"Delivery progress by language", issuesSec:"Issues & revisions",
+    byStep:"Stages done by language", byLangProgress:"Delivery progress by language", issuesSec:"Issues & revisions",
     timelineTitle:"Project timeline", spanishTitle:"Spanish translation status", covSub:"of videos translated to Spanish",
     esStageSec:"Spanish stages complete (of 100)", byLangCompletion:"Completion by language", analytics:"Analytics",
     completionByType:"Completion by type", byProduct:"Progress by product (EN + ES)", tracker:"Video tracker",
@@ -830,7 +830,7 @@ const I18N = {
     dailyProgress:"完成进度",
     toolsSec:"相关工具", tool1Name:"文件代理 (LifewoodFileAgent)", tool1Desc:"NAS 文件同步与项目登记", tool2Name:"分镜工作室", tool2Desc:"AI 分镜 / 脚本生成", home:"主页",
     toolsHint:"分镜工作室已内置于本站点，可直接打开。文件代理是独立后端（LifewoodFileAgent.exe + 你的 NAS）—— 发布前请在 index.html 的 FILE_AGENT_URL 中设置其地址。",
-    byStep:"按当前阶段统计轨道", byLangProgress:"按语言交付进度", issuesSec:"问题与修改",
+    byStep:"各阶段完成数（按语言）", byLangProgress:"按语言交付进度", issuesSec:"问题与修改",
     timelineTitle:"项目时间线", spanishTitle:"西班牙语翻译状态", covSub:"的视频已翻译为西班牙语",
     esStageSec:"西班牙语各阶段完成数（共 100）", byLangCompletion:"按语言完成情况", analytics:"数据分析",
     completionByType:"按类型完成情况", byProduct:"按产品进度（英 + 西）", tracker:"视频追踪表",
@@ -1475,11 +1475,9 @@ function renderTranslation(){
 }
 function renderCharts(){
   if(typeof Chart==="undefined"||!stageChart) return;
-  const cats=STAGES.concat(["__done"]);
-  stageChart.data.labels=cats.map(c=>c==="__done"?t("completed"):t("stages")[c]);
-  const bucket=(tr)=>{ const c=trackCurrent(tr); return c===null?"__done":c; };
-  stageChart.data.datasets[0].label=t("english"); stageChart.data.datasets[0].data=cats.map(c=>DATA.filter(v=>bucket(v.en)===c).length);
-  stageChart.data.datasets[1].label=t("spanish"); stageChart.data.datasets[1].data=cats.map(c=>DATA.filter(v=>bucket(v.es)===c).length); stageChart.update();
+  stageChart.data.labels=STAGES.map(s=>t("stages")[s]);
+  stageChart.data.datasets[0].label=t("english"); stageChart.data.datasets[0].data=STAGES.map(s=>stageDoneTrack("en",s));
+  stageChart.data.datasets[1].label=t("spanish"); stageChart.data.datasets[1].data=STAGES.map(s=>stageDoneTrack("es",s)); stageChart.update();
   // status distribution (overall, across 200 tracks)
   const ovs=["not_started","in_progress","reviewing","rejected","abnormal","completed"]; const oc={}; ovs.forEach(o=>oc[o]=0);
   DATA.forEach(v=>TRACKS.forEach(trk=>oc[trackOverall(v[trk])]++));
