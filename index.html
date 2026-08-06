@@ -235,6 +235,15 @@
   .chip-stage.cur{box-shadow:0 0 0 2px var(--gold-soft);outline:1px solid var(--gold);}
   .track-tag{display:inline-block;padding:1px 6px;border-radius:5px;font-size:10px;font-weight:800;margin-right:6px;}
   .track-tag.en{background:#e4eefb;color:#2456a6;} .track-tag.es{background:var(--gold-soft);color:#9a6510;}
+  .biz-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0 4px;margin:0 0 6px;}
+  .biz-bar label{font-size:12px;font-weight:700;color:var(--green-800);text-transform:uppercase;letter-spacing:.3px;}
+  .biz-bar select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;background:#fff;color:var(--green-800);min-width:160px;}
+  .biz-bar .biz-hint{font-size:12px;color:var(--muted);}
+  .lang-select{padding:5px 8px;border:1px solid var(--line);border-radius:7px;font-size:12px;font-weight:700;font-family:inherit;background:#fff;color:var(--green-800);min-width:88px;}
+  .biz-cell{font-size:12.5px;font-weight:700;color:var(--green-800);white-space:nowrap;}
+  .admin-list{display:flex;flex-direction:column;gap:8px;}
+  .admin-list .team-row input{flex:1;}
+
   .ov-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;}
   .latest-cell{font-size:11px;color:var(--muted);font-family:ui-monospace,Consolas,monospace;max-width:200px;}
   .latest-cell .lf{color:var(--green-800);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;}
@@ -386,6 +395,14 @@
   <a class="tab" href="workflow.html" data-i18n="navWorkflow">⛏ Workflow</a>
 </div></div>
 
+<div class="wrap" id="bizFilterWrap" style="padding-top:12px;padding-bottom:0">
+  <div class="biz-bar" id="bizFilterBar">
+    <label data-i18n="bizFilter">Business</label>
+    <select id="gBiz" onchange="setBusinessFilter(this.value)"></select>
+    <span class="biz-hint" data-i18n="bizFilterHint">Default: all businesses (totals)</span>
+  </div>
+</div>
+
 <!-- Lock screen (shown until signed in) -->
 <div class="lockscreen" id="lockScreen">
   <div class="lock-card">
@@ -455,6 +472,7 @@
       <button class="btn" onclick="clearSel()" data-i18n="clearSel">Clear</button>
     </div>
     <div class="toolbar">
+      <select id="fBiz" onchange="setBusinessFilter(this.value)"></select>
       <input type="text" id="search" oninput="render()" data-i18n-ph="searchPh" placeholder="Search…" />
       <select id="fStage" onchange="render()"></select>
       <select id="fOverall" onchange="render()"></select>
@@ -557,6 +575,18 @@
   <section id="view-admin" class="view" style="display:none">
     <div class="sec-title" data-i18n="adminTitle">Admin · fill production data</div>
     <div class="footer-note" data-i18n="adminHint" style="text-align:left;margin:0 0 14px">Changes here update your local data and apply across all tabs.</div>
+    <div class="charts" style="grid-template-columns:1fr 1fr;margin-bottom:16px;">
+      <div class="card">
+        <h4 data-i18n="bizManageTitle">Businesses</h4>
+        <div class="footer-note" style="text-align:left;margin:0 0 10px" data-i18n="bizManageHint">Add businesses shown in the tracker and global filter.</div>
+        <div class="admin-list" id="adminBiz"></div>
+      </div>
+      <div class="card">
+        <h4 data-i18n="langManageTitle">Languages</h4>
+        <div class="footer-note" style="text-align:left;margin:0 0 10px" data-i18n="langManageHint">Language dropdown options. New languages get blank stage tracks on every video.</div>
+        <div class="admin-list" id="adminLang"></div>
+      </div>
+    </div>
     <div class="charts" style="grid-template-columns:1.3fr 1fr;">
       <div class="card">
         <h4 data-i18n="bulkPicTitle">Bulk assign PIC</h4>
@@ -578,7 +608,7 @@
     <div class="sec-title" data-i18n="adminDataTitle">Video data</div>
     <div class="table-card"><div class="tbl-wrap"><table>
       <thead><tr>
-        <th data-i18n="colNum">ID</th><th data-i18n="colProductH">Product</th><th data-i18n="colType">Type</th>
+        <th data-i18n="colNum">ID</th><th data-i18n="colBiz">Business</th><th data-i18n="colProductH">Product</th><th data-i18n="colType">Type</th>
         <th data-i18n="prioLabel">Priority</th><th data-i18n="nameLabel">Video name</th><th data-i18n="descLabel">Description</th>
       </tr></thead>
       <tbody id="adminBody"></tbody>
@@ -592,13 +622,14 @@
     <h3 data-i18n="modalTitle">Video details</h3>
     <div class="msub" id="mSub"></div>
     <div class="row2">
-      <div class="field"><label data-i18n="colProductH">Product</label><input type="text" id="mProduct" list="productList" /></div>
+      <div class="field"><label data-i18n="colBiz">Business</label><select id="mBiz"></select></div>
       <div class="field"><label data-i18n="colType">Type</label><select id="mType"></select></div>
     </div>
     <div class="row2">
-      <div class="field"><label data-i18n="nameLabel">Video name</label><input type="text" id="mName" data-i18n-ph="namePh" placeholder="e.g. Creatine — energy hook" /></div>
+      <div class="field"><label data-i18n="colProductH">Product</label><input type="text" id="mProduct" list="productList" /></div>
       <div class="field"><label data-i18n="prioLabel">Priority</label><select id="mPrio"></select></div>
     </div>
+    <div class="field"><label data-i18n="nameLabel">Video name</label><input type="text" id="mName" data-i18n-ph="namePh" placeholder="e.g. Creatine — energy hook" /></div>
     <div class="field"><label data-i18n="descLabel">Description</label><textarea id="mDesc" data-i18n-ph="descPh" placeholder="What this video covers…"></textarea></div>
     <div class="field"><label data-i18n="stepsPicTitle">Stages, status &amp; PIC</label><div id="mSteps"></div></div>
     <div class="field"><label class="flag-check"><input type="checkbox" id="mFlag" /><span class="ftxt" data-i18n="flagLabel">Flag this video — needs redoing / has an issue</span></label></div>
@@ -656,6 +687,7 @@
     <h3 data-i18n="enterDataTitle">Add videos</h3>
     <div class="msub" style="font-family:inherit" data-i18n="enterDataSub">Demo data is cleared. Add your videos below — each entry appears in all dashboard tabs immediately.</div>
     <div id="entryCount" style="font-size:12px;font-weight:700;color:var(--green-700);margin-bottom:12px"></div>
+    <div class="field"><label data-i18n="colBiz">Business</label><select id="eBiz"></select></div>
     <div class="field"><label data-i18n="colProductH">Product</label><input type="text" id="eProduct" list="productList" data-i18n-ph="enterProductPh" placeholder="Product name" onkeydown="if(event.key==='Enter')addEntryVideo()" /></div>
     <datalist id="productList"></datalist>
     <div class="row2">
@@ -681,12 +713,12 @@ const I18N = {
     adminTitle:"Admin · fill production data", adminHint:"Changes here update your local data and apply across all tabs.",
     bulkPicTitle:"Bulk assign PIC to a stage", applyAll:"Apply to all", teamTitle:"Team members (PICs)",
     bulkNamesTitle:"Bulk fill names (one per line, in video order)", namesPh:"Creatine — energy hook\nRUT — strength explainer\n…",
-    applyNames:"Apply names", adminDataTitle:"Video data (edit priority, name & description inline)", trackBoth:"Both (EN + ES)",
+    applyNames:"Apply names", adminDataTitle:"Video data (edit priority, name & description inline)", trackBoth:"All languages",
     colProductH:"Product", newPicPh:"New member name", addPic:"Add", removePicT:"Remove",
     picApplied:"PIC applied across all videos.", namesApplied:"{n} names applied.",
-    pipelineSec:"Production pipeline · stages done (of 200 tracks)", anomSec:"Anomaly alerts", statusDist:"Status distribution (200 tracks)",
+    pipelineSec:"Production pipeline · stages done", anomSec:"Anomaly alerts", statusDist:"Status distribution",
     dailyOutputSec:"Daily output",
-    dailyVideoSec:"Video output", dailyVideoToday:"Today's videos", dailyVideoTodayHint:"Videos fully completed today (EN + ES)",
+    dailyVideoSec:"Video output", dailyVideoToday:"Today's videos", dailyVideoTodayHint:"Videos fully completed today (all languages)",
     dailyStageSec:"Stage output", dailyStagePick:"Stage", dailyStageTodayHint:"Tracks marked done for this stage today",
     dailyGoal:"Daily goal", dailyGoalPh:"e.g. 20", dailyVideoGoalUnit:"videos / day", dailyStageGoalUnit:"tracks / day",
     dailyPct:"Goal progress", dailyRemain:"{n} to go", dailyNoGoal:"Set a daily goal above",
@@ -697,10 +729,10 @@ const I18N = {
     chartDone:"Done", chartPlan:"Daily target",
     timelineTitle:"Project timeline", spanishTitle:"Spanish translation status", covSub:"of videos translated to Spanish",
     esStageSec:"Spanish stages complete (of 100)", byLangCompletion:"Completion by language", analytics:"Analytics",
-    completionByType:"Completion by type", byProduct:"Progress by product (EN + ES)", tracker:"Video tracker",
+    completionByType:"Completion by type", byProduct:"Progress by product", tracker:"Video tracker",
     completeWord:"complete", onTrack:"On track", atRisk:"At risk", toDelivery:"days to delivery",
     tlKickoff:"Kickoff · 1 Jul 2026", tlProduction:"Production · Jul 2026", tlDelivery:"Delivery · 1 Aug 2026", todayLabel:"Today",
-    kTotal:"Total deliverables", kTotalHint:"100 videos × EN + ES", kDone:"Completed", kProd:"In production",
+    kTotal:"Total deliverables", kTotalHint:"Videos × languages (scoped by business filter)", kDone:"Completed", kProd:"In production",
     kReview:"Pending review", kRejected:"Rejected", kDistributed:"Distributed",
     stShowing:"Showing", stCompleted:"Completed", stInProgress:"In production", stRejected:"Rejected", stTotal:"Total",
     flaggedLbl:"Flagged", inRevision:"In revision", revLimit:"Revision limit",
@@ -727,8 +759,14 @@ const I18N = {
     saveToFile:"Saved · dashboard-data.json", saveToFilePending:"Saving…", saveToFileErr:"Save failed", saveLocalOnly:"Browser only (open via Start Lifewood AIGC.bat for JSON file)",
     fileApiOff:"JSON file offline — close this tab, double-click Start Lifewood AIGC.bat, use http://localhost:8765",
     flaggedCount:"Flagged with issues", revLimitReached:"Revision limit reached",
-    colNum:"ID", colVideo:"Video", colType:"Type", colEN:"English stages", colES:"Spanish stages",
+    colNum:"ID", colVideo:"Video", colType:"Type", colBiz:"Business", colLang:"Language", colStage:"Stages",
+    colEN:"English stages", colES:"Spanish stages",
     colCurrent:"Current · state", colLatest:"Latest file", colCompletedAt:"Completed at", colIssue:"Issue", colProgress:"Progress",
+    bizFilter:"Business", bizFilterHint:"Default: all businesses (totals)", allBiz:"All businesses",
+    bizManageTitle:"Businesses", bizManageHint:"Add businesses shown in the tracker and global filter.",
+    langManageTitle:"Languages", langManageHint:"Language dropdown options. New languages get blank stage tracks on every video.",
+    newBizPh:"New business name", addBiz:"Add business", newLangIdPh:"id (e.g. fr)", newLangEnPh:"English label", newLangZhPh:"Chinese label", addLang:"Add language",
+    removeBizT:"Remove business", removeLangT:"Remove language",
     completedAtLabel:"Done at", noCompletedAt:"— not done —",
     dailyWorkload:"Daily workload (stage completions)", dailyWorkloadHint:"Each stage marked done counts once toward that day. Used for daily output tracking.",
     todayCompletions:"Today's completions",
@@ -769,7 +807,7 @@ const I18N = {
     helpPagesH:"What each page does",
     helpPages:[
       ["Overview","Headline metrics (total / completed / in production / pending review / rejected / distributed), the 7-stage pipeline, anomaly alerts, charts and timeline."],
-      ["Video tracker","Every video's EN and ES stage statuses, current stage, latest file and progress. Click a stage chip to cycle its status; use batch actions, filters, and Export / Import / Merge."],
+      ["Video tracker","Business column, language dropdown, stage chips, current state, latest file and progress. Filter by business globally; click a stage chip to cycle status."],
       ["File sync","The naming convention, a sync simulator (paste filenames to see updates), the video_file_sync_log, and the full anomaly list."],
       ["Spanish status","Spanish translation coverage and per-stage completion."],
       ["Analytics","Completion by video type and by product."],
@@ -819,13 +857,13 @@ const I18N = {
     adminTitle:"管理 · 填写生产数据", adminHint:"此处的修改会更新本地数据并在所有页面生效。",
     bulkPicTitle:"批量为某阶段指派负责人", applyAll:"应用到全部", teamTitle:"团队成员（负责人）",
     bulkNamesTitle:"批量填写名称（每行一个，按视频顺序）", namesPh:"肌酸 — 能量开场\nRUT — 力量讲解\n…",
-    applyNames:"应用名称", adminDataTitle:"视频数据（直接编辑优先级、名称与描述）", trackBoth:"两者（英 + 西）",
+    applyNames:"应用名称", adminDataTitle:"视频数据（直接编辑优先级、名称与描述）", trackBoth:"全部语言",
     colProductH:"产品", newPicPh:"新成员名称", addPic:"添加", removePicT:"移除",
     picApplied:"已为所有视频应用负责人。", namesApplied:"已应用 {n} 个名称。",
-    pipelineSec:"生产管线 · 各阶段完成数（共 200 条轨道）", anomSec:"异常提醒", statusDist:"状态分布（200 条轨道）",
+    pipelineSec:"生产管线 · 各阶段完成数", anomSec:"异常提醒", statusDist:"状态分布",
     dailyOutputSec:"每日产量统计",
-    dailyVideoSec:"视频产量", dailyVideoToday:"今日视频", dailyVideoTodayHint:"今日英西双轨均完成的视频数",
-    dailyStageSec:"阶段产量", dailyStagePick:"选择阶段", dailyStageTodayHint:"今日该阶段标记完成的轨道数（英 + 西）",
+    dailyVideoSec:"视频产量", dailyVideoToday:"今日视频", dailyVideoTodayHint:"今日全部语言均已完成的视频数",
+    dailyStageSec:"阶段产量", dailyStagePick:"选择阶段", dailyStageTodayHint:"今日该阶段标记完成的轨道数",
     dailyGoal:"每日目标", dailyGoalPh:"例如 20", dailyVideoGoalUnit:"个/天", dailyStageGoalUnit:"条/天",
     dailyPct:"目标进度", dailyRemain:"还差 {n}", dailyNoGoal:"请在上方填写每日目标",
     dailyProgress:"完成进度",
@@ -835,10 +873,10 @@ const I18N = {
     chartDone:"完成", chartPlan:"计划",
     timelineTitle:"项目时间线", spanishTitle:"西班牙语翻译状态", covSub:"的视频已翻译为西班牙语",
     esStageSec:"西班牙语各阶段完成数（共 100）", byLangCompletion:"按语言完成情况", analytics:"数据分析",
-    completionByType:"按类型完成情况", byProduct:"按产品进度（英 + 西）", tracker:"视频追踪表",
+    completionByType:"按类型完成情况", byProduct:"按产品进度", tracker:"视频追踪表",
     completeWord:"完成", onTrack:"进度正常", atRisk:"有风险", toDelivery:"天后交付",
     tlKickoff:"启动 · 2026年7月1日", tlProduction:"制作 · 2026年7月", tlDelivery:"交付 · 2026年8月1日", todayLabel:"今天",
-    kTotal:"交付件总数", kTotalHint:"100 个视频 × 英 + 西", kDone:"已完成", kProd:"制作中",
+    kTotal:"交付件总数", kTotalHint:"视频 × 语言（受业务筛选影响）", kDone:"已完成", kProd:"制作中",
     kReview:"待审核", kRejected:"被退回", kDistributed:"已分发",
     stShowing:"显示中", stCompleted:"已完成", stInProgress:"制作中", stRejected:"被退回", stTotal:"总数",
     flaggedLbl:"已标记", inRevision:"修改中", revLimit:"达修改上限",
@@ -857,8 +895,14 @@ const I18N = {
     resetDone:"已重置。已下载备份文件，可点击“撤销重置”恢复。",
     footer:"数据保存在本浏览器本地。在生产环境中由 NAS 同步系统写入 video_progress 表，看板只读取该表。使用“导出备份”可在不同电脑间共享或迁移。",
     flaggedCount:"有问题的标记", revLimitReached:"已达修改上限",
-    colNum:"编号", colVideo:"视频", colType:"类型", colEN:"英语阶段", colES:"西班牙语阶段",
+    colNum:"编号", colVideo:"视频", colType:"类型", colBiz:"业务", colLang:"语言", colStage:"阶段",
+    colEN:"英语阶段", colES:"西班牙语阶段",
     colCurrent:"当前 · 状态", colLatest:"最新文件", colCompletedAt:"完成时间", colIssue:"问题", colProgress:"进度",
+    bizFilter:"业务", bizFilterHint:"默认显示全部业务合计", allBiz:"全部业务",
+    bizManageTitle:"业务管理", bizManageHint:"新增业务后可在追踪表与全局筛选中使用。",
+    langManageTitle:"语言管理", langManageHint:"语言下拉选项。新增语言会为每条视频补空白阶段轨道。",
+    newBizPh:"新业务名称", addBiz:"添加业务", newLangIdPh:"id（如 fr）", newLangEnPh:"英文名", newLangZhPh:"中文名", addLang:"添加语言",
+    removeBizT:"删除业务", removeLangT:"删除语言",
     completedAtLabel:"完成于", noCompletedAt:"— 未完成 —",
     dailyWorkload:"每日工作量（阶段完成数）", dailyWorkloadHint:"每个阶段标记为「已完成/已通过」时，按完成日期计入当日工作量。",
     todayCompletions:"今日完成",
@@ -908,7 +952,7 @@ const I18N = {
     helpPagesH:"各页面说明",
     helpPages:[
       ["概览","总览指标（总数 / 已完成 / 制作中 / 待审核 / 被退回 / 已分发）、7 阶段管线、异常提醒、图表与时间线。"],
-      ["视频追踪","每条视频的英语与西语阶段状态、当前阶段、最新文件与进度。点状态块可切换状态；支持批量操作、筛选、导出 / 导入 / 合并。"],
+      ["视频追踪","业务栏、语言下拉、阶段状态块、当前状态、最新文件与进度。可全局按业务筛选；点状态块可切换状态。"],
       ["文件同步","命名规则、同步模拟器（粘贴文件名查看更新效果）、video_file_sync_log 日志、完整异常清单。"],
       ["西语状态","西班牙语翻译覆盖率与各阶段完成情况。"],
       ["数据分析","按视频类型、按产品的完成情况。"],
@@ -960,7 +1004,16 @@ const PRODUCTS = ["Creatine Monohydrate","RUT Testosterone Booster","Bucked Up P
   "Woke AF Pre Workout","Mother Bucker Pre Workout","6 Point Creatine","PWR Buck Energy Pouches",
   "Buck Naked - Fat Burner","Buck Feed - Protein Powder","Pumpocalypse"];
 const STAGES = ["brief","script","voice","music","video","review","distribution"];
-const TRACKS = ["en","es"];
+const DEFAULT_BUSINESSES = ["Bucked Up"];
+const DEFAULT_LANG_DEFS = [
+  {id:"en", en:"English", zh:"英语"},
+  {id:"es", en:"Spanish", zh:"西班牙语"}
+];
+let BUSINESSES = (function(){ try{ const s=JSON.parse(localStorage.getItem("bu_businesses")); return (Array.isArray(s)&&s.length)?s.slice():DEFAULT_BUSINESSES.slice(); }catch(e){ return DEFAULT_BUSINESSES.slice(); } })();
+let LANG_DEFS = (function(){ try{ const s=JSON.parse(localStorage.getItem("bu_languages")); if(Array.isArray(s)&&s.length&&s.every(x=>x&&x.id)) return s.map(x=>({id:String(x.id).toLowerCase(), en:x.en||x.id, zh:x.zh||x.en||x.id})); }catch(e){} return DEFAULT_LANG_DEFS.map(x=>({...x})); })();
+let TRACKS = LANG_DEFS.map(l=>l.id);
+let BUSINESS_FILTER = localStorage.getItem("bu_biz_filter") || "";
+const ROW_LANG = {}; // videoId -> selected language for table row
 const STATUSES = ["not_started","in_progress","uploaded","reviewing","approved","rejected","completed"];
 const DONE = new Set(["approved","completed"]);
 const STATUS_PCT = {not_started:0,in_progress:0.4,uploaded:0.7,reviewing:0.75,rejected:0.15,approved:1,completed:1};
@@ -1019,15 +1072,16 @@ function trackFullyCompletedAt(tr){
 }
 function countCompletionsOnDate(dk){
   let n=0;
-  DATA.forEach(v=>TRACKS.forEach(trk=>{ ensureTrack(v[trk]); STAGES.forEach(s=>{ if(dateKey(v[trk].completed_at[s])===dk) n++; }); }));
+  scopedData().forEach(v=>{ ensureVideoTracks(v); TRACKS.forEach(trk=>{ ensureTrack(v[trk]); STAGES.forEach(s=>{ if(dateKey(v[trk].completed_at[s])===dk) n++; }); }); });
   return n;
 }
 function countVideosCompletedOnDate(dk){
   let n=0;
-  DATA.forEach(v=>{
-    if(!trackComplete(v.en)||!trackComplete(v.es)) return;
-    const enAt=trackFullyCompletedAt(v.en), esAt=trackFullyCompletedAt(v.es);
-    const last=enAt>=esAt?enAt:esAt;
+  scopedData().forEach(v=>{
+    ensureVideoTracks(v);
+    if(!TRACKS.every(trk=>trackComplete(v[trk]))) return;
+    let last="";
+    TRACKS.forEach(trk=>{ const at=trackFullyCompletedAt(v[trk]); if(at&&(!last||at>last)) last=at; });
     if(dateKey(last)===dk) n++;
   });
   return n;
@@ -1035,15 +1089,15 @@ function countVideosCompletedOnDate(dk){
 function countStageCompletionsOnDate(dk, stage){
   if(!stage||!STAGES.includes(stage)) return 0;
   let n=0;
-  DATA.forEach(v=>TRACKS.forEach(trk=>{
+  scopedData().forEach(v=>{ ensureVideoTracks(v); TRACKS.forEach(trk=>{
     ensureTrack(v[trk]);
     if(DONE.has(v[trk].status[stage])&&dateKey(v[trk].completed_at[stage])===dk) n++;
-  }));
+  }); });
   return n;
 }
 function collectDailySeries(days){
   days=days||30; const map={};
-  DATA.forEach(v=>TRACKS.forEach(trk=>{ ensureTrack(v[trk]); STAGES.forEach(s=>{ const k=dateKey(v[trk].completed_at[s]); if(k) map[k]=(map[k]||0)+1; }); }));
+  scopedData().forEach(v=>{ ensureVideoTracks(v); TRACKS.forEach(trk=>{ ensureTrack(v[trk]); STAGES.forEach(s=>{ const k=dateKey(v[trk].completed_at[s]); if(k) map[k]=(map[k]||0)+1; }); }); });
   const labels=[], data=[], end=new Date();
   for(let i=days-1;i>=0;i--){
     const d=new Date(end); d.setDate(d.getDate()-i);
@@ -1053,11 +1107,41 @@ function collectDailySeries(days){
   }
   return {labels,data};
 }
-function blankVideo(id,product,type){ return {id, project_id:PROJECT_ID, video_id:vidCode(id), product:product||"—", type:type||"T1", name:"", description:"", priority:"", flag:false, revisions:0, reason:"", notes:"", en:blankTrack(), es:blankTrack()}; }
+function syncTracksFromDefs(){ TRACKS = LANG_DEFS.map(l=>l.id); }
+function saveBusinesses(){ localStorage.setItem("bu_businesses", JSON.stringify(BUSINESSES)); schedulePersist(); }
+function saveLanguages(){ localStorage.setItem("bu_languages", JSON.stringify(LANG_DEFS)); syncTracksFromDefs(); schedulePersist(); }
+function langLabel(id){ const d=LANG_DEFS.find(l=>l.id===id); if(!d) return (id||"").toUpperCase(); return LANG==="zh"?(d.zh||d.en||d.id):(d.en||d.zh||d.id); }
+function defaultBusiness(){ return BUSINESSES[0]||"Bucked Up"; }
+function ensureVideoTracks(v){
+  if(!v) return v;
+  if(!v.business) v.business=defaultBusiness();
+  if(BUSINESSES.indexOf(v.business)<0) BUSINESSES.push(v.business);
+  TRACKS.forEach(trk=>{ if(!v[trk]||typeof v[trk]!=="object") v[trk]=blankTrack(); else ensureTrack(v[trk]); });
+  return v;
+}
+function viewLang(v){ const id=v&&v.id; const cur=ROW_LANG[id]; if(cur&&TRACKS.includes(cur)) return cur; const d=TRACKS[0]||"en"; if(id!=null) ROW_LANG[id]=d; return d; }
+function setRowLang(id,trk){ if(!TRACKS.includes(trk)) return; ROW_LANG[id]=trk; render(); }
+function scopedData(){ if(!BUSINESS_FILTER) return DATA; return DATA.filter(v=>(v.business||defaultBusiness())===BUSINESS_FILTER); }
+function setBusinessFilter(val){ BUSINESS_FILTER=val||""; localStorage.setItem("bu_biz_filter", BUSINESS_FILTER); render(); }
+function bizOptions(sel, includeAll){
+  let h=includeAll?`<option value="">${t("allBiz")}</option>`:"";
+  BUSINESSES.forEach(b=>{ h+=`<option value="${esc(b)}" ${b===sel?"selected":""}>${esc(b)}</option>`; });
+  return h;
+}
+function fillBizSelects(){
+  const g=document.getElementById("gBiz"); if(g){ g.innerHTML=bizOptions(BUSINESS_FILTER,true); g.value=BUSINESS_FILTER; }
+  const f=document.getElementById("fBiz"); if(f){ f.innerHTML=bizOptions(BUSINESS_FILTER,true); f.value=BUSINESS_FILTER; }
+  const wrap=document.getElementById("bizFilterWrap"); if(wrap) wrap.style.display=AUTH?"":"none";
+}
+function blankVideo(id,product,type,business){
+  const v={id, project_id:PROJECT_ID, video_id:vidCode(id), product:product||"—", type:type||"T1", business:business||defaultBusiness(), name:"", description:"", priority:"", flag:false, revisions:0, reason:"", notes:""};
+  TRACKS.forEach(trk=>{ v[trk]=blankTrack(); });
+  return v;
+}
 
 function stageDone(tr,s){ return DONE.has(tr.status[s]); }
 function trackPct(tr){ let sum=0; STAGES.forEach(s=>sum+=STATUS_PCT[tr.status[s]]||0); return sum/STAGES.length; }
-function videoPct(v){ return Math.round((trackPct(v.en)+trackPct(v.es))/2*100); }
+function videoPct(v,trk){ ensureVideoTracks(v); if(trk) return Math.round(trackPct(v[trk])*100); const list=TRACKS.filter(t=>v[t]); if(!list.length) return 0; return Math.round(list.reduce((a,t)=>a+trackPct(v[t]),0)/list.length*100); }
 function trackCurrent(tr){ for(const s of STAGES){ if(!stageDone(tr,s)) return s; } return null; }
 function trackComplete(tr){ return STAGES.every(s=>stageDone(tr,s)); }
 function distAdvanced(tr){ return ["uploaded","completed"].includes(tr.status.distribution); }
@@ -1070,8 +1154,8 @@ function trackOverall(tr){
   if(tr.status.review==="reviewing") return "reviewing";
   return STAGES.some(s=>tr.status[s]!=="not_started") ? "in_progress" : "not_started";
 }
-/* translation status from the Spanish track */
-function transStatus(v){ if(trackComplete(v.es)) return "done"; return STAGES.some(s=>v.es.status[s]!=="not_started")?"wip":"none"; }
+/* translation status from secondary language track (es or first non-primary) */
+function transStatus(v){ ensureVideoTracks(v); const trk=TRACKS.includes("es")?"es":(TRACKS.find(t=>t!=="en")||TRACKS[0]); const tr=v[trk]; if(trackComplete(tr)) return "done"; return STAGES.some(s=>tr.status[s]!=="not_started")?"wip":"none"; }
 
 /* ---------- seed ---------- */
 function seedTrack(level, opts, id, trk){ // level = how many leading stages are finished (0 = untouched)
@@ -1109,8 +1193,8 @@ function seedData(){
     if(id===20) enOpts.abnormal=true;                 // distribution before approval
     if(id===49||id===50) enOpts.stale=true;           // stale
     if(id<=8) { /* done EN, maybe not distributed handled by level 7 */ }
-    const v=blankVideo(id, PRODUCTS[p], type);
-    v.en=seedTrack(enLvl,enOpts,id,"en"); v.es=seedTrack(esLvl,esOpts,id,"es");
+    const v=blankVideo(id, PRODUCTS[p], type, defaultBusiness());
+    v.en=seedTrack(enLvl,enOpts,id,"en"); v.es=seedTrack(esLvl,esOpts,id,"es"); ensureVideoTracks(v);
     if(id<=4){ v.priority="high"; } else if(id<=12){ v.priority="medium"; }
     if(id===19){ v.flag=true; v.reason="caption"; v.revisions=1; v.notes="Spanish subtitles out of sync — client asked for a re-cut."; }
     if(id===33){ v.flag=true; v.reason="claims"; v.revisions=2; v.notes="Used both in-scope revision rounds."; }
@@ -1124,9 +1208,9 @@ function seedData(){
 /* ---------- migration from the old 4-stage / asset model ---------- */
 function migrateOld(arr){
   return arr.map(o=>{
-    const v=blankVideo(o.id, o.product, o.type);
+    const v=blankVideo(o.id, o.product, o.type, o.business||defaultBusiness());
     v.name=o.name||""; v.description=o.description||""; v.flag=!!o.flag; v.revisions=o.revisions||0; v.reason=o.reason||""; v.notes=o.notes||"";
-    v.priority=o.priority||""; if(o.project_id)v.project_id=o.project_id; if(o.video_id)v.video_id=o.video_id;
+    v.priority=o.priority||""; v.business=o.business||defaultBusiness(); if(o.project_id)v.project_id=o.project_id; if(o.video_id)v.video_id=o.video_id;
     function setFromObj(tr,src){
       if(!src||typeof src!=="object")return;
       if(src.B) tr.status.brief = src.B.done?"completed":"not_started";
@@ -1151,17 +1235,26 @@ function migrateOld(arr){
       return ensureOne(o);
     } else if(o.en && typeof o.en==="object"){ setFromObj(v.en,o.en); setFromObj(v.es,o.es); }
     else { setFromNumeric(v.en,o.en,false); setFromNumeric(v.es,o.es,true); }
-    return v;
+    return ensureVideoTracks(v);
   });
 }
-function ensureOne(o){ const v=blankVideo(o.id,o.product,o.type);
+function ensureOne(o){ const v=blankVideo(o.id,o.product,o.type,o.business||defaultBusiness());
   v.name=o.name||""; v.description=o.description||""; v.flag=!!o.flag; v.revisions=o.revisions||0; v.reason=o.reason||""; v.notes=o.notes||"";
   v.priority=o.priority||""; v.project_id=o.project_id||PROJECT_ID; v.video_id=o.video_id||vidCode(o.id);
-  TRACKS.forEach(trk=>{ const src=o[trk]; if(src&&src.status){ STAGES.forEach(s=>{ v[trk].status[s]=STATUSES.includes(src.status[s])?src.status[s]:"not_started"; v[trk].pic[s]=(src.pic&&src.pic[s])||""; });
-      v[trk].latest_file_name=src.latest_file_name||""; v[trk].latest_file_path=src.latest_file_path||""; v[trk].latest_version=src.latest_version||""; v[trk].last_updated_at=src.last_updated_at||"";
-      if(src.completed_at&&typeof src.completed_at==="object") STAGES.forEach(s=>{ v[trk].completed_at[s]=src.completed_at[s]||""; });
-      backfillCompletedAt(v[trk]); } });
-  return v;
+  v.business=o.business||defaultBusiness();
+  // copy known language tracks from source (including langs not yet in LANG_DEFS)
+  Object.keys(o).forEach(k=>{
+    if(["id","project_id","video_id","product","type","business","name","description","priority","flag","revisions","reason","notes"].includes(k)) return;
+    const src=o[k]; if(src&&typeof src==="object"&&src.status){
+      if(!TRACKS.includes(k)){ LANG_DEFS.push({id:k, en:k.toUpperCase(), zh:k.toUpperCase()}); syncTracksFromDefs(); }
+      v[k]=blankTrack();
+      STAGES.forEach(s=>{ v[k].status[s]=STATUSES.includes(src.status[s])?src.status[s]:"not_started"; v[k].pic[s]=(src.pic&&src.pic[s])||""; });
+      v[k].latest_file_name=src.latest_file_name||""; v[k].latest_file_path=src.latest_file_path||""; v[k].latest_version=src.latest_version||""; v[k].last_updated_at=src.last_updated_at||"";
+      if(src.completed_at&&typeof src.completed_at==="object") STAGES.forEach(s=>{ v[k].completed_at[s]=src.completed_at[s]||""; });
+      backfillCompletedAt(v[k]);
+    }
+  });
+  return ensureVideoTracks(v);
 }
 function isNewFormat(d){ return Array.isArray(d)&&d.length&&d[0]&&d[0].en&&typeof d[0].en==="object"&&d[0].en.status; }
 function isCustomMode(){ return localStorage.getItem("bu_custom_mode")==="1"; }
@@ -1177,7 +1270,7 @@ function loadLocal(){
   }catch(e){ console.warn("load failed, seeding",e); return isCustomMode() ? [] : seedData(); }
 }
 function buildBundle(){
-  return { version:1, custom_mode:isCustomMode(), daily_goal:DAILY_VIDEO_GOAL, daily_video_goal:DAILY_VIDEO_GOAL, daily_stage_goal:DAILY_STAGE_GOAL, daily_stage:DAILY_STAGE_KEY, team:TEAM, sync_log:SYNC_LOG.slice(0,500), videos:DATA };
+  return { version:2, custom_mode:isCustomMode(), daily_goal:DAILY_VIDEO_GOAL, daily_video_goal:DAILY_VIDEO_GOAL, daily_stage_goal:DAILY_STAGE_GOAL, daily_stage:DAILY_STAGE_KEY, team:TEAM, businesses:BUSINESSES.slice(), languages:LANG_DEFS.map(l=>({id:l.id,en:l.en,zh:l.zh})), sync_log:SYNC_LOG.slice(0,500), videos:DATA };
 }
 function applyBundle(b){
   if(!b||typeof b!=="object") return;
@@ -1188,10 +1281,16 @@ function applyBundle(b){
   else if(typeof b.daily_goal==="number"&&!isNaN(b.daily_goal)){ DAILY_STAGE_GOAL=Math.max(0,Math.round(b.daily_goal)); localStorage.setItem("bu_daily_stage_goal",String(DAILY_STAGE_GOAL)); }
   if(b.daily_stage&&STAGES.includes(b.daily_stage)){ DAILY_STAGE_KEY=b.daily_stage; localStorage.setItem("bu_daily_stage",DAILY_STAGE_KEY); }
   if(Array.isArray(b.team)&&b.team.length){ TEAM=b.team; localStorage.setItem("bu_team",JSON.stringify(TEAM)); }
+  if(Array.isArray(b.businesses)&&b.businesses.length){ BUSINESSES=b.businesses.map(String).filter(Boolean); saveBusinesses(); }
+  if(Array.isArray(b.languages)&&b.languages.length){ LANG_DEFS=b.languages.filter(x=>x&&x.id).map(x=>({id:String(x.id).toLowerCase(), en:x.en||x.id, zh:x.zh||x.en||x.id})); saveLanguages(); }
   if(Array.isArray(b.sync_log)){ SYNC_LOG=b.sync_log; localStorage.setItem("bu_sync_log",JSON.stringify(SYNC_LOG)); }
   const vids=Array.isArray(b.videos)?b.videos:[];
   if(vids.length) DATA=isNewFormat(vids)?vids.map(ensureOne):migrateOld(vids);
   else DATA=isCustomMode()?[]:seedData();
+  DATA.forEach(ensureVideoTracks);
+  // collect businesses from videos
+  DATA.forEach(v=>{ if(v.business&&BUSINESSES.indexOf(v.business)<0) BUSINESSES.push(v.business); });
+  saveBusinesses();
   localStorage.setItem("bu_data",JSON.stringify(DATA));
 }
 let FILE_API=false, saveTimer=null;
@@ -1248,15 +1347,16 @@ async function initData(){
         DATA=loadLocal();
         await persistToFile();
       }else applyBundle(bundle);
+      DATA.forEach(ensureVideoTracks);
       setSavePill("file",t("saveToFile"));
       return;
     }
     setSavePill("err",t("fileApiOff"));
-    DATA=loadLocal();
+    DATA=loadLocal(); DATA.forEach(ensureVideoTracks);
     return;
   }
   FILE_API=false;
-  DATA=loadLocal();
+  DATA=loadLocal(); DATA.forEach(ensureVideoTracks);
   setSavePill("",t("saveLocalOnly"));
 }
 async function reloadFromFile(){
@@ -1312,18 +1412,21 @@ function dailyPanelCards(today,goal,goalSetter,unitKey,todayLabel,todayHint,firs
 
 /* ============================== stats ============================== */
 function projStats(){
-  const tracks=DATA.length*2; let done=0,prod=0,review=0,rejected=0,distributed=0,sum=0,not=0;
-  DATA.forEach(v=>TRACKS.forEach(trk=>{ const tr=v[trk]; const ov=trackOverall(tr); sum+=trackPct(tr);
+  const rows=scopedData(); rows.forEach(ensureVideoTracks);
+  const tracks=rows.length*Math.max(1,TRACKS.length); let done=0,prod=0,review=0,rejected=0,distributed=0,sum=0,not=0;
+  rows.forEach(v=>TRACKS.forEach(trk=>{ const tr=v[trk]; const ov=trackOverall(tr); sum+=trackPct(tr);
     if(ov==="completed")done++; else if(ov==="not_started")not++; else prod++;
     if(tr.status.review==="reviewing"||trackCurrent(tr)==="review")review++;
     if(tr.status.review==="rejected")rejected++;
     if(stageDone(tr,"distribution"))distributed++;
   }));
-  return {tracks,done,not,prod,review,rejected,distributed,pct:Math.round(sum/tracks*100),
+  return {tracks,done,not,prod,review,rejected,distributed,pct:tracks?Math.round(sum/tracks*100):0,
     days:Math.max(0,Math.ceil((DEADLINE-new Date())/86400000)),
-    flagged:DATA.filter(v=>v.flag).length, inRev:DATA.filter(v=>v.revisions>0).length, revMax:DATA.filter(v=>v.revisions>=2).length}; }
-function stageDoneCount(stage){ return DATA.reduce((a,v)=>a+(stageDone(v.en,stage)?1:0)+(stageDone(v.es,stage)?1:0),0); } // /200
-function stageDoneTrack(trk,stage){ return DATA.filter(v=>stageDone(v[trk],stage)).length; } // /100
+    flagged:rows.filter(v=>v.flag).length, inRev:rows.filter(v=>v.revisions>0).length, revMax:rows.filter(v=>v.revisions>=2).length}; }
+function stageDoneCount(stage){ return scopedData().reduce((a,v)=>{ ensureVideoTracks(v); return a+TRACKS.reduce((b,trk)=>b+(stageDone(v[trk],stage)?1:0),0); },0); }
+function stageDoneTrack(trk,stage){ return scopedData().filter(v=>{ ensureVideoTracks(v); return stageDone(v[trk],stage); }).length; }
+function trackDenom(){ return Math.max(1, scopedData().length * Math.max(1,TRACKS.length)); }
+function langDenom(){ return Math.max(1, scopedData().length); }
 
 /* ---------- anomalies ---------- */
 function computeAnomalies(){
@@ -1334,7 +1437,7 @@ function computeAnomalies(){
   const seen={};
   SYNC_LOG.filter(e=>e.sync_status==="ok").forEach(e=>{ const k=e.video_id+"|"+e.track+"|"+e.stage; (seen[k]=seen[k]||new Set()).add(e.version); });
   Object.keys(seen).forEach(k=>{ if(seen[k].size>1){ const vid=k.split("|")[0]; const lbl=k.split("|")[0]+" "+k.split("|")[1].toUpperCase()+"·"+(I18N[LANG].stageAbbr[k.split("|")[2]]||k.split("|")[2]); a.version.push(lbl); } });
-  DATA.forEach(v=>TRACKS.forEach(trk=>{ const tr=v[trk]; const tag=taskCode(v.id)+"-"+trk.toUpperCase();
+  scopedData().forEach(v=>{ ensureVideoTracks(v); TRACKS.forEach(trk=>{ const tr=v[trk]; const tag=taskCode(v.id)+"-"+trk.toUpperCase();
     // missing prerequisite: a later stage started while an earlier is not_started
     let firstStarted=-1; for(let i=0;i<STAGES.length;i++){ if(tr.status[STAGES[i]]!=="not_started"){firstStarted=i;break;} }
     if(firstStarted>=0){ for(let j=firstStarted+1;j<STAGES.length;j++){ if(tr.status[STAGES[j]]!=="not_started"){ // ok started later
@@ -1348,7 +1451,7 @@ function computeAnomalies(){
     if(isAbnormal(tr)) a.abnormal.push(tag);
     if(reviewOk(tr) && !stageDone(tr,"distribution")) a.undist.push(tag);
     if(!trackComplete(tr) && tr.last_updated_at && daysSince(tr.last_updated_at)>STALE_DAYS) a.stale.push(tag);
-  }));
+  }); });
   return a;
 }
 function anomTotal(a){ return a.naming.length+a.prereq.length+a.rejected.length+a.version.length+a.stale.length+a.undist.length+a.abnormal.length; }
@@ -1439,7 +1542,7 @@ function buildFilters(){
 function buildBatch(){
   const bar=document.getElementById("batchbar"); bar.style.display=SEL.size>0?"flex":"none"; if(SEL.size===0)return;
   document.getElementById("selCount").textContent=`${SEL.size} ${t("selectedWord")}`;
-  const bTrack=document.getElementById("bTrack"),ctr=bTrack.value; bTrack.innerHTML=`<option value="en">${t("english")}</option><option value="es">${t("spanish")}</option>`; bTrack.value=ctr||"en";
+  const bTrack=document.getElementById("bTrack"),ctr=bTrack.value; bTrack.innerHTML=TRACKS.map(trk=>`<option value="${trk}">${esc(langLabel(trk))}</option>`).join(""); bTrack.value=TRACKS.includes(ctr)?ctr:(TRACKS[0]||"en");
   const bStage=document.getElementById("bStage"),cs=bStage.value; bStage.innerHTML=STAGES.map(s=>`<option value="${s}">${t("stages")[s]}</option>`).join(""); if(cs)bStage.value=cs;
   const bStatus=document.getElementById("bStatus"),cst=bStatus.value; bStatus.innerHTML=STATUSES.map(s=>`<option value="${s}">${t("statuses")[s]}</option>`).join(""); if(cst)bStatus.value=cst;
   const bPic=document.getElementById("bPic"),cp=bPic.value; bPic.innerHTML=`<option value="">${t("pending")}</option>`+TEAM.map(p=>`<option value="${p}">${p}</option>`).join(""); bPic.value=cp;
@@ -1469,7 +1572,7 @@ function renderDailyOutput(){
     `<div class="daily-panel"><div class="daily-panel-h">${t("dailyVideoSec")}</div><div class="daily-out">${dailyPanelCards(videoToday,videoGoal,"setDailyVideoGoal","dailyVideoGoalUnit",t("dailyVideoToday"),t("dailyVideoTodayHint"))}</div></div>`+
     `<div class="daily-panel"><div class="daily-panel-h">${t("dailyStageSec")}</div><div class="daily-out">${dailyPanelCards(stageToday,stageGoal,"setDailyStageGoal","dailyStageGoalUnit",t("dailyVideoToday"),t("dailyStageTodayHint"),stageFirst)}</div></div>`;
 }
-function pcard(stage,idx){ const n=stageDoneCount(stage),den=200,pct=Math.round(n/den*100),gate=stage==="review"||stage==="distribution";
+function pcard(stage,idx){ const n=stageDoneCount(stage),den=trackDenom(),pct=Math.round(n/den*100),gate=stage==="review"||stage==="distribution";
   return `<div class="pcard ${gate?'gate':''}"><div class="pl"><span class="num">${idx+1}</span>${t("stages")[stage]}</div><div class="pv">${n} <small>/ ${den}</small></div><div class="pmini"><span style="width:${pct}%"></span></div></div>`; }
 function renderPipeline(){
   document.getElementById("pipe").innerHTML = STAGES.map((s,i)=>pcard(s,i)).join(`<div class="parrow">›</div>`);
@@ -1487,7 +1590,7 @@ function renderAnoms(targetId){
   if(badge){ if(total>0){ badge.style.display="inline-block"; badge.textContent=total; } else badge.style.display="none"; }
 }
 function assetBar(label,n,den){ const pct=Math.round(n/den*100); return `<div class="abar"><span class="an">${label}</span><span class="at"><span style="width:${pct}%"></span></span><span class="av">${pct}% <small>(${n}/${den})</small></span></div>`; }
-function renderEsStageBars(){ const el=document.getElementById("esStageBars"); if(el) el.innerHTML=STAGES.map(s=>assetBar(t("stages")[s],stageDoneTrack("es",s),100)).join(""); }
+function renderEsStageBars(){ const el=document.getElementById("esStageBars"); if(!el) return; const trk=TRACKS.includes("es")?"es":(TRACKS[1]||TRACKS[0]||"en"); el.innerHTML=STAGES.map(s=>assetBar(t("stages")[s],stageDoneTrack(trk,s),langDenom())).join(""); }
 function renderIssues(){
   const s=projStats();
   document.getElementById("issueStats").innerHTML=
@@ -1496,12 +1599,13 @@ function renderIssues(){
      <div class="stat red"><div class="l">${t("revLimit")}</div><div class="v">${s.revMax}</div></div>`;
 }
 function renderLangBars(){
-  const n=DATA.length;
-  const enPct=Math.round(DATA.reduce((a,v)=>a+trackPct(v.en),0)/n*100), esPct=Math.round(DATA.reduce((a,v)=>a+trackPct(v.es),0)/n*100);
-  const enDone=DATA.filter(v=>trackComplete(v.en)).length, esDone=DATA.filter(v=>trackComplete(v.es)).length;
-  document.getElementById("langBars").innerHTML=
-    `<div class="lb-row"><span class="lb-name">${t("english")}</span><span class="lb-track lb-en"><span style="width:${enPct}%"></span></span><span class="lb-val">${enPct}% <small>(${enDone}/${n})</small></span></div>
-     <div class="lb-row"><span class="lb-name">${t("spanish")}</span><span class="lb-track lb-es"><span style="width:${esPct}%"></span></span><span class="lb-val">${esPct}% <small>(${esDone}/${n})</small></span></div>`;
+  const rows=scopedData(); const n=Math.max(1,rows.length); rows.forEach(ensureVideoTracks);
+  document.getElementById("langBars").innerHTML=TRACKS.map((trk,i)=>{
+    const pct=Math.round(rows.reduce((a,v)=>a+trackPct(v[trk]),0)/n*100);
+    const done=rows.filter(v=>trackComplete(v[trk])).length;
+    const cls=trk==="es"?"lb-es":"lb-en";
+    return `<div class="lb-row"><span class="lb-name">${esc(langLabel(trk))}</span><span class="lb-track ${cls}"><span style="width:${pct}%"></span></span><span class="lb-val">${pct}% <small>(${done}/${rows.length})</small></span></div>`;
+  }).join("");
 }
 function renderTimeline(){
   const span=DEADLINE-KICKOFF, timePct=Math.round(Math.max(0,Math.min(1,(new Date()-KICKOFF)/span))*100);
@@ -1511,38 +1615,42 @@ function renderTimeline(){
        <div class="tl-today" style="left:${timePct}%"><div class="lbl">${t("todayLabel")}</div><div class="pin"></div></div></div>`;
 }
 function renderTranslation(){
-  const tot=DATA.length,counts={done:0,wip:0,none:0}; DATA.forEach(v=>counts[transStatus(v)]++);
+  const rows=scopedData(); rows.forEach(ensureVideoTracks);
+  const tot=Math.max(1,rows.length),counts={done:0,wip:0,none:0}; rows.forEach(v=>counts[transStatus(v)]++);
   const covPct=Math.round(counts.done/tot*100);
   document.getElementById("covPct").textContent=covPct+"%"; document.getElementById("covBar").style.width=covPct+"%";
   document.getElementById("transCounts").innerHTML=["done","wip","none"].map(k=>`<span class="tc"><span class="dot ${k}"></span>${t("trans")[k]}: <b>&nbsp;${counts[k]}</b></span>`).join("");
   if(transChart){ transChart.data.labels=["done","wip","none"].map(k=>t("trans")[k]); transChart.data.datasets[0].data=[counts.done,counts.wip,counts.none]; transChart.update(); }
+  const enTrk=TRACKS.includes("en")?"en":TRACKS[0];
   document.getElementById("esStats").innerHTML=
     `<div class="stat green"><div class="l">${t("trans").done}</div><div class="v">${counts.done}</div></div>
      <div class="stat gold"><div class="l">${t("trans").wip}</div><div class="v">${counts.wip}</div></div>
      <div class="stat"><div class="l">${t("trans").none}</div><div class="v">${counts.none}</div></div>
-     <div class="stat blue"><div class="l">${t("english")} ✓</div><div class="v">${DATA.filter(v=>trackComplete(v.en)).length}</div></div>`;
+     <div class="stat blue"><div class="l">${esc(langLabel(enTrk))} ✓</div><div class="v">${rows.filter(v=>trackComplete(v[enTrk])).length}</div></div>`;
 }
 function renderCharts(){
   if(typeof Chart==="undefined") return;
   renderStageChart();
-  // status distribution (overall, across 200 tracks)
+  const rows=scopedData(); rows.forEach(ensureVideoTracks);
   const ovs=["not_started","in_progress","reviewing","rejected","abnormal","completed"]; const oc={}; ovs.forEach(o=>oc[o]=0);
-  DATA.forEach(v=>TRACKS.forEach(trk=>oc[trackOverall(v[trk])]++));
+  rows.forEach(v=>TRACKS.forEach(trk=>oc[trackOverall(v[trk])]++));
   statusChart.data.labels=ovs.map(o=>t("overall")[o]); statusChart.data.datasets[0].data=ovs.map(o=>oc[o]); statusChart.data.datasets[0].backgroundColor=ovs.map(o=>OVERALL_COLOR[o]); statusChart.update();
-  const enDone=DATA.filter(v=>trackComplete(v.en)).length, esDone=DATA.filter(v=>trackComplete(v.es)).length;
-  langChart.data.labels=[t("english"),t("spanish")];
-  langChart.data.datasets[0].label=t("done"); langChart.data.datasets[0].data=[enDone,esDone];
-  langChart.data.datasets[1].label=t("remaining"); langChart.data.datasets[1].data=[DATA.length-enDone,DATA.length-esDone]; langChart.update();
-  const typeDone=x=>DATA.filter(v=>v.type===x).reduce((a,v)=>a+(trackComplete(v.en)?1:0)+(trackComplete(v.es)?1:0),0); const typeTot=x=>DATA.filter(v=>v.type===x).length*2;
+  langChart.data.labels=TRACKS.map(langLabel);
+  langChart.data.datasets[0].label=t("done"); langChart.data.datasets[0].data=TRACKS.map(trk=>rows.filter(v=>trackComplete(v[trk])).length);
+  langChart.data.datasets[1].label=t("remaining"); langChart.data.datasets[1].data=TRACKS.map(trk=>rows.length-rows.filter(v=>trackComplete(v[trk])).length); langChart.update();
+  const typeDone=x=>rows.filter(v=>v.type===x).reduce((a,v)=>a+TRACKS.reduce((b,trk)=>b+(trackComplete(v[trk])?1:0),0),0); const typeTot=x=>rows.filter(v=>v.type===x).length*Math.max(1,TRACKS.length);
   typeChart.data.labels=[t("types").T1,t("types").T2];
   typeChart.data.datasets[0].label=t("done"); typeChart.data.datasets[0].data=[typeDone("T1"),typeDone("T2")];
   typeChart.data.datasets[1].label=t("remaining"); typeChart.data.datasets[1].data=[typeTot("T1")-typeDone("T1"),typeTot("T2")-typeDone("T2")]; typeChart.update();
   if(dailyChart){ const ds=collectDailySeries(30); dailyChart.data.labels=ds.labels; dailyChart.data.datasets[0].label=t("dailyWorkload"); dailyChart.data.datasets[0].data=ds.data; dailyChart.update(); }
 }
 function renderProducts(){
-  document.getElementById("prodGrid").innerHTML=PRODUCTS.map(p=>{ const items=DATA.filter(v=>v.product===p); if(!items.length)return"";
-    const pct=Math.round(items.reduce((a,v)=>a+trackPct(v.en)+trackPct(v.es),0)/(items.length*2)*100);
-    return `<div class="prod-row"><span class="name">${p}</span><span class="mini"><span style="width:${pct}%"></span></span><span class="val">${pct}%</span></div>`; }).join("");
+  const rows=scopedData(); rows.forEach(ensureVideoTracks);
+  const products=[...new Set(rows.map(v=>v.product).filter(Boolean))];
+  document.getElementById("prodGrid").innerHTML=products.map(p=>{ const items=rows.filter(v=>v.product===p); if(!items.length)return"";
+    const den=items.length*Math.max(1,TRACKS.length);
+    const pct=Math.round(items.reduce((a,v)=>a+TRACKS.reduce((b,trk)=>b+trackPct(v[trk]),0),0)/den*100);
+    return `<div class="prod-row"><span class="name">${esc(p)}</span><span class="mini"><span style="width:${pct}%"></span></span><span class="val">${pct}%</span></div>`; }).join("");
 }
 function renderFlagSummary(){ const s=projStats(); document.getElementById("flagSummary").innerHTML=`<span>🚩 ${t("flaggedCount")}: <b>${s.flagged}</b></span><span>${t("revLimitReached")}: <b>${s.revMax}</b></span>`; }
 function renderTrackerStats(){
@@ -1556,41 +1664,45 @@ function renderTrackerStats(){
      <div class="stat gold"><div class="l">${t("stShowing")}</div><div class="v">${shown}</div></div>`;
 }
 function renderAnStats(){
-  const t1=DATA.filter(v=>v.type==="T1").reduce((a,v)=>a+(trackComplete(v.en)?1:0)+(trackComplete(v.es)?1:0),0);
-  const t2=DATA.filter(v=>v.type==="T2").reduce((a,v)=>a+(trackComplete(v.en)?1:0)+(trackComplete(v.es)?1:0),0);
+  const rows=scopedData(); rows.forEach(ensureVideoTracks);
+  const t1=rows.filter(v=>v.type==="T1").reduce((a,v)=>a+TRACKS.reduce((b,trk)=>b+(trackComplete(v[trk])?1:0),0),0);
+  const t2=rows.filter(v=>v.type==="T2").reduce((a,v)=>a+TRACKS.reduce((b,trk)=>b+(trackComplete(v[trk])?1:0),0),0);
+  const den1=rows.filter(v=>v.type==="T1").length*Math.max(1,TRACKS.length);
+  const den2=rows.filter(v=>v.type==="T2").length*Math.max(1,TRACKS.length);
   const todayN=countCompletionsOnDate(todayStr());
   document.getElementById("anStats").innerHTML=
     `<div class="stat green"><div class="l">${t("todayCompletions")}</div><div class="v">${todayN}</div></div>
-     <div class="stat blue"><div class="l">${t("types").T1} ✓</div><div class="v">${t1} <small>/100</small></div></div>
-     <div class="stat"><div class="l">${t("types").T2} ✓</div><div class="v">${t2} <small>/100</small></div></div>`;
+     <div class="stat blue"><div class="l">${t("types").T1} ✓</div><div class="v">${t1} <small>/${den1}</small></div></div>
+     <div class="stat"><div class="l">${t("types").T2} ✓</div><div class="v">${t2} <small>/${den2}</small></div></div>`;
 }
 function stageChips(v,trk){
-  const tr=v[trk],cur=trackCurrent(tr);
+  ensureVideoTracks(v); const tr=v[trk],cur=trackCurrent(tr);
   let html=`<div class="steps-wrap"><div class="task-id">${taskCode(v.id)}-${trk.toUpperCase()}</div><div class="chips-line">`;
   STAGES.forEach(s=>{ const st=tr.status[s]; const isCur=s===cur;
     html+=`<span class="chip-stage ${isCur?"cur":""}" style="background:${STATUS_COLOR[st]}" title="${esc(t("stages")[s]+" — "+t("statuses")[st]+(tr.pic[s]?" · "+tr.pic[s]:"")+(tr.completed_at[s]?" · "+fmtDateTime(tr.completed_at[s]):""))}" onclick="cycleStage(${v.id},'${trk}','${s}')">${t("stageAbbr")[s]}</span>`;
   });
   return html+`</div></div>`;
 }
+function langCell(v){
+  const cur=viewLang(v);
+  return `<select class="lang-select" onchange="setRowLang(${v.id},this.value)" onclick="event.stopPropagation()">${TRACKS.map(trk=>`<option value="${trk}" ${trk===cur?"selected":""}>${esc(langLabel(trk))}</option>`).join("")}</select>`;
+}
 function currentCell(v){
-  return TRACKS.map(trk=>{ const tr=v[trk]; const ov=trackOverall(tr); const cur=trackCurrent(tr);
-    const ovBadge=`<span class="ov-badge" style="background:${OVERALL_COLOR[ov]}">${t("overall")[ov]}</span>`;
-    const curTxt = cur===null ? `✓ ${t("completed")}` : `${t("stages")[cur]}${tr.pic[cur]?" · "+esc(tr.pic[cur]):` · <span class="pending">${t("pending")}</span>`}`;
-    return `<div style="margin-bottom:5px"><span class="track-tag ${trk}">${trk.toUpperCase()}</span>${ovBadge} <span style="font-size:12px">${curTxt}</span></div>`;
-  }).join("");
+  const trk=viewLang(v); ensureVideoTracks(v); const tr=v[trk]; const ov=trackOverall(tr); const cur=trackCurrent(tr);
+  const ovBadge=`<span class="ov-badge" style="background:${OVERALL_COLOR[ov]}">${t("overall")[ov]}</span>`;
+  const curTxt = cur===null ? `✓ ${t("completed")}` : `${t("stages")[cur]}${tr.pic[cur]?" · "+esc(tr.pic[cur]):` · <span class="pending">${t("pending")}</span>`}`;
+  return `<div>${ovBadge} <span style="font-size:12px">${curTxt}</span></div>`;
 }
 function completedCell(v){
-  return TRACKS.map(trk=>{ const tr=v[trk]; const full=trackFullyCompletedAt(tr), latest=trackLatestCompletedAt(tr);
-    const txt=full?`<b>${esc(fmtDateTime(full))}</b>`:(latest?esc(fmtDateTime(latest)):t("noCompletedAt"));
-    const hint=full?t("completed"):t("completedAtLabel");
-    return `<div class="latest-cell"><span class="track-tag ${trk}">${trk.toUpperCase()}</span><span style="font-size:12px" title="${esc(hint)}">${txt}</span></div>`;
-  }).join("");
+  const trk=viewLang(v); ensureVideoTracks(v); const tr=v[trk]; const full=trackFullyCompletedAt(tr), latest=trackLatestCompletedAt(tr);
+  const txt=full?`<b>${esc(fmtDateTime(full))}</b>`:(latest?esc(fmtDateTime(latest)):t("noCompletedAt"));
+  const hint=full?t("completed"):t("completedAtLabel");
+  return `<div class="latest-cell"><span style="font-size:12px" title="${esc(hint)}">${txt}</span></div>`;
 }
 function latestCell(v){
-  return TRACKS.map(trk=>{ const tr=v[trk];
-    if(!tr.latest_file_name) return `<div class="latest-cell"><span class="track-tag ${trk}">${trk.toUpperCase()}</span><span style="opacity:.6">${t("noFile")}</span></div>`;
-    return `<div class="latest-cell"><span class="track-tag ${trk}">${trk.toUpperCase()}</span>${esc(tr.latest_version)} · ${esc(fmtDate(tr.last_updated_at))}<span class="lf" title="${esc(tr.latest_file_path||tr.latest_file_name)}">${esc(tr.latest_file_name)}</span></div>`;
-  }).join("");
+  const trk=viewLang(v); ensureVideoTracks(v); const tr=v[trk];
+  if(!tr.latest_file_name) return `<div class="latest-cell"><span style="opacity:.6">${t("noFile")}</span></div>`;
+  return `<div class="latest-cell">${esc(tr.latest_version)} · ${esc(fmtDate(tr.last_updated_at))}<span class="lf" title="${esc(tr.latest_file_path||tr.latest_file_name)}">${esc(tr.latest_file_name)}</span></div>`;
 }
 function issueCell(v){
   const reasonLabel=v.reason?I18N[LANG].reasons[v.reason]:"";
@@ -1603,18 +1715,23 @@ function issueCell(v){
 function filteredRows(){
   const q=document.getElementById("search").value.trim().toLowerCase();
   const fs=document.getElementById("fStage").value,fo=document.getElementById("fOverall").value,ft=document.getElementById("fType").value,fr=document.getElementById("fTrans").value,fp=document.getElementById("fPIC").value,ff=document.getElementById("fFlag").value;
-  const matchStage=v=>{ if(fs==="")return true; if(fs==="__done")return trackComplete(v.en)||trackComplete(v.es); return trackCurrent(v.en)===fs||trackCurrent(v.es)===fs; };
-  const matchOverall=v=>{ if(fo==="")return true; return trackOverall(v.en)===fo||trackOverall(v.es)===fo; };
-  const matchPic=v=>{ if(fp==="")return true; return TRACKS.some(trk=>STAGES.some(s=>v[trk].pic[s]===fp)); };
-  return DATA.filter(v=>(!q||(v.product+" "+(v.name||"")+" "+(v.description||"")+" "+taskCode(v.id)+" "+v.video_id+" "+(v.en.latest_file_name||"")+" "+(v.es.latest_file_name||"")).toLowerCase().includes(q))
-    && matchStage(v) && matchOverall(v) && (ft===""||v.type===ft) && (fr===""||transStatus(v)===fr) && matchPic(v) && (ff===""||(ff==="1"?v.flag:!v.flag)));
+  const matchStage=v=>{ ensureVideoTracks(v); if(fs==="")return true; if(fs==="__done")return TRACKS.some(trk=>trackComplete(v[trk])); return TRACKS.some(trk=>trackCurrent(v[trk])===fs); };
+  const matchOverall=v=>{ ensureVideoTracks(v); if(fo==="")return true; return TRACKS.some(trk=>trackOverall(v[trk])===fo); };
+  const matchPic=v=>{ ensureVideoTracks(v); if(fp==="")return true; return TRACKS.some(trk=>STAGES.some(s=>v[trk].pic[s]===fp)); };
+  return scopedData().filter(v=>{
+    ensureVideoTracks(v);
+    const fileBlob=TRACKS.map(trk=>v[trk].latest_file_name||"").join(" ");
+    return (!q||(v.business+" "+v.product+" "+(v.name||"")+" "+(v.description||"")+" "+taskCode(v.id)+" "+v.video_id+" "+fileBlob).toLowerCase().includes(q))
+      && matchStage(v) && matchOverall(v) && (ft===""||v.type===ft) && (fr===""||transStatus(v)===fr) && matchPic(v) && (ff===""||(ff==="1"?v.flag:!v.flag));
+  });
 }
 function renderTable(){
-  document.getElementById("thead").innerHTML=`<th style="width:30px"><input type="checkbox" id="selAll" onclick="toggleSelAll(this.checked)"></th>`+["colNum","colVideo","colType","colEN","colES","colCurrent","colLatest","colCompletedAt","colIssue","colProgress"].map(k=>`<th>${t(k)}</th>`).join("");
+  document.getElementById("thead").innerHTML=`<th style="width:30px"><input type="checkbox" id="selAll" onclick="toggleSelAll(this.checked)"></th>`+["colBiz","colNum","colVideo","colType","colLang","colStage","colCurrent","colLatest","colCompletedAt","colIssue","colProgress"].map(k=>`<th>${t(k)}</th>`).join("");
   const rows=filteredRows();
-  document.getElementById("tbody").innerHTML=rows.map(v=>{ const pct=videoPct(v); const abn=isAbnormal(v.en)||isAbnormal(v.es);
+  document.getElementById("tbody").innerHTML=rows.map(v=>{ ensureVideoTracks(v); const trk=viewLang(v); const pct=videoPct(v,trk); const abn=TRACKS.some(t=>isAbnormal(v[t]));
     return `<tr class="${v.flag?"row-flagged":(abn?"row-abn":"")}">
       <td><input type="checkbox" ${SEL.has(v.id)?"checked":""} onclick="toggleSel(${v.id},this.checked)"></td>
+      <td class="biz-cell">${esc(v.business||defaultBusiness())}</td>
       <td><span class="task-base">${taskCode(v.id)}</span></td>
       <td class="vid-cell" onclick="openModal(${v.id})" title="${esc(v.description)||esc(t("clickToEdit"))}">
         <div class="vid-name">${esc(v.name||v.product)}<span class="edit-hint">✎</span></div>
@@ -1622,8 +1739,8 @@ function renderTable(){
         ${v.description?`<div class="vid-desc">${esc(v.description)}</div>`:`<div class="vid-add">+ ${t("addDetails")}</div>`}
       </td>
       <td><span class="pill ${v.type.toLowerCase()}">${t("types")[v.type]}</span></td>
-      <td>${stageChips(v,"en")}</td>
-      <td>${stageChips(v,"es")}</td>
+      <td>${langCell(v)}</td>
+      <td>${stageChips(v,trk)}</td>
       <td>${currentCell(v)}</td>
       <td>${latestCell(v)}</td>
       <td>${completedCell(v)}</td>
@@ -1634,6 +1751,7 @@ function renderTable(){
 }
 function render(){
   applyStaticI18n(); applyAuth();
+  fillBizSelects();
   if(!AUTH) return;                 // data stays hidden (and unrendered) until signed in
   buildFilters(); buildBatch();
   renderBanner(); renderKPIs(); renderDailyOutput(); renderPipeline(); renderAnoms("anoms"); renderAnoms("anoms2"); renderEsStageBars(); renderIssues(); renderLangBars(); renderTimeline();
@@ -1728,7 +1846,7 @@ function parseFileName(fn){
   const dot=file.lastIndexOf("."); const ext=dot>=0?file.slice(dot+1):""; const base=dot>=0?file.slice(0,dot):file;
   const parts=base.split("_");
   let project_id,video_id,track="en",stage,version,status,date;
-  if(parts.length===7 && /^(en|es)$/i.test(parts[2])){ [project_id,video_id,track,stage,version,status,date]=parts; track=track.toLowerCase(); }
+  if(parts.length===7 && /^[a-z]{2,5}$/i.test(parts[2])){ [project_id,video_id,track,stage,version,status,date]=parts; track=track.toLowerCase(); }
   else if(parts.length===6){ [project_id,video_id,stage,version,status,date]=parts; }
   else return {file_name:file, error:"errTokens"};
   const ns=STAGE_ALIASES[(stage||"").toLowerCase()]; if(!ns) return {file_name:file, project_id,video_id,track, error:"errStage"};
@@ -1745,7 +1863,12 @@ function applySync(p){ // returns {ok, msg, created, reset}
   if(!num){ return {ok:false, msg:t("errVid")}; }
   let v=DATA.find(x=>x.id===num); let created=false;
   if(!v){ v=blankVideo(num,"—",num%2?"T1":"T2"); v.project_id=p.project_id||PROJECT_ID; v.video_id=p.video_id; DATA.push(v); DATA.sort((a,b)=>a.id-b.id); created=true; }
-  const tr=v[p.track]; let reset=false;
+  ensureVideoTracks(v);
+  const trk=(p.track||"en").toLowerCase();
+  if(!TRACKS.includes(trk)){ LANG_DEFS.push({id:trk, en:trk.toUpperCase(), zh:trk.toUpperCase()}); saveLanguages(); DATA.forEach(x=>{ if(!x[trk]) x[trk]=blankTrack(); }); }
+  if(!v[trk]) v[trk]=blankTrack();
+  p.track=trk;
+  const tr=v[trk]; let reset=false;
   // Rule 4: a newer production version invalidates a prior review approval
   const isProd=["script","voice","music","video"].includes(p.stage);
   if(isProd && verNum(p.version)>verNum(tr.latest_version) && (p.status==="uploaded"||p.status==="completed")){
@@ -1820,6 +1943,7 @@ function updateEntryCount(){
 }
 function fillEntryForm(){
   document.getElementById("productList").innerHTML=PRODUCTS.map(p=>`<option value="${esc(p)}">`).join("");
+  const eBiz=document.getElementById("eBiz"); if(eBiz) eBiz.innerHTML=bizOptions(defaultBusiness(),false);
   const pr=I18N[LANG].prios;
   document.getElementById("ePrio").innerHTML=Object.keys(pr).map(k=>`<option value="${k}">${pr[k]}</option>`).join("");
   const ts=I18N[LANG].types;
@@ -1869,7 +1993,8 @@ function addEntryVideo(){
   const name=(document.getElementById("eName").value||"").trim();
   const desc=(document.getElementById("eDesc").value||"").trim();
   const prio=document.getElementById("ePrio").value;
-  const v=blankVideo(nextVideoId(), product, type);
+  const bizEl=document.getElementById("eBiz"); const biz=bizEl?bizEl.value:defaultBusiness();
+  const v=blankVideo(nextVideoId(), product, type, biz);
   v.name=name; v.description=desc; v.priority=prio;
   DATA.push(v); save();
   document.getElementById("eName").value=""; document.getElementById("eDesc").value="";
@@ -1904,7 +2029,7 @@ function buildStepEditor(v){
     `<select class="se-batch-pic" data-tr="${trk}" title="${esc(t("modalBatchPic"))}" onchange="modalBatchPic('${trk}',this.value)">`+
     `<option value="">${esc(t("modalBatchPic"))}</option>${picOptions("")}</select></div>`;
   const block=trk=>{ const tr=v[trk]; const latest=tr.latest_file_name?`${esc(tr.latest_version)} · ${esc(fmtDate(tr.last_updated_at))} · ${esc(tr.latest_file_name)}`:t("noFile");
-    let h=`<div class="se-track"><div class="se-h"><span class="track-tag ${trk}">${trk.toUpperCase()}</span><span class="se-lang">${trk==="en"?t("english"):t("spanish")}</span>${batchBar(trk)}<span class="se-latest">${latest}</span></div>`;
+    let h=`<div class="se-track"><div class="se-h"><span class="track-tag ${trk}">${trk.toUpperCase()}</span><span class="se-lang">${esc(langLabel(trk))}</span>${batchBar(trk)}<span class="se-latest">${latest}</span></div>`;
     STAGES.forEach(s=>{ const st=tr.status[s];
       h+=`<div class="se-row"><span class="se-dot" style="background:${STATUS_COLOR[st]}"></span><span class="se-name">${t("stages")[s]}</span>`+
         `<select class="se-status" data-tr="${trk}" data-stage="${s}" onchange="syncModalRowStatus(this)">${statusOptions(st)}</select>`+
@@ -1912,10 +2037,11 @@ function buildStepEditor(v){
         `<input class="se-done" type="datetime-local" data-tr="${trk}" data-stage="${s}" value="${toDatetimeLocal(tr.completed_at[s])}" ${DONE.has(st)?"":"disabled"} title="${esc(t("completedAtLabel"))}" /></div>`;
     });
     return h+`</div>`; };
-  document.getElementById("mSteps").innerHTML=block("en")+block("es");
+  document.getElementById("mSteps").innerHTML=TRACKS.map(block).join("");
 }
-function openModal(id){ const v=DATA.find(x=>x.id===id); if(!v)return; editingId=id;
-  document.getElementById("mSub").textContent=`${v.project_id}·${v.video_id} · ${taskCode(v.id)}-EN / -ES`;
+function openModal(id){ const v=DATA.find(x=>x.id===id); if(!v)return; ensureVideoTracks(v); editingId=id;
+  document.getElementById("mSub").textContent=`${v.project_id}·${v.video_id} · ${taskCode(v.id)} · ${v.business||defaultBusiness()}`;
+  const mBiz=document.getElementById("mBiz"); if(mBiz){ mBiz.innerHTML=bizOptions(v.business||defaultBusiness(),false); mBiz.value=v.business||defaultBusiness(); }
   document.getElementById("mProduct").value=v.product||"";
   const ts=I18N[LANG].types;
   document.getElementById("mType").innerHTML=["T1","T2"].map(k=>`<option value="${k}">${ts[k]||k}</option>`).join("");
@@ -1929,6 +2055,7 @@ function openModal(id){ const v=DATA.find(x=>x.id===id); if(!v)return; editingId
 }
 function closeModal(){ document.getElementById("modal").classList.remove("open"); editingId=null; }
 function saveModal(){ const v=DATA.find(x=>x.id===editingId); if(!v){closeModal();return;}
+  const mBiz=document.getElementById("mBiz"); if(mBiz){ v.business=mBiz.value||defaultBusiness(); if(BUSINESSES.indexOf(v.business)<0){ BUSINESSES.push(v.business); saveBusinesses(); } }
   v.product=(document.getElementById("mProduct").value||"").trim()||"—";
   v.type=document.getElementById("mType").value||"T1";
   v.name=document.getElementById("mName").value.trim(); v.description=document.getElementById("mDesc").value.trim();
@@ -1954,12 +2081,12 @@ function exportSlice(){ const rows=SEL.size>0?DATA.filter(v=>SEL.has(v.id)):filt
 function importJSON(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader();
   r.onload=()=>{ try{ const d=JSON.parse(r.result);
     if(d&&Array.isArray(d.videos)){ applyBundle(d); localStorage.setItem("bu_custom_mode","1"); save(); render(); }
-    else if(Array.isArray(d)&&d.every(x=>"id"in x&&"en"in x&&"es"in x)){ DATA=isNewFormat(d)?d.map(ensureOne):migrateOld(d); localStorage.setItem("bu_custom_mode","1"); save(); render(); }
+    else if(Array.isArray(d)&&d.every(x=>x&&("id"in x))){ DATA=isNewFormat(d)?d.map(ensureOne):migrateOld(d); DATA.forEach(ensureVideoTracks); localStorage.setItem("bu_custom_mode","1"); save(); render(); }
     else throw new Error();
   }catch(err){ alert(t("importBad")); } };
   r.readAsText(f); e.target.value=""; }
 function mergeJSON(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader();
-  r.onload=()=>{ try{ let arr=JSON.parse(r.result); if(!Array.isArray(arr))throw new Error(); arr=arr.filter(x=>x&&("id"in x)&&("en"in x)&&("es"in x)); if(!arr.length)throw new Error();
+  r.onload=()=>{ try{ let arr=JSON.parse(r.result); if(!Array.isArray(arr))throw new Error(); arr=arr.filter(x=>x&&("id"in x)); if(!arr.length)throw new Error();
     arr=isNewFormat(arr)?arr.map(ensureOne):migrateOld(arr); let n=0; arr.forEach(inc=>{ const i=DATA.findIndex(v=>v.id===inc.id); if(i>=0)DATA[i]=inc; else DATA.push(inc); n++; });
     DATA.sort((a,b)=>a.id-b.id); save(); render(); alert(t("mergeDone").replace("{n}",n)); }catch(err){ alert(t("importBad")); } };
   r.readAsText(f); e.target.value=""; }
@@ -1968,22 +2095,29 @@ function mergeJSON(e){ const f=e.target.files[0]; if(!f)return; const r=new File
 function renderAdmin(){
   const aStage=document.getElementById("aStage"); if(!aStage) return;
   const cs=aStage.value; aStage.innerHTML=STAGES.map(s=>`<option value="${s}">${t("stages")[s]}</option>`).join(""); if(cs)aStage.value=cs;
-  const aTrack=document.getElementById("aTrack"),ct=aTrack.value; aTrack.innerHTML=`<option value="both">${t("trackBoth")}</option><option value="en">${t("english")}</option><option value="es">${t("spanish")}</option>`; if(ct)aTrack.value=ct;
+  const aTrack=document.getElementById("aTrack"),ct=aTrack.value; aTrack.innerHTML=`<option value="both">${t("trackBoth")}</option>`+TRACKS.map(trk=>`<option value="${trk}">${esc(langLabel(trk))}</option>`).join(""); if(ct)aTrack.value=ct;
   const aPic=document.getElementById("aPic"),cp=aPic.value; aPic.innerHTML=`<option value="">${t("pending")}</option>`+TEAM.map(p=>`<option value="${p}">${p}</option>`).join(""); if(cp)aPic.value=cp;
+  const ab=document.getElementById("adminBiz");
+  if(ab) ab.innerHTML = BUSINESSES.map((b,i)=>`<div class="team-row"><input type="text" value="${esc(b)}" onchange="adminRenameBiz(${i},this.value)"><button class="btn warn" title="${esc(t("removeBizT"))}" onclick="adminRemoveBiz(${i})">✕</button></div>`).join("")
+    + `<div class="team-row"><input type="text" id="newBiz" placeholder="${esc(t("newBizPh"))}" onkeydown="if(event.key==='Enter')adminAddBiz()"><button class="btn" onclick="adminAddBiz()">+ ${t("addBiz")}</button></div>`;
+  const al=document.getElementById("adminLang");
+  if(al) al.innerHTML = LANG_DEFS.map((l,i)=>`<div class="team-row"><input type="text" value="${esc(l.id)}" disabled style="max-width:70px"><input type="text" value="${esc(l.en)}" onchange="adminRenameLang(${i},'en',this.value)" placeholder="EN"><input type="text" value="${esc(l.zh)}" onchange="adminRenameLang(${i},'zh',this.value)" placeholder="中文"><button class="btn warn" title="${esc(t("removeLangT"))}" onclick="adminRemoveLang(${i})">✕</button></div>`).join("")
+    + `<div class="team-row"><input type="text" id="newLangId" placeholder="${esc(t("newLangIdPh"))}" style="max-width:90px"><input type="text" id="newLangEn" placeholder="${esc(t("newLangEnPh"))}"><input type="text" id="newLangZh" placeholder="${esc(t("newLangZhPh"))}" onkeydown="if(event.key==='Enter')adminAddLang()"><button class="btn" onclick="adminAddLang()">+ ${t("addLang")}</button></div>`;
   document.getElementById("adminTeam").innerHTML =
     TEAM.map((p,i)=>`<div class="team-row"><input type="text" value="${esc(p)}" onchange="adminRenamePic(${i},this.value)"><button class="btn warn" title="${esc(t("removePicT"))}" onclick="adminRemovePic(${i})">✕</button></div>`).join("")
     + `<div class="team-row"><input type="text" id="newPic" placeholder="${esc(t("newPicPh"))}" onkeydown="if(event.key==='Enter')adminAddPic()"><button class="btn" onclick="adminAddPic()">+ ${t("addPic")}</button></div>`;
   const pr=I18N[LANG].prios;
-  document.getElementById("adminBody").innerHTML = [...DATA].sort((a,b)=>a.id-b.id).map(v=>`<tr>
+  document.getElementById("adminBody").innerHTML = [...DATA].sort((a,b)=>a.id-b.id).map(v=>{ ensureVideoTracks(v); return `<tr>
     <td><span class="task-base">${taskCode(v.id)}</span><div class="vid-sub">${esc(v.video_id)}</div></td>
+    <td><select onchange="adminSet(${v.id},'business',this.value)">${bizOptions(v.business||defaultBusiness(),false)}</select></td>
     <td>${esc(v.product)}</td>
     <td><span class="pill ${v.type.toLowerCase()}">${t("types")[v.type]}</span></td>
     <td><select onchange="adminSet(${v.id},'priority',this.value)">${Object.keys(pr).map(k=>`<option value="${k}" ${k===(v.priority||"")?"selected":""}>${pr[k]}</option>`).join("")}</select></td>
     <td><input type="text" value="${esc(v.name)}" placeholder="${esc(t("namePh"))}" oninput="adminSet(${v.id},'name',this.value)"></td>
     <td><input type="text" value="${esc(v.description)}" placeholder="${esc(t("descPh"))}" oninput="adminSet(${v.id},'description',this.value)"></td>
-  </tr>`).join("");
+  </tr>`; }).join("");
 }
-function adminSet(id,field,val){ const v=DATA.find(x=>x.id===id); if(v){ v[field]=val; save(); if(field==="priority")render(); } }
+function adminSet(id,field,val){ const v=DATA.find(x=>x.id===id); if(v){ v[field]=val; if(field==="business"&&val&&BUSINESSES.indexOf(val)<0){ BUSINESSES.push(val); saveBusinesses(); } save(); if(field==="priority"||field==="business")render(); } }
 function adminBulkPic(){
   const stage=document.getElementById("aStage").value, track=document.getElementById("aTrack").value, pic=document.getElementById("aPic").value;
   const trks=track==="both"?TRACKS:[track];
@@ -1995,6 +2129,30 @@ function adminBulkNames(){
   const sorted=[...DATA].sort((a,b)=>a.id-b.id); let n=0;
   lines.forEach((line,i)=>{ if(line && sorted[i]){ sorted[i].name=line; n++; } });
   save(); render(); alert(t("namesApplied").replace("{n}",n));
+}
+
+function adminAddBiz(){ const el=document.getElementById("newBiz"); const val=(el&&el.value||"").trim(); if(!val)return; if(BUSINESSES.includes(val)){ el.value=""; return; } BUSINESSES.push(val); saveBusinesses(); if(el)el.value=""; render(); }
+function adminRenameBiz(i,val){ val=(val||"").trim(); if(!val){ render(); return; } const old=BUSINESSES[i]; BUSINESSES[i]=val; DATA.forEach(v=>{ if(v.business===old) v.business=val; }); saveBusinesses(); save(); render(); }
+function adminRemoveBiz(i){ if(BUSINESSES.length<=1) return; const old=BUSINESSES[i]; BUSINESSES.splice(i,1); const fb=defaultBusiness(); DATA.forEach(v=>{ if(v.business===old) v.business=fb; }); if(BUSINESS_FILTER===old) BUSINESS_FILTER=""; saveBusinesses(); save(); render(); }
+function adminAddLang(){
+  const idEl=document.getElementById("newLangId"), enEl=document.getElementById("newLangEn"), zhEl=document.getElementById("newLangZh");
+  let id=((idEl&&idEl.value)||"").trim().toLowerCase().replace(/[^a-z0-9]/g,"");
+  if(!id||id.length<2) return;
+  if(LANG_DEFS.some(l=>l.id===id)){ if(idEl)idEl.value=""; return; }
+  const en=((enEl&&enEl.value)||id).trim(), zh=((zhEl&&zhEl.value)||en).trim();
+  LANG_DEFS.push({id,en,zh}); saveLanguages();
+  DATA.forEach(v=>{ if(!v[id]) v[id]=blankTrack(); });
+  if(idEl)idEl.value=""; if(enEl)enEl.value=""; if(zhEl)zhEl.value="";
+  save(); render();
+}
+function adminRenameLang(i,field,val){ val=(val||"").trim(); if(!val){ render(); return; } if(LANG_DEFS[i]) LANG_DEFS[i][field]=val; saveLanguages(); render(); }
+function adminRemoveLang(i){
+  if(LANG_DEFS.length<=1) return;
+  const id=LANG_DEFS[i].id;
+  if(id==="en"||id==="es"){ if(!confirm("Remove language track "+id+"?")) return; }
+  LANG_DEFS.splice(i,1); saveLanguages();
+  Object.keys(ROW_LANG).forEach(k=>{ if(ROW_LANG[k]===id) delete ROW_LANG[k]; });
+  render();
 }
 function adminAddPic(){ const el=document.getElementById("newPic"); const v=(el.value||"").trim(); if(v && !TEAM.includes(v)){ TEAM.push(v); saveTeam(); render(); } }
 function adminRenamePic(i,val){ val=(val||"").trim(); const old=TEAM[i]; if(!val||val===old)return;

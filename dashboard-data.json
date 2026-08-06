@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "updated_at": "2026-06-30T10:07:17.687Z",
   "custom_mode": true,
   "daily_goal": 20,
@@ -90,7 +90,8 @@
         "latest_file_path": "",
         "latest_version": "",
         "last_updated_at": "2026-06-30"
-      }
+      },
+      "business": "Bucked Up"
     },
     {
       "id": 2,
@@ -170,7 +171,23 @@
         "latest_file_path": "",
         "latest_version": "",
         "last_updated_at": ""
-      }
+      },
+      "business": "Bucked Up"
+    }
+  ],
+  "businesses": [
+    "Bucked Up"
+  ],
+  "languages": [
+    {
+      "id": "en",
+      "en": "English",
+      "zh": "英语"
+    },
+    {
+      "id": "es",
+      "en": "Spanish",
+      "zh": "西班牙语"
     }
   ]
 }
