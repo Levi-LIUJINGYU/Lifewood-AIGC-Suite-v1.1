@@ -243,6 +243,13 @@
   .biz-cell{font-size:12.5px;font-weight:700;color:var(--green-800);white-space:nowrap;}
   .admin-list{display:flex;flex-direction:column;gap:8px;}
   .admin-list .team-row input{flex:1;}
+  .add-inline{display:flex;gap:8px;align-items:center;}
+  .add-inline select,.add-inline input{flex:1;}
+  .add-inline .btn{flex:none;white-space:nowrap;padding:8px 10px;}
+  .type-dur{display:flex;gap:8px;align-items:center;}
+  .type-dur select{flex:1.4;}
+  .type-dur input{flex:1;min-width:0;}
+
 
   .ov-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;}
   .latest-cell{font-size:11px;color:var(--muted);font-family:ui-monospace,Consolas,monospace;max-width:200px;}
@@ -575,7 +582,7 @@
   <section id="view-admin" class="view" style="display:none">
     <div class="sec-title" data-i18n="adminTitle">Admin · fill production data</div>
     <div class="footer-note" data-i18n="adminHint" style="text-align:left;margin:0 0 14px">Changes here update your local data and apply across all tabs.</div>
-    <div class="charts" style="grid-template-columns:1fr 1fr;margin-bottom:16px;">
+    <div class="charts" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:16px;">
       <div class="card">
         <h4 data-i18n="bizManageTitle">Businesses</h4>
         <div class="footer-note" style="text-align:left;margin:0 0 10px" data-i18n="bizManageHint">Add businesses shown in the tracker and global filter.</div>
@@ -585,6 +592,11 @@
         <h4 data-i18n="langManageTitle">Languages</h4>
         <div class="footer-note" style="text-align:left;margin:0 0 10px" data-i18n="langManageHint">Language dropdown options. New languages get blank stage tracks on every video.</div>
         <div class="admin-list" id="adminLang"></div>
+      </div>
+      <div class="card">
+        <h4 data-i18n="typeManageTitle">Video types / duration</h4>
+        <div class="footer-note" style="text-align:left;margin:0 0 10px" data-i18n="typeManageHint">Edit type labels and duration (seconds). Used in tracker, entry form, and filters.</div>
+        <div class="admin-list" id="adminType"></div>
       </div>
     </div>
     <div class="charts" style="grid-template-columns:1.3fr 1fr;">
@@ -622,8 +634,18 @@
     <h3 data-i18n="modalTitle">Video details</h3>
     <div class="msub" id="mSub"></div>
     <div class="row2">
-      <div class="field"><label data-i18n="colBiz">Business</label><select id="mBiz"></select></div>
-      <div class="field"><label data-i18n="colType">Type</label><select id="mType"></select></div>
+      <div class="field"><label data-i18n="colBiz">Business</label>
+        <div class="add-inline">
+          <input type="text" id="mBiz" list="bizList" data-i18n-ph="newBizPh" placeholder="Business name" />
+          <button type="button" class="btn" onclick="addBusinessFromInput('mBiz')" data-i18n="addBiz">Add business</button>
+        </div>
+      </div>
+      <div class="field"><label data-i18n="colType">Type / duration</label>
+        <div class="type-dur">
+          <select id="mType" onchange="onTypePick('mType','mDuration')"></select>
+          <input type="number" id="mDuration" min="1" step="1" data-i18n-ph="durationPh" placeholder="sec" title="Duration (seconds)" />
+        </div>
+      </div>
     </div>
     <div class="row2">
       <div class="field"><label data-i18n="colProductH">Product</label><input type="text" id="mProduct" list="productList" /></div>
@@ -687,11 +709,22 @@
     <h3 data-i18n="enterDataTitle">Add videos</h3>
     <div class="msub" style="font-family:inherit" data-i18n="enterDataSub">Demo data is cleared. Add your videos below — each entry appears in all dashboard tabs immediately.</div>
     <div id="entryCount" style="font-size:12px;font-weight:700;color:var(--green-700);margin-bottom:12px"></div>
-    <div class="field"><label data-i18n="colBiz">Business</label><select id="eBiz"></select></div>
+    <div class="field"><label data-i18n="colBiz">Business</label>
+      <div class="add-inline">
+        <input type="text" id="eBiz" list="bizList" data-i18n-ph="newBizPh" placeholder="Business name" />
+        <button type="button" class="btn" onclick="addBusinessFromInput('eBiz')" data-i18n="addBiz">Add business</button>
+      </div>
+    </div>
+    <datalist id="bizList"></datalist>
     <div class="field"><label data-i18n="colProductH">Product</label><input type="text" id="eProduct" list="productList" data-i18n-ph="enterProductPh" placeholder="Product name" onkeydown="if(event.key==='Enter')addEntryVideo()" /></div>
     <datalist id="productList"></datalist>
     <div class="row2">
-      <div class="field"><label data-i18n="colType">Type</label><select id="eType"><option value="T1">T1</option><option value="T2">T2</option></select></div>
+      <div class="field"><label data-i18n="colType">Type</label>
+        <div class="type-dur">
+          <select id="eType" onchange="onTypePick('eType','eDuration')"></select>
+          <input type="number" id="eDuration" min="1" step="1" data-i18n-ph="durationPh" placeholder="sec" title="Duration (seconds)" />
+        </div>
+      </div>
       <div class="field"><label data-i18n="prioLabel">Priority</label><select id="ePrio"></select></div>
     </div>
     <div class="field"><label data-i18n="nameLabel">Video name</label><input type="text" id="eName" data-i18n-ph="namePh" placeholder="e.g. Creatine — energy hook" onkeydown="if(event.key==='Enter')addEntryVideo()" /></div>
@@ -767,11 +800,14 @@ const I18N = {
     langManageTitle:"Languages", langManageHint:"Language dropdown options. New languages get blank stage tracks on every video.",
     newBizPh:"New business name", addBiz:"Add business", newLangIdPh:"id (e.g. fr)", newLangEnPh:"English label", newLangZhPh:"Chinese label", addLang:"Add language",
     removeBizT:"Remove business", removeLangT:"Remove language",
+    typeManageTitle:"Video types / duration", typeManageHint:"Edit type labels and duration (seconds). Used in tracker, entry form, and filters.",
+    newTypeIdPh:"id (e.g. T3)", newTypeEnPh:"English label", newTypeZhPh:"Chinese label", newTypeDurPh:"sec", addType:"Add type", removeTypeT:"Remove type",
+    durationPh:"sec", durationLabel:"Duration (sec)", bizAdded:"Business added.",
     completedAtLabel:"Done at", noCompletedAt:"— not done —",
     dailyWorkload:"Daily workload (stage completions)", dailyWorkloadHint:"Each stage marked done counts once toward that day. Used for daily output tracking.",
     todayCompletions:"Today's completions",
     done:"Completed", remaining:"Remaining", english:"English", spanish:"Spanish",
-    types:{T1:"Type 1 (~30s)", T2:"Type 2 (~120s)"}, trans:{done:"Translated", wip:"In translation", none:"Not translated"},
+    types:{T1:"Type 1 (~30s)", T2:"Type 2 (~120s)"}, /* fallback; TYPE_DEFS overrides */ trans:{done:"Translated", wip:"In translation", none:"Not translated"},
     completed:"Completed", pending:"Pending assignment", noFile:"— no file synced —",
     stages:{brief:"Brief",script:"Script",voice:"Voice",music:"Music",video:"Video",review:"Review",distribution:"Distribution"},
     stageAbbr:{brief:"Bf",script:"Sc",voice:"Vo",music:"Mu",video:"Vd",review:"Rv",distribution:"Ds"},
@@ -903,11 +939,14 @@ const I18N = {
     langManageTitle:"语言管理", langManageHint:"语言下拉选项。新增语言会为每条视频补空白阶段轨道。",
     newBizPh:"新业务名称", addBiz:"添加业务", newLangIdPh:"id（如 fr）", newLangEnPh:"英文名", newLangZhPh:"中文名", addLang:"添加语言",
     removeBizT:"删除业务", removeLangT:"删除语言",
+    typeManageTitle:"视频类型 / 时长", typeManageHint:"可编辑类型名称与时长（秒），用于追踪表、录入与筛选。",
+    newTypeIdPh:"id（如 T3）", newTypeEnPh:"英文名", newTypeZhPh:"中文名", newTypeDurPh:"秒", addType:"添加类型", removeTypeT:"删除类型",
+    durationPh:"秒", durationLabel:"时长（秒）", bizAdded:"业务已添加。",
     completedAtLabel:"完成于", noCompletedAt:"— 未完成 —",
     dailyWorkload:"每日工作量（阶段完成数）", dailyWorkloadHint:"每个阶段标记为「已完成/已通过」时，按完成日期计入当日工作量。",
     todayCompletions:"今日完成",
     done:"已完成", remaining:"剩余", english:"英语", spanish:"西班牙语",
-    types:{T1:"类型1 (约30秒)", T2:"类型2 (约120秒)"}, trans:{done:"已翻译", wip:"翻译中", none:"未翻译"},
+    types:{T1:"类型1 (约30秒)", T2:"类型2 (约120秒)"}, /* fallback; TYPE_DEFS overrides */ trans:{done:"已翻译", wip:"翻译中", none:"未翻译"},
     completed:"已完成", pending:"待指派", noFile:"— 暂无同步文件 —",
     stages:{brief:"简报",script:"脚本",voice:"配音",music:"音乐",video:"视频",review:"审核",distribution:"分发"},
     stageAbbr:{brief:"简",script:"脚",voice:"配",music:"音",video:"视",review:"审",distribution:"分"},
@@ -1007,10 +1046,38 @@ const STAGES = ["brief","script","voice","music","video","review","distribution"
 const DEFAULT_BUSINESSES = ["Bucked Up"];
 const DEFAULT_LANG_DEFS = [
   {id:"en", en:"English", zh:"英语"},
-  {id:"es", en:"Spanish", zh:"西班牙语"}
+  {id:"es", en:"Spanish", zh:"西班牙语"},
+  {id:"zh", en:"Mandarin", zh:"普通话"},
+  {id:"yue", en:"Cantonese", zh:"粤语"},
+  {id:"ja", en:"Japanese", zh:"日语"},
+  {id:"ko", en:"Korean", zh:"韩语"}
 ];
+const DEFAULT_TYPE_DEFS = [
+  {id:"T1", en:"Type 1 (~30s)", zh:"类型1 (约30秒)", duration:30},
+  {id:"T2", en:"Type 2 (~120s)", zh:"类型2 (约120秒)", duration:120}
+];
+function normalizeLangDefs(arr){
+  const map=new Map();
+  (arr||[]).forEach(x=>{ if(x&&x.id){ const id=String(x.id).toLowerCase(); map.set(id,{id, en:x.en||id, zh:x.zh||x.en||id}); } });
+  DEFAULT_LANG_DEFS.forEach(d=>{ if(!map.has(d.id)) map.set(d.id,{...d}); });
+  // keep default order first, then extras
+  const ordered=[];
+  DEFAULT_LANG_DEFS.forEach(d=>{ if(map.has(d.id)){ ordered.push(map.get(d.id)); map.delete(d.id); } });
+  map.forEach(v=>ordered.push(v));
+  return ordered;
+}
+function normalizeTypeDefs(arr){
+  const map=new Map();
+  (arr||[]).forEach(x=>{ if(x&&x.id){ const id=String(x.id); const dur=+x.duration; map.set(id,{id, en:x.en||id, zh:x.zh||x.en||id, duration:(!isNaN(dur)&&dur>0)?Math.round(dur):30}); } });
+  DEFAULT_TYPE_DEFS.forEach(d=>{ if(!map.has(d.id)) map.set(d.id,{...d}); });
+  const ordered=[];
+  DEFAULT_TYPE_DEFS.forEach(d=>{ if(map.has(d.id)){ ordered.push(map.get(d.id)); map.delete(d.id); } });
+  map.forEach(v=>ordered.push(v));
+  return ordered;
+}
 let BUSINESSES = (function(){ try{ const s=JSON.parse(localStorage.getItem("bu_businesses")); return (Array.isArray(s)&&s.length)?s.slice():DEFAULT_BUSINESSES.slice(); }catch(e){ return DEFAULT_BUSINESSES.slice(); } })();
-let LANG_DEFS = (function(){ try{ const s=JSON.parse(localStorage.getItem("bu_languages")); if(Array.isArray(s)&&s.length&&s.every(x=>x&&x.id)) return s.map(x=>({id:String(x.id).toLowerCase(), en:x.en||x.id, zh:x.zh||x.en||x.id})); }catch(e){} return DEFAULT_LANG_DEFS.map(x=>({...x})); })();
+let LANG_DEFS = (function(){ try{ const s=JSON.parse(localStorage.getItem("bu_languages")); if(Array.isArray(s)&&s.length) return normalizeLangDefs(s); }catch(e){} return normalizeLangDefs(null); })();
+let TYPE_DEFS = (function(){ try{ const s=JSON.parse(localStorage.getItem("bu_types")); if(Array.isArray(s)&&s.length) return normalizeTypeDefs(s); }catch(e){} return normalizeTypeDefs(null); })();
 let TRACKS = LANG_DEFS.map(l=>l.id);
 let BUSINESS_FILTER = localStorage.getItem("bu_biz_filter") || "";
 const ROW_LANG = {}; // videoId -> selected language for table row
@@ -1110,7 +1177,22 @@ function collectDailySeries(days){
 function syncTracksFromDefs(){ TRACKS = LANG_DEFS.map(l=>l.id); }
 function saveBusinesses(){ localStorage.setItem("bu_businesses", JSON.stringify(BUSINESSES)); schedulePersist(); }
 function saveLanguages(){ localStorage.setItem("bu_languages", JSON.stringify(LANG_DEFS)); syncTracksFromDefs(); schedulePersist(); }
+function saveTypes(){ localStorage.setItem("bu_types", JSON.stringify(TYPE_DEFS)); schedulePersist(); }
 function langLabel(id){ const d=LANG_DEFS.find(l=>l.id===id); if(!d) return (id||"").toUpperCase(); return LANG==="zh"?(d.zh||d.en||d.id):(d.en||d.zh||d.id); }
+function typeDef(id){ return TYPE_DEFS.find(x=>x.id===id)||null; }
+function typeLabel(id){
+  const d=typeDef(id);
+  if(d){ const base=LANG==="zh"?(d.zh||d.en||d.id):(d.en||d.zh||d.id); return d.duration?`${base.replace(/\s*\(~?\d+s\)|\s*（约\d+秒）/g,"")} (${d.duration}s)`:base; }
+  return (I18N[LANG].types&&I18N[LANG].types[id])||id||"—";
+}
+function defaultTypeId(){ return (TYPE_DEFS[0]&&TYPE_DEFS[0].id)||"T1"; }
+function defaultDurationForType(id){ const d=typeDef(id); return d&&d.duration?d.duration:30; }
+function videoDuration(v){ const n=+((v&&v.duration)||0); if(!isNaN(n)&&n>0) return Math.round(n); return defaultDurationForType(v&&v.type); }
+function typeOptionsHtml(sel){ return TYPE_DEFS.map(d=>`<option value="${esc(d.id)}" ${d.id===sel?"selected":""}>${esc(typeLabel(d.id))}</option>`).join(""); }
+function fillBizList(){ const dl=document.getElementById("bizList"); if(dl) dl.innerHTML=BUSINESSES.map(b=>`<option value="${esc(b)}">`).join(""); }
+function ensureBusinessName(name){ name=(name||"").trim(); if(!name) return defaultBusiness(); if(BUSINESSES.indexOf(name)<0){ BUSINESSES.push(name); saveBusinesses(); } return name; }
+function addBusinessFromInput(inputId){ const el=document.getElementById(inputId); const name=ensureBusinessName(el&&el.value); if(el) el.value=name; fillBizList(); fillBizSelects(); alert(t("bizAdded")); }
+function onTypePick(typeSelId, durId){ const sel=document.getElementById(typeSelId), dur=document.getElementById(durId); if(!sel||!dur) return; dur.value=defaultDurationForType(sel.value); }
 function defaultBusiness(){ return BUSINESSES[0]||"Bucked Up"; }
 function ensureVideoTracks(v){
   if(!v) return v;
@@ -1129,12 +1211,14 @@ function bizOptions(sel, includeAll){
   return h;
 }
 function fillBizSelects(){
+  fillBizList();
   const g=document.getElementById("gBiz"); if(g){ g.innerHTML=bizOptions(BUSINESS_FILTER,true); g.value=BUSINESS_FILTER; }
   const f=document.getElementById("fBiz"); if(f){ f.innerHTML=bizOptions(BUSINESS_FILTER,true); f.value=BUSINESS_FILTER; }
   const wrap=document.getElementById("bizFilterWrap"); if(wrap) wrap.style.display=AUTH?"":"none";
 }
-function blankVideo(id,product,type,business){
-  const v={id, project_id:PROJECT_ID, video_id:vidCode(id), product:product||"—", type:type||"T1", business:business||defaultBusiness(), name:"", description:"", priority:"", flag:false, revisions:0, reason:"", notes:""};
+function blankVideo(id,product,type,business,duration){
+  const tid=type||defaultTypeId();
+  const v={id, project_id:PROJECT_ID, video_id:vidCode(id), product:product||"—", type:tid, duration:(duration!=null&&+duration>0)?Math.round(+duration):defaultDurationForType(tid), business:business||defaultBusiness(), name:"", description:"", priority:"", flag:false, revisions:0, reason:"", notes:""};
   TRACKS.forEach(trk=>{ v[trk]=blankTrack(); });
   return v;
 }
@@ -1238,10 +1322,12 @@ function migrateOld(arr){
     return ensureVideoTracks(v);
   });
 }
-function ensureOne(o){ const v=blankVideo(o.id,o.product,o.type,o.business||defaultBusiness());
+function ensureOne(o){ const v=blankVideo(o.id,o.product,o.type,o.business||defaultBusiness(),o.duration);
   v.name=o.name||""; v.description=o.description||""; v.flag=!!o.flag; v.revisions=o.revisions||0; v.reason=o.reason||""; v.notes=o.notes||"";
   v.priority=o.priority||""; v.project_id=o.project_id||PROJECT_ID; v.video_id=o.video_id||vidCode(o.id);
   v.business=o.business||defaultBusiness();
+  if(o.duration!=null&&+o.duration>0) v.duration=Math.round(+o.duration);
+  else if(!v.duration) v.duration=defaultDurationForType(v.type);
   // copy known language tracks from source (including langs not yet in LANG_DEFS)
   Object.keys(o).forEach(k=>{
     if(["id","project_id","video_id","product","type","business","name","description","priority","flag","revisions","reason","notes"].includes(k)) return;
@@ -1270,7 +1356,7 @@ function loadLocal(){
   }catch(e){ console.warn("load failed, seeding",e); return isCustomMode() ? [] : seedData(); }
 }
 function buildBundle(){
-  return { version:2, custom_mode:isCustomMode(), daily_goal:DAILY_VIDEO_GOAL, daily_video_goal:DAILY_VIDEO_GOAL, daily_stage_goal:DAILY_STAGE_GOAL, daily_stage:DAILY_STAGE_KEY, team:TEAM, businesses:BUSINESSES.slice(), languages:LANG_DEFS.map(l=>({id:l.id,en:l.en,zh:l.zh})), sync_log:SYNC_LOG.slice(0,500), videos:DATA };
+  return { version:2, custom_mode:isCustomMode(), daily_goal:DAILY_VIDEO_GOAL, daily_video_goal:DAILY_VIDEO_GOAL, daily_stage_goal:DAILY_STAGE_GOAL, daily_stage:DAILY_STAGE_KEY, team:TEAM, businesses:BUSINESSES.slice(), languages:LANG_DEFS.map(l=>({id:l.id,en:l.en,zh:l.zh})), types:TYPE_DEFS.map(x=>({id:x.id,en:x.en,zh:x.zh,duration:x.duration})), sync_log:SYNC_LOG.slice(0,500), videos:DATA };
 }
 function applyBundle(b){
   if(!b||typeof b!=="object") return;
@@ -1282,7 +1368,10 @@ function applyBundle(b){
   if(b.daily_stage&&STAGES.includes(b.daily_stage)){ DAILY_STAGE_KEY=b.daily_stage; localStorage.setItem("bu_daily_stage",DAILY_STAGE_KEY); }
   if(Array.isArray(b.team)&&b.team.length){ TEAM=b.team; localStorage.setItem("bu_team",JSON.stringify(TEAM)); }
   if(Array.isArray(b.businesses)&&b.businesses.length){ BUSINESSES=b.businesses.map(String).filter(Boolean); saveBusinesses(); }
-  if(Array.isArray(b.languages)&&b.languages.length){ LANG_DEFS=b.languages.filter(x=>x&&x.id).map(x=>({id:String(x.id).toLowerCase(), en:x.en||x.id, zh:x.zh||x.en||x.id})); saveLanguages(); }
+  if(Array.isArray(b.languages)&&b.languages.length){ LANG_DEFS=normalizeLangDefs(b.languages); saveLanguages(); }
+  else { LANG_DEFS=normalizeLangDefs(LANG_DEFS); saveLanguages(); }
+  if(Array.isArray(b.types)&&b.types.length){ TYPE_DEFS=normalizeTypeDefs(b.types); saveTypes(); }
+  else { TYPE_DEFS=normalizeTypeDefs(TYPE_DEFS); saveTypes(); }
   if(Array.isArray(b.sync_log)){ SYNC_LOG=b.sync_log; localStorage.setItem("bu_sync_log",JSON.stringify(SYNC_LOG)); }
   const vids=Array.isArray(b.videos)?b.videos:[];
   if(vids.length) DATA=isNewFormat(vids)?vids.map(ensureOne):migrateOld(vids);
@@ -1347,16 +1436,24 @@ async function initData(){
         DATA=loadLocal();
         await persistToFile();
       }else applyBundle(bundle);
+      LANG_DEFS=normalizeLangDefs(LANG_DEFS); saveLanguages();
+      TYPE_DEFS=normalizeTypeDefs(TYPE_DEFS); saveTypes();
       DATA.forEach(ensureVideoTracks);
       setSavePill("file",t("saveToFile"));
       return;
     }
     setSavePill("err",t("fileApiOff"));
-    DATA=loadLocal(); DATA.forEach(ensureVideoTracks);
+    DATA=loadLocal();
+    LANG_DEFS=normalizeLangDefs(LANG_DEFS); saveLanguages();
+    TYPE_DEFS=normalizeTypeDefs(TYPE_DEFS); saveTypes();
+    DATA.forEach(ensureVideoTracks);
     return;
   }
   FILE_API=false;
-  DATA=loadLocal(); DATA.forEach(ensureVideoTracks);
+  DATA=loadLocal();
+  LANG_DEFS=normalizeLangDefs(LANG_DEFS); saveLanguages();
+  TYPE_DEFS=normalizeTypeDefs(TYPE_DEFS); saveTypes();
+  DATA.forEach(ensureVideoTracks);
   setSavePill("",t("saveLocalOnly"));
 }
 async function reloadFromFile(){
@@ -1533,7 +1630,7 @@ function buildFilters(){
   const ids=["fStage","fOverall","fType","fTrans","fPIC","fFlag"],cur={}; ids.forEach(i=>cur[i]=document.getElementById(i).value);
   document.getElementById("fStage").innerHTML=`<option value="">${t("allStages")}</option>`+STAGES.map(s=>`<option value="${s}">${t("stages")[s]}</option>`).join("")+`<option value="__done">${t("completed")}</option>`;
   document.getElementById("fOverall").innerHTML=`<option value="">${t("allOverall")}</option>`+["not_started","in_progress","reviewing","rejected","abnormal","completed"].map(s=>`<option value="${s}">${t("overall")[s]}</option>`).join("");
-  document.getElementById("fType").innerHTML=`<option value="">${t("allTypes")}</option>`+["T1","T2"].map(x=>`<option value="${x}">${t("types")[x]}</option>`).join("");
+  document.getElementById("fType").innerHTML=`<option value="">${t("allTypes")}</option>`+TYPE_DEFS.map(x=>`<option value="${x.id}">${esc(typeLabel(x.id))}</option>`).join("");
   document.getElementById("fTrans").innerHTML=`<option value="">${t("allTrans")}</option>`+["done","wip","none"].map(x=>`<option value="${x}">${t("trans")[x]}</option>`).join("");
   document.getElementById("fPIC").innerHTML=`<option value="">${t("allPICs")}</option>`+TEAM.map(p=>`<option value="${p}">${p}</option>`).join("");
   document.getElementById("fFlag").innerHTML=`<option value="">${t("allFlags")}</option><option value="1">🚩 ${t("flaggedOnly")}</option><option value="0">${t("notFlagged")}</option>`;
@@ -1638,10 +1735,11 @@ function renderCharts(){
   langChart.data.labels=TRACKS.map(langLabel);
   langChart.data.datasets[0].label=t("done"); langChart.data.datasets[0].data=TRACKS.map(trk=>rows.filter(v=>trackComplete(v[trk])).length);
   langChart.data.datasets[1].label=t("remaining"); langChart.data.datasets[1].data=TRACKS.map(trk=>rows.length-rows.filter(v=>trackComplete(v[trk])).length); langChart.update();
+  const typeIds=TYPE_DEFS.map(d=>d.id);
   const typeDone=x=>rows.filter(v=>v.type===x).reduce((a,v)=>a+TRACKS.reduce((b,trk)=>b+(trackComplete(v[trk])?1:0),0),0); const typeTot=x=>rows.filter(v=>v.type===x).length*Math.max(1,TRACKS.length);
-  typeChart.data.labels=[t("types").T1,t("types").T2];
-  typeChart.data.datasets[0].label=t("done"); typeChart.data.datasets[0].data=[typeDone("T1"),typeDone("T2")];
-  typeChart.data.datasets[1].label=t("remaining"); typeChart.data.datasets[1].data=[typeTot("T1")-typeDone("T1"),typeTot("T2")-typeDone("T2")]; typeChart.update();
+  typeChart.data.labels=typeIds.map(typeLabel);
+  typeChart.data.datasets[0].label=t("done"); typeChart.data.datasets[0].data=typeIds.map(typeDone);
+  typeChart.data.datasets[1].label=t("remaining"); typeChart.data.datasets[1].data=typeIds.map(id=>typeTot(id)-typeDone(id)); typeChart.update();
   if(dailyChart){ const ds=collectDailySeries(30); dailyChart.data.labels=ds.labels; dailyChart.data.datasets[0].label=t("dailyWorkload"); dailyChart.data.datasets[0].data=ds.data; dailyChart.update(); }
 }
 function renderProducts(){
@@ -1665,15 +1763,14 @@ function renderTrackerStats(){
 }
 function renderAnStats(){
   const rows=scopedData(); rows.forEach(ensureVideoTracks);
-  const t1=rows.filter(v=>v.type==="T1").reduce((a,v)=>a+TRACKS.reduce((b,trk)=>b+(trackComplete(v[trk])?1:0),0),0);
-  const t2=rows.filter(v=>v.type==="T2").reduce((a,v)=>a+TRACKS.reduce((b,trk)=>b+(trackComplete(v[trk])?1:0),0),0);
-  const den1=rows.filter(v=>v.type==="T1").length*Math.max(1,TRACKS.length);
-  const den2=rows.filter(v=>v.type==="T2").length*Math.max(1,TRACKS.length);
   const todayN=countCompletionsOnDate(todayStr());
-  document.getElementById("anStats").innerHTML=
-    `<div class="stat green"><div class="l">${t("todayCompletions")}</div><div class="v">${todayN}</div></div>
-     <div class="stat blue"><div class="l">${t("types").T1} ✓</div><div class="v">${t1} <small>/${den1}</small></div></div>
-     <div class="stat"><div class="l">${t("types").T2} ✓</div><div class="v">${t2} <small>/${den2}</small></div></div>`;
+  let html=`<div class="stat green"><div class="l">${t("todayCompletions")}</div><div class="v">${todayN}</div></div>`;
+  TYPE_DEFS.forEach((d,i)=>{
+    const done=rows.filter(v=>v.type===d.id).reduce((a,v)=>a+TRACKS.reduce((b,trk)=>b+(trackComplete(v[trk])?1:0),0),0);
+    const den=rows.filter(v=>v.type===d.id).length*Math.max(1,TRACKS.length);
+    html+=`<div class="stat ${i===0?"blue":""}"><div class="l">${esc(typeLabel(d.id))} ✓</div><div class="v">${done} <small>/${den}</small></div></div>`;
+  });
+  document.getElementById("anStats").innerHTML=html;
 }
 function stageChips(v,trk){
   ensureVideoTracks(v); const tr=v[trk],cur=trackCurrent(tr);
@@ -1738,7 +1835,7 @@ function renderTable(){
         <div class="vid-sub">${esc(v.project_id)}·${esc(v.video_id)}${v.priority?` · ${t("prios")[v.priority]}`:""}</div>
         ${v.description?`<div class="vid-desc">${esc(v.description)}</div>`:`<div class="vid-add">+ ${t("addDetails")}</div>`}
       </td>
-      <td><span class="pill ${v.type.toLowerCase()}">${t("types")[v.type]}</span></td>
+      <td><span class="pill ${(v.type||"t1").toLowerCase()}">${esc(typeLabel(v.type))}<div class="vid-sub">${videoDuration(v)}s</div></span></td>
       <td>${langCell(v)}</td>
       <td>${stageChips(v,trk)}</td>
       <td>${currentCell(v)}</td>
@@ -1943,11 +2040,12 @@ function updateEntryCount(){
 }
 function fillEntryForm(){
   document.getElementById("productList").innerHTML=PRODUCTS.map(p=>`<option value="${esc(p)}">`).join("");
-  const eBiz=document.getElementById("eBiz"); if(eBiz) eBiz.innerHTML=bizOptions(defaultBusiness(),false);
+  fillBizList();
+  const eBiz=document.getElementById("eBiz"); if(eBiz) eBiz.value=defaultBusiness();
   const pr=I18N[LANG].prios;
   document.getElementById("ePrio").innerHTML=Object.keys(pr).map(k=>`<option value="${k}">${pr[k]}</option>`).join("");
-  const ts=I18N[LANG].types;
-  document.getElementById("eType").innerHTML=["T1","T2"].map(k=>`<option value="${k}">${ts[k]||k}</option>`).join("");
+  const eType=document.getElementById("eType"); if(eType){ eType.innerHTML=typeOptionsHtml(defaultTypeId()); }
+  const eDur=document.getElementById("eDuration"); if(eDur) eDur.value=defaultDurationForType(defaultTypeId());
   updateEntryCount();
 }
 function openEntryModal(){
@@ -1993,8 +2091,9 @@ function addEntryVideo(){
   const name=(document.getElementById("eName").value||"").trim();
   const desc=(document.getElementById("eDesc").value||"").trim();
   const prio=document.getElementById("ePrio").value;
-  const bizEl=document.getElementById("eBiz"); const biz=bizEl?bizEl.value:defaultBusiness();
-  const v=blankVideo(nextVideoId(), product, type, biz);
+  const biz=ensureBusinessName((document.getElementById("eBiz")||{}).value);
+  const durEl=document.getElementById("eDuration"); const dur=durEl?+durEl.value:0;
+  const v=blankVideo(nextVideoId(), product, type, biz, dur);
   v.name=name; v.description=desc; v.priority=prio;
   DATA.push(v); save();
   document.getElementById("eName").value=""; document.getElementById("eDesc").value="";
@@ -2041,11 +2140,11 @@ function buildStepEditor(v){
 }
 function openModal(id){ const v=DATA.find(x=>x.id===id); if(!v)return; ensureVideoTracks(v); editingId=id;
   document.getElementById("mSub").textContent=`${v.project_id}·${v.video_id} · ${taskCode(v.id)} · ${v.business||defaultBusiness()}`;
-  const mBiz=document.getElementById("mBiz"); if(mBiz){ mBiz.innerHTML=bizOptions(v.business||defaultBusiness(),false); mBiz.value=v.business||defaultBusiness(); }
+  fillBizList();
+  const mBiz=document.getElementById("mBiz"); if(mBiz) mBiz.value=v.business||defaultBusiness();
   document.getElementById("mProduct").value=v.product||"";
-  const ts=I18N[LANG].types;
-  document.getElementById("mType").innerHTML=["T1","T2"].map(k=>`<option value="${k}">${ts[k]||k}</option>`).join("");
-  document.getElementById("mType").value=v.type||"T1";
+  const mType=document.getElementById("mType"); if(mType){ mType.innerHTML=typeOptionsHtml(v.type||defaultTypeId()); mType.value=v.type||defaultTypeId(); }
+  const mDur=document.getElementById("mDuration"); if(mDur) mDur.value=videoDuration(v);
   document.getElementById("mName").value=v.name||""; document.getElementById("mDesc").value=v.description||"";
   const pr=I18N[LANG].prios; document.getElementById("mPrio").innerHTML=Object.keys(pr).map(k=>`<option value="${k}" ${k===(v.priority||"")?"selected":""}>${pr[k]}</option>`).join("");
   buildStepEditor(v);
@@ -2055,9 +2154,10 @@ function openModal(id){ const v=DATA.find(x=>x.id===id); if(!v)return; ensureVid
 }
 function closeModal(){ document.getElementById("modal").classList.remove("open"); editingId=null; }
 function saveModal(){ const v=DATA.find(x=>x.id===editingId); if(!v){closeModal();return;}
-  const mBiz=document.getElementById("mBiz"); if(mBiz){ v.business=mBiz.value||defaultBusiness(); if(BUSINESSES.indexOf(v.business)<0){ BUSINESSES.push(v.business); saveBusinesses(); } }
+  const mBiz=document.getElementById("mBiz"); if(mBiz) v.business=ensureBusinessName(mBiz.value);
   v.product=(document.getElementById("mProduct").value||"").trim()||"—";
-  v.type=document.getElementById("mType").value||"T1";
+  v.type=document.getElementById("mType").value||defaultTypeId();
+  const mDur=document.getElementById("mDuration"); v.duration=(mDur&&+mDur.value>0)?Math.round(+mDur.value):defaultDurationForType(v.type);
   v.name=document.getElementById("mName").value.trim(); v.description=document.getElementById("mDesc").value.trim();
   v.priority=document.getElementById("mPrio").value;
   document.querySelectorAll("#mSteps .se-status").forEach(s=>{ const trk=s.dataset.tr, stage=s.dataset.stage, old=v[trk].status[stage], neu=s.value; applyStatusChange(v[trk],stage,neu,old); v[trk].status[stage]=neu; });
@@ -2103,6 +2203,9 @@ function renderAdmin(){
   const al=document.getElementById("adminLang");
   if(al) al.innerHTML = LANG_DEFS.map((l,i)=>`<div class="team-row"><input type="text" value="${esc(l.id)}" disabled style="max-width:70px"><input type="text" value="${esc(l.en)}" onchange="adminRenameLang(${i},'en',this.value)" placeholder="EN"><input type="text" value="${esc(l.zh)}" onchange="adminRenameLang(${i},'zh',this.value)" placeholder="中文"><button class="btn warn" title="${esc(t("removeLangT"))}" onclick="adminRemoveLang(${i})">✕</button></div>`).join("")
     + `<div class="team-row"><input type="text" id="newLangId" placeholder="${esc(t("newLangIdPh"))}" style="max-width:90px"><input type="text" id="newLangEn" placeholder="${esc(t("newLangEnPh"))}"><input type="text" id="newLangZh" placeholder="${esc(t("newLangZhPh"))}" onkeydown="if(event.key==='Enter')adminAddLang()"><button class="btn" onclick="adminAddLang()">+ ${t("addLang")}</button></div>`;
+  const at=document.getElementById("adminType");
+  if(at) at.innerHTML = TYPE_DEFS.map((d,i)=>`<div class="team-row"><input type="text" value="${esc(d.id)}" disabled style="max-width:60px"><input type="text" value="${esc(d.en)}" onchange="adminRenameType(${i},'en',this.value)" placeholder="EN"><input type="text" value="${esc(d.zh)}" onchange="adminRenameType(${i},'zh',this.value)" placeholder="中文"><input type="number" min="1" value="${d.duration||30}" style="max-width:70px" onchange="adminRenameType(${i},'duration',this.value)" title="${esc(t("durationLabel"))}"><button class="btn warn" title="${esc(t("removeTypeT"))}" onclick="adminRemoveType(${i})">✕</button></div>`).join("")
+    + `<div class="team-row"><input type="text" id="newTypeId" placeholder="${esc(t("newTypeIdPh"))}" style="max-width:70px"><input type="text" id="newTypeEn" placeholder="${esc(t("newTypeEnPh"))}"><input type="text" id="newTypeZh" placeholder="${esc(t("newTypeZhPh"))}"><input type="number" id="newTypeDur" min="1" placeholder="${esc(t("newTypeDurPh"))}" style="max-width:70px" onkeydown="if(event.key==='Enter')adminAddType()"><button class="btn" onclick="adminAddType()">+ ${t("addType")}</button></div>`;
   document.getElementById("adminTeam").innerHTML =
     TEAM.map((p,i)=>`<div class="team-row"><input type="text" value="${esc(p)}" onchange="adminRenamePic(${i},this.value)"><button class="btn warn" title="${esc(t("removePicT"))}" onclick="adminRemovePic(${i})">✕</button></div>`).join("")
     + `<div class="team-row"><input type="text" id="newPic" placeholder="${esc(t("newPicPh"))}" onkeydown="if(event.key==='Enter')adminAddPic()"><button class="btn" onclick="adminAddPic()">+ ${t("addPic")}</button></div>`;
@@ -2111,13 +2214,17 @@ function renderAdmin(){
     <td><span class="task-base">${taskCode(v.id)}</span><div class="vid-sub">${esc(v.video_id)}</div></td>
     <td><select onchange="adminSet(${v.id},'business',this.value)">${bizOptions(v.business||defaultBusiness(),false)}</select></td>
     <td>${esc(v.product)}</td>
-    <td><span class="pill ${v.type.toLowerCase()}">${t("types")[v.type]}</span></td>
+    <td><select onchange="adminSetType(${v.id},this.value)">${typeOptionsHtml(v.type||defaultTypeId())}</select><input type="number" min="1" value="${videoDuration(v)}" style="margin-top:4px" onchange="adminSet(${v.id},'duration',this.value)" title="${esc(t("durationLabel"))}"></td>
     <td><select onchange="adminSet(${v.id},'priority',this.value)">${Object.keys(pr).map(k=>`<option value="${k}" ${k===(v.priority||"")?"selected":""}>${pr[k]}</option>`).join("")}</select></td>
     <td><input type="text" value="${esc(v.name)}" placeholder="${esc(t("namePh"))}" oninput="adminSet(${v.id},'name',this.value)"></td>
     <td><input type="text" value="${esc(v.description)}" placeholder="${esc(t("descPh"))}" oninput="adminSet(${v.id},'description',this.value)"></td>
   </tr>`; }).join("");
 }
-function adminSet(id,field,val){ const v=DATA.find(x=>x.id===id); if(v){ v[field]=val; if(field==="business"&&val&&BUSINESSES.indexOf(val)<0){ BUSINESSES.push(val); saveBusinesses(); } save(); if(field==="priority"||field==="business")render(); } }
+function adminSet(id,field,val){ const v=DATA.find(x=>x.id===id); if(!v)return;
+  if(field==="duration"){ v.duration=(+val>0)?Math.round(+val):defaultDurationForType(v.type); save(); render(); return; }
+  v[field]=val; if(field==="business") ensureBusinessName(val); save(); if(field==="priority"||field==="business")render();
+}
+function adminSetType(id,typeId){ const v=DATA.find(x=>x.id===id); if(!v)return; v.type=typeId||defaultTypeId(); v.duration=defaultDurationForType(v.type); save(); render(); }
 function adminBulkPic(){
   const stage=document.getElementById("aStage").value, track=document.getElementById("aTrack").value, pic=document.getElementById("aPic").value;
   const trks=track==="both"?TRACKS:[track];
@@ -2153,6 +2260,30 @@ function adminRemoveLang(i){
   LANG_DEFS.splice(i,1); saveLanguages();
   Object.keys(ROW_LANG).forEach(k=>{ if(ROW_LANG[k]===id) delete ROW_LANG[k]; });
   render();
+}
+
+function adminAddType(){
+  const idEl=document.getElementById("newTypeId"), enEl=document.getElementById("newTypeEn"), zhEl=document.getElementById("newTypeZh"), durEl=document.getElementById("newTypeDur");
+  let id=((idEl&&idEl.value)||"").trim(); if(!id) return;
+  if(TYPE_DEFS.some(d=>d.id===id)){ if(idEl)idEl.value=""; return; }
+  const en=((enEl&&enEl.value)||id).trim(), zh=((zhEl&&zhEl.value)||en).trim();
+  const duration=(durEl&&+durEl.value>0)?Math.round(+durEl.value):30;
+  TYPE_DEFS.push({id,en,zh,duration}); saveTypes();
+  if(idEl)idEl.value=""; if(enEl)enEl.value=""; if(zhEl)zhEl.value=""; if(durEl)durEl.value="";
+  render();
+}
+function adminRenameType(i,field,val){
+  if(!TYPE_DEFS[i]) return;
+  if(field==="duration"){ TYPE_DEFS[i].duration=(+val>0)?Math.round(+val):30; }
+  else { val=(val||"").trim(); if(!val){ render(); return; } TYPE_DEFS[i][field]=val; }
+  saveTypes(); render();
+}
+function adminRemoveType(i){
+  if(TYPE_DEFS.length<=1) return;
+  const id=TYPE_DEFS[i].id; TYPE_DEFS.splice(i,1); saveTypes();
+  const fb=defaultTypeId();
+  DATA.forEach(v=>{ if(v.type===id){ v.type=fb; v.duration=defaultDurationForType(fb); } });
+  save(); render();
 }
 function adminAddPic(){ const el=document.getElementById("newPic"); const v=(el.value||"").trim(); if(v && !TEAM.includes(v)){ TEAM.push(v); saveTeam(); render(); } }
 function adminRenamePic(i,val){ val=(val||"").trim(); const old=TEAM[i]; if(!val||val===old)return;
