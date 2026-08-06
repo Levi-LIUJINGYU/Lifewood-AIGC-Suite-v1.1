@@ -1,179 +1,18 @@
 {
   "version": 2,
-  "updated_at": "2026-06-30T10:07:17.687Z",
+  "updated_at": "2026-08-06T01:39:52.395Z",
   "custom_mode": true,
   "daily_goal": 20,
+  "daily_video_goal": 20,
+  "daily_stage_goal": 20,
+  "daily_stage": "distribution",
   "team": [
     "Gavin",
     "Ian",
     "Eva",
     "Pierce",
-    "Vena"
-  ],
-  "sync_log": [],
-  "videos": [
-    {
-      "id": 1,
-      "project_id": "AIGC001",
-      "video_id": "VID001",
-      "product": "Creatine Monohydrate",
-      "type": "T1",
-      "name": "sss",
-      "description": "ssss",
-      "priority": "high",
-      "flag": false,
-      "revisions": 0,
-      "reason": "",
-      "notes": "",
-      "en": {
-        "status": {
-          "brief": "approved",
-          "script": "approved",
-          "voice": "approved",
-          "music": "approved",
-          "video": "approved",
-          "review": "approved",
-          "distribution": "approved"
-        },
-        "pic": {
-          "brief": "",
-          "script": "",
-          "voice": "",
-          "music": "",
-          "video": "",
-          "review": "",
-          "distribution": ""
-        },
-        "completed_at": {
-          "brief": "2026-06-30T18:07",
-          "script": "2026-06-30T18:07",
-          "voice": "2026-06-30T18:07",
-          "music": "2026-06-30T18:07",
-          "video": "2026-06-30T18:07",
-          "review": "2026-06-30T18:07",
-          "distribution": "2026-06-30T18:07"
-        },
-        "latest_file_name": "",
-        "latest_file_path": "",
-        "latest_version": "",
-        "last_updated_at": "2026-06-30"
-      },
-      "es": {
-        "status": {
-          "brief": "approved",
-          "script": "approved",
-          "voice": "approved",
-          "music": "approved",
-          "video": "approved",
-          "review": "approved",
-          "distribution": "approved"
-        },
-        "pic": {
-          "brief": "",
-          "script": "",
-          "voice": "",
-          "music": "",
-          "video": "",
-          "review": "",
-          "distribution": ""
-        },
-        "completed_at": {
-          "brief": "2026-06-30T18:07",
-          "script": "2026-06-30T18:07",
-          "voice": "2026-06-30T18:07",
-          "music": "2026-06-30T18:07",
-          "video": "2026-06-30T18:07",
-          "review": "2026-06-30T18:07",
-          "distribution": "2026-06-30T18:07"
-        },
-        "latest_file_name": "",
-        "latest_file_path": "",
-        "latest_version": "",
-        "last_updated_at": "2026-06-30"
-      },
-      "business": "Bucked Up"
-    },
-    {
-      "id": 2,
-      "project_id": "AIGC001",
-      "video_id": "VID002",
-      "product": "RUT Testosterone Booster",
-      "type": "T1",
-      "name": "5",
-      "description": "58",
-      "priority": "high",
-      "flag": false,
-      "revisions": 0,
-      "reason": "",
-      "notes": "",
-      "en": {
-        "status": {
-          "brief": "not_started",
-          "script": "not_started",
-          "voice": "not_started",
-          "music": "not_started",
-          "video": "not_started",
-          "review": "not_started",
-          "distribution": "not_started"
-        },
-        "pic": {
-          "brief": "",
-          "script": "",
-          "voice": "",
-          "music": "",
-          "video": "",
-          "review": "",
-          "distribution": ""
-        },
-        "completed_at": {
-          "brief": "",
-          "script": "",
-          "voice": "",
-          "music": "",
-          "video": "",
-          "review": "",
-          "distribution": ""
-        },
-        "latest_file_name": "",
-        "latest_file_path": "",
-        "latest_version": "",
-        "last_updated_at": ""
-      },
-      "es": {
-        "status": {
-          "brief": "not_started",
-          "script": "not_started",
-          "voice": "not_started",
-          "music": "not_started",
-          "video": "not_started",
-          "review": "not_started",
-          "distribution": "not_started"
-        },
-        "pic": {
-          "brief": "",
-          "script": "",
-          "voice": "",
-          "music": "",
-          "video": "",
-          "review": "",
-          "distribution": ""
-        },
-        "completed_at": {
-          "brief": "",
-          "script": "",
-          "voice": "",
-          "music": "",
-          "video": "",
-          "review": "",
-          "distribution": ""
-        },
-        "latest_file_name": "",
-        "latest_file_path": "",
-        "latest_version": "",
-        "last_updated_at": ""
-      },
-      "business": "Bucked Up"
-    }
+    "Vena",
+    "Georges"
   ],
   "businesses": [
     "Bucked Up"
@@ -188,6 +27,6165 @@
       "id": "es",
       "en": "Spanish",
       "zh": "西班牙语"
+    }
+  ],
+  "sync_log": [],
+  "videos": [
+    {
+      "id": 2,
+      "project_id": "AIGC001",
+      "video_id": "VID002",
+      "product": "Protein Drinks",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "Protein Drinks-30s-v1",
+      "description": "Protein Drinks-30s-v1",
+      "priority": "",
+      "flag": false,
+      "revisions": 1,
+      "reason": "audio",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "Georges",
+          "script": "Georges",
+          "voice": "Ian",
+          "music": "Ian",
+          "video": "Eva",
+          "review": "Eva",
+          "distribution": "Pierce"
+        },
+        "completed_at": {
+          "brief": "2026-08-05T15:08",
+          "script": "2026-08-05T15:07",
+          "voice": "2026-08-05T15:07",
+          "music": "2026-08-05T15:07",
+          "video": "2026-08-05T15:07",
+          "review": "2026-08-05T15:07",
+          "distribution": "2026-08-05T15:07"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-08-05"
+      },
+      "es": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-08-05T15:09",
+          "script": "2026-08-05T15:09",
+          "voice": "2026-08-05T15:09",
+          "music": "2026-08-05T15:09",
+          "video": "2026-08-05T15:09",
+          "review": "2026-08-05T15:09",
+          "distribution": "2026-08-05T15:09"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-08-05"
+      }
+    },
+    {
+      "id": 3,
+      "project_id": "AIGC001",
+      "video_id": "VID003",
+      "product": "Creatine",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "90%的人肌酸吃错了",
+      "description": "90%的人肌酸吃错了",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 4,
+      "project_id": "AIGC001",
+      "video_id": "VID004",
+      "product": "Creatine",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "上班族也能练出力量感",
+      "description": "上班族也能练出力量感",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 6,
+      "project_id": "AIGC001",
+      "video_id": "VID006",
+      "product": "Creatine",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "Creatine-60s-v3",
+      "description": "Creatine-60s-v3",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "reviewing",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-06T17:02",
+          "script": "2026-07-06T17:02",
+          "voice": "2026-07-06T17:02",
+          "music": "2026-07-06T17:02",
+          "video": "2026-07-06T17:02",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-06"
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-06"
+      }
+    },
+    {
+      "id": 16,
+      "project_id": "AIGC001",
+      "video_id": "VID016",
+      "product": "Woke AF Pre Workout",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "别空着状态练",
+      "description": "别空着状态练",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 21,
+      "project_id": "AIGC001",
+      "video_id": "VID021",
+      "product": "Bucked Up Pre Workout",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "训练前一口",
+      "description": "训练前一口",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 22,
+      "project_id": "AIGC001",
+      "video_id": "VID022",
+      "product": "Bucked Up Pre Workout",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "没状态也要练",
+      "description": "没状态也要练",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 23,
+      "project_id": "AIGC001",
+      "video_id": "VID023",
+      "product": "Bucked Up Pre Workout",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "稳定输出感",
+      "description": "稳定输出感",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 24,
+      "project_id": "AIGC001",
+      "video_id": "VID024",
+      "product": "Bucked Up Pre Workout",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "健身前准备",
+      "description": "健身前准备",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 29,
+      "project_id": "AIGC001",
+      "video_id": "VID029",
+      "product": "Energy Drink",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "一罐开机",
+      "description": "一罐开机",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "reviewing",
+          "script": "reviewing",
+          "voice": "in_progress",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-08-05"
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 30,
+      "project_id": "AIGC001",
+      "video_id": "VID030",
+      "product": "Energy Drink",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "低电量救场",
+      "description": "低电量救场",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 31,
+      "project_id": "AIGC001",
+      "video_id": "VID031",
+      "product": "Energy Drink",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "清醒但不复杂",
+      "description": "清醒但不复杂",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 32,
+      "project_id": "AIGC001",
+      "video_id": "VID032",
+      "product": "Energy Drink",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "随手能量补给",
+      "description": "随手能量补给",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 34,
+      "project_id": "AIGC001",
+      "video_id": "VID034",
+      "product": "Creatine Monohydrate",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "Creatine Monohydrate-30s-v1",
+      "description": "Creatine Monohydrate-30s-v1",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "reviewing",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-08T10:42",
+          "script": "2026-07-08T10:42",
+          "voice": "2026-07-08T10:42",
+          "music": "2026-07-08T10:42",
+          "video": "2026-07-08T10:42",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-08"
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-08"
+      }
+    },
+    {
+      "id": 35,
+      "project_id": "AIGC001",
+      "video_id": "VID035",
+      "product": "Creatine Monohydrate",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "Creatine Monohydrate-30s-v2",
+      "description": "Creatine Monohydrate-30s-v2",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "reviewing",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-08T10:43",
+          "script": "2026-07-08T10:43",
+          "voice": "2026-07-08T10:43",
+          "music": "2026-07-08T10:43",
+          "video": "2026-07-08T10:43",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-08"
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-08"
+      }
+    },
+    {
+      "id": 36,
+      "project_id": "AIGC001",
+      "video_id": "VID036",
+      "product": "Creatine Monohydrate",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "Creatine Monohydrate-30s-v3",
+      "description": "Creatine Monohydrate-30s-v3",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "reviewing",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-08T10:43",
+          "script": "2026-07-08T10:43",
+          "voice": "2026-07-08T10:43",
+          "music": "2026-07-08T10:43",
+          "video": "2026-07-08T10:43",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-08"
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-08"
+      }
+    },
+    {
+      "id": 37,
+      "project_id": "AIGC001",
+      "video_id": "VID037",
+      "product": "Protein Drink",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "汽水感蛋白",
+      "description": "汽水感蛋白",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 38,
+      "project_id": "AIGC001",
+      "video_id": "VID038",
+      "product": "Protein Drink",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "清爽补蛋白",
+      "description": "清爽补蛋白",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 39,
+      "project_id": "AIGC001",
+      "video_id": "VID039",
+      "product": "Protein Drink",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "不用摇杯",
+      "description": "不用摇杯",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 40,
+      "project_id": "AIGC001",
+      "video_id": "VID040",
+      "product": "Protein Drink",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "健身后打开",
+      "description": "健身后打开",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 41,
+      "project_id": "AIGC001",
+      "video_id": "VID041",
+      "product": "Mother Bucker Pre Workout",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "重训练日的强力训练前",
+      "description": "重训练日的强力训练前",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 42,
+      "project_id": "AIGC001",
+      "video_id": "VID042",
+      "product": "Mother Bucker Pre Workout",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "当普通能量不够用",
+      "description": "当普通能量不够用",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 43,
+      "project_id": "AIGC001",
+      "video_id": "VID043",
+      "product": "Mother Bucker Pre Workout",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "硬核训练前挑战",
+      "description": "硬核训练前挑战",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 44,
+      "project_id": "AIGC001",
+      "video_id": "VID044",
+      "product": "Mother Bucker Pre Workout",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "推重量前的状态切换",
+      "description": "推重量前的状态切换",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 45,
+      "project_id": "AIGC001",
+      "video_id": "VID045",
+      "product": "Mother Bucker Pre Workout",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "硬核训练前",
+      "description": "硬核训练前",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 46,
+      "project_id": "AIGC001",
+      "video_id": "VID046",
+      "product": "Mother Bucker Pre Workout",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "重训日专用",
+      "description": "重训日专用",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 47,
+      "project_id": "AIGC001",
+      "video_id": "VID047",
+      "product": "Mother Bucker Pre Workout",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "状态拉满",
+      "description": "状态拉满",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 48,
+      "project_id": "AIGC001",
+      "video_id": "VID048",
+      "product": "Mother Bucker Pre Workout",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "准备推重量",
+      "description": "准备推重量",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 49,
+      "project_id": "AIGC001",
+      "video_id": "VID049",
+      "product": "Six Point Creatine",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "不只是普通肌酸",
+      "description": "不只是普通肌酸",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 50,
+      "project_id": "AIGC001",
+      "video_id": "VID050",
+      "product": "Six Point Creatine",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "力量恢复与训练表现测试",
+      "description": "力量恢复与训练表现测试",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 51,
+      "project_id": "AIGC001",
+      "video_id": "VID051",
+      "product": "Six Point Creatine",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "进阶训练者的肌酸选择",
+      "description": "进阶训练者的肌酸选择",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 52,
+      "project_id": "AIGC001",
+      "video_id": "VID052",
+      "product": "Six Point Creatine",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "每天一勺的长期改变",
+      "description": "每天一勺的长期改变",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 53,
+      "project_id": "AIGC001",
+      "video_id": "VID053",
+      "product": "Six Point Creatine",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "进阶肌酸",
+      "description": "进阶肌酸",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 54,
+      "project_id": "AIGC001",
+      "video_id": "VID054",
+      "product": "Six Point Creatine",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "训练表现补给",
+      "description": "训练表现补给",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 55,
+      "project_id": "AIGC001",
+      "video_id": "VID055",
+      "product": "Six Point Creatine",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "每天一勺",
+      "description": "每天一勺",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 56,
+      "project_id": "AIGC001",
+      "video_id": "VID056",
+      "product": "Six Point Creatine",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "恢复力量感",
+      "description": "恢复力量感",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 57,
+      "project_id": "AIGC001",
+      "video_id": "VID057",
+      "product": "RUT Test Booster",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "30岁后男人状态下降信号",
+      "description": "30岁后男人状态下降信号",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 58,
+      "project_id": "AIGC001",
+      "video_id": "VID058",
+      "product": "RUT Test Booster",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "不是累是身体状态掉了",
+      "description": "不是累是身体状态掉了",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 59,
+      "project_id": "AIGC001",
+      "video_id": "VID059",
+      "product": "RUT Test Booster",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "男性日常状态管理",
+      "description": "男性日常状态管理",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 60,
+      "project_id": "AIGC001",
+      "video_id": "VID060",
+      "product": "RUT Test Booster",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "从没精神到重新有劲",
+      "description": "从没精神到重新有劲",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 61,
+      "project_id": "AIGC001",
+      "video_id": "VID061",
+      "product": "RUT Test Booster",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "30岁后要听",
+      "description": "30岁后要听",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 62,
+      "project_id": "AIGC001",
+      "video_id": "VID062",
+      "product": "RUT Test Booster",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "男人状态下降",
+      "description": "男人状态下降",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 63,
+      "project_id": "AIGC001",
+      "video_id": "VID063",
+      "product": "RUT Test Booster",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "重新有劲",
+      "description": "重新有劲",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 64,
+      "project_id": "AIGC001",
+      "video_id": "VID064",
+      "product": "RUT Test Booster",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "日常状态管理",
+      "description": "日常状态管理",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 65,
+      "project_id": "AIGC001",
+      "video_id": "VID065",
+      "product": "Buck Naked Fat Burner",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "减脂期最怕的不是饿",
+      "description": "减脂期最怕的不是饿",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 66,
+      "project_id": "AIGC001",
+      "video_id": "VID066",
+      "product": "Buck Naked Fat Burner",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "早晨燃脂状态挑战",
+      "description": "早晨燃脂状态挑战",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 67,
+      "project_id": "AIGC001",
+      "video_id": "VID067",
+      "product": "Buck Naked Fat Burner",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "从拖延到开始减脂",
+      "description": "从拖延到开始减脂",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 68,
+      "project_id": "AIGC001",
+      "video_id": "VID068",
+      "product": "Buck Naked Fat Burner",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "减脂不是靠意志硬撑",
+      "description": "减脂不是靠意志硬撑",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 69,
+      "project_id": "AIGC001",
+      "video_id": "VID069",
+      "product": "Buck Naked Fat Burner",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "减脂期救场",
+      "description": "减脂期救场",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 70,
+      "project_id": "AIGC001",
+      "video_id": "VID070",
+      "product": "Buck Naked Fat Burner",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "早晨燃脂感",
+      "description": "早晨燃脂感",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 71,
+      "project_id": "AIGC001",
+      "video_id": "VID071",
+      "product": "Buck Naked Fat Burner",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "别再拖延",
+      "description": "别再拖延",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 72,
+      "project_id": "AIGC001",
+      "video_id": "VID072",
+      "product": "Buck Naked Fat Burner",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "减脂启动",
+      "description": "减脂启动",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 73,
+      "project_id": "AIGC001",
+      "video_id": "VID073",
+      "product": "Buck Feed Protein",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "一天蛋白质为什么总是不够",
+      "description": "一天蛋白质为什么总是不够",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 74,
+      "project_id": "AIGC001",
+      "video_id": "VID074",
+      "product": "Buck Feed Protein",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "增肌期的蛋白补给方案",
+      "description": "增肌期的蛋白补给方案",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 75,
+      "project_id": "AIGC001",
+      "video_id": "VID075",
+      "product": "Buck Feed Protein",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "忙碌上班族怎么补蛋白",
+      "description": "忙碌上班族怎么补蛋白",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 76,
+      "project_id": "AIGC001",
+      "video_id": "VID076",
+      "product": "Buck Feed Protein",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "训练后恢复从蛋白开始",
+      "description": "训练后恢复从蛋白开始",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 77,
+      "project_id": "AIGC001",
+      "video_id": "VID077",
+      "product": "Buck Feed Protein",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "蛋白不够了",
+      "description": "蛋白不够了",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 78,
+      "project_id": "AIGC001",
+      "video_id": "VID078",
+      "product": "Buck Feed Protein",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "增肌补给",
+      "description": "增肌补给",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 79,
+      "project_id": "AIGC001",
+      "video_id": "VID079",
+      "product": "Buck Feed Protein",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "训练后恢复",
+      "description": "训练后恢复",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 80,
+      "project_id": "AIGC001",
+      "video_id": "VID080",
+      "product": "Buck Feed Protein",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "忙人蛋白方案",
+      "description": "忙人蛋白方案",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 81,
+      "project_id": "AIGC001",
+      "video_id": "VID081",
+      "product": "PWR BUCK",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "不用喝饮料的能量方式",
+      "description": "不用喝饮料的能量方式",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 82,
+      "project_id": "AIGC001",
+      "video_id": "VID082",
+      "product": "PWR BUCK",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "开车上班健身都能用",
+      "description": "开车上班健身都能用",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 83,
+      "project_id": "AIGC001",
+      "video_id": "VID083",
+      "product": "PWR BUCK",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "口袋里的清醒补给",
+      "description": "口袋里的清醒补给",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 84,
+      "project_id": "AIGC001",
+      "video_id": "VID084",
+      "product": "PWR BUCK",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "无尼古丁能量袋测试",
+      "description": "无尼古丁能量袋测试",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 85,
+      "project_id": "AIGC001",
+      "video_id": "VID085",
+      "product": "PWR BUCK",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "口袋能量",
+      "description": "口袋能量",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 86,
+      "project_id": "AIGC001",
+      "video_id": "VID086",
+      "product": "PWR BUCK",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "不用开罐",
+      "description": "不用开罐",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 87,
+      "project_id": "AIGC001",
+      "video_id": "VID087",
+      "product": "PWR BUCK",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "无尼古丁选择",
+      "description": "无尼古丁选择",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 88,
+      "project_id": "AIGC001",
+      "video_id": "VID088",
+      "product": "PWR BUCK",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "随时清醒",
+      "description": "随时清醒",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 89,
+      "project_id": "AIGC001",
+      "video_id": "VID089",
+      "product": "Pump Ocalypse",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "训练泵感到底是什么",
+      "description": "训练泵感到底是什么",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 90,
+      "project_id": "AIGC001",
+      "video_id": "VID090",
+      "product": "Pump Ocalypse",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "手臂训练前后对比",
+      "description": "手臂训练前后对比",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 91,
+      "project_id": "AIGC001",
+      "video_id": "VID091",
+      "product": "Pump Ocalypse",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "健身房泵感挑战",
+      "description": "健身房泵感挑战",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 92,
+      "project_id": "AIGC001",
+      "video_id": "VID092",
+      "product": "Pump Ocalypse",
+      "type": "T1",
+      "business": "Bucked Up",
+      "name": "不是刺激是充血感",
+      "description": "不是刺激是充血感",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "2分钟主片，可用于完整叙事/投放测试",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 93,
+      "project_id": "AIGC001",
+      "video_id": "VID093",
+      "product": "Pump Ocalypse",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "泵感来了",
+      "description": "泵感来了",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 94,
+      "project_id": "AIGC001",
+      "video_id": "VID094",
+      "product": "Pump Ocalypse",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "手臂爆胀感",
+      "description": "手臂爆胀感",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 95,
+      "project_id": "AIGC001",
+      "video_id": "VID095",
+      "product": "Pump Ocalypse",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "训练前泵感",
+      "description": "训练前泵感",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 96,
+      "project_id": "AIGC001",
+      "video_id": "VID096",
+      "product": "Pump Ocalypse",
+      "type": "T2",
+      "business": "Bucked Up",
+      "name": "健身房挑战",
+      "description": "健身房挑战",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "30秒短片，可用于Hook测试/短广告",
+      "en": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "not_started",
+          "script": "not_started",
+          "voice": "not_started",
+          "music": "not_started",
+          "video": "not_started",
+          "review": "not_started",
+          "distribution": "not_started"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
     }
   ]
 }
