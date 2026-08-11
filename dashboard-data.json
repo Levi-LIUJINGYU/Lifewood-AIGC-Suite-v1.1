@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated_at": "2026-08-06T03:09:52.839Z",
+  "updated_at": "2026-08-06T07:00:37.473Z",
   "custom_mode": true,
   "daily_goal": 20,
   "daily_video_goal": 20,
@@ -49,6 +49,20 @@
       "zh": "韩语"
     }
   ],
+  "types": [
+    {
+      "id": "T1",
+      "en": "Type 1 (~30s)",
+      "zh": "类型1 (约30秒)",
+      "duration": 30
+    },
+    {
+      "id": "T2",
+      "en": "Type 2 (~120s)",
+      "zh": "类型2 (约120秒)",
+      "duration": 120
+    }
+  ],
   "sync_log": [],
   "videos": [
     {
@@ -57,6 +71,7 @@
       "video_id": "VID002",
       "product": "Protein Drinks",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "Protein Drinks-30s-v1",
       "description": "Protein Drinks-30s-v1",
@@ -131,7 +146,6 @@
         "latest_version": "",
         "last_updated_at": "2026-08-05"
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -271,6 +285,7 @@
       "video_id": "VID003",
       "product": "Creatine",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "90%的人肌酸吃错了",
       "description": "90%的人肌酸吃错了",
@@ -345,7 +360,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -485,6 +499,7 @@
       "video_id": "VID004",
       "product": "Creatine",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "上班族也能练出力量感",
       "description": "上班族也能练出力量感",
@@ -559,7 +574,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -699,6 +713,7 @@
       "video_id": "VID006",
       "product": "Creatine",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "Creatine-60s-v3",
       "description": "Creatine-60s-v3",
@@ -773,7 +788,6 @@
         "latest_version": "",
         "last_updated_at": "2026-07-06"
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -913,6 +927,7 @@
       "video_id": "VID016",
       "product": "Woke AF Pre Workout",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "别空着状态练",
       "description": "别空着状态练",
@@ -987,7 +1002,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -1127,6 +1141,7 @@
       "video_id": "VID021",
       "product": "Bucked Up Pre Workout",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "训练前一口",
       "description": "训练前一口",
@@ -1201,7 +1216,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -1341,6 +1355,7 @@
       "video_id": "VID022",
       "product": "Bucked Up Pre Workout",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "没状态也要练",
       "description": "没状态也要练",
@@ -1415,7 +1430,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -1555,6 +1569,7 @@
       "video_id": "VID023",
       "product": "Bucked Up Pre Workout",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "稳定输出感",
       "description": "稳定输出感",
@@ -1629,7 +1644,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -1769,6 +1783,7 @@
       "video_id": "VID024",
       "product": "Bucked Up Pre Workout",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "健身前准备",
       "description": "健身前准备",
@@ -1843,7 +1858,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -1983,6 +1997,7 @@
       "video_id": "VID029",
       "product": "Energy Drink",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "一罐开机",
       "description": "一罐开机",
@@ -2057,7 +2072,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -2197,6 +2211,7 @@
       "video_id": "VID030",
       "product": "Energy Drink",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "低电量救场",
       "description": "低电量救场",
@@ -2271,7 +2286,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -2411,6 +2425,7 @@
       "video_id": "VID031",
       "product": "Energy Drink",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "清醒但不复杂",
       "description": "清醒但不复杂",
@@ -2485,7 +2500,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -2625,6 +2639,7 @@
       "video_id": "VID032",
       "product": "Energy Drink",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "随手能量补给",
       "description": "随手能量补给",
@@ -2699,7 +2714,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -2839,6 +2853,7 @@
       "video_id": "VID034",
       "product": "Creatine Monohydrate",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "Creatine Monohydrate-30s-v1",
       "description": "Creatine Monohydrate-30s-v1",
@@ -2913,7 +2928,6 @@
         "latest_version": "",
         "last_updated_at": "2026-07-08"
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -3053,6 +3067,7 @@
       "video_id": "VID035",
       "product": "Creatine Monohydrate",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "Creatine Monohydrate-30s-v2",
       "description": "Creatine Monohydrate-30s-v2",
@@ -3127,7 +3142,6 @@
         "latest_version": "",
         "last_updated_at": "2026-07-08"
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -3267,6 +3281,7 @@
       "video_id": "VID036",
       "product": "Creatine Monohydrate",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "Creatine Monohydrate-30s-v3",
       "description": "Creatine Monohydrate-30s-v3",
@@ -3341,7 +3356,6 @@
         "latest_version": "",
         "last_updated_at": "2026-07-08"
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -3481,6 +3495,7 @@
       "video_id": "VID037",
       "product": "Protein Drink",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "汽水感蛋白",
       "description": "汽水感蛋白",
@@ -3555,7 +3570,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -3695,6 +3709,7 @@
       "video_id": "VID038",
       "product": "Protein Drink",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "清爽补蛋白",
       "description": "清爽补蛋白",
@@ -3769,7 +3784,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -3909,6 +3923,7 @@
       "video_id": "VID039",
       "product": "Protein Drink",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "不用摇杯",
       "description": "不用摇杯",
@@ -3983,7 +3998,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -4123,6 +4137,7 @@
       "video_id": "VID040",
       "product": "Protein Drink",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "健身后打开",
       "description": "健身后打开",
@@ -4197,7 +4212,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -4337,6 +4351,7 @@
       "video_id": "VID041",
       "product": "Mother Bucker Pre Workout",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "重训练日的强力训练前",
       "description": "重训练日的强力训练前",
@@ -4411,7 +4426,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -4551,6 +4565,7 @@
       "video_id": "VID042",
       "product": "Mother Bucker Pre Workout",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "当普通能量不够用",
       "description": "当普通能量不够用",
@@ -4625,7 +4640,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -4765,6 +4779,7 @@
       "video_id": "VID043",
       "product": "Mother Bucker Pre Workout",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "硬核训练前挑战",
       "description": "硬核训练前挑战",
@@ -4839,7 +4854,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -4979,6 +4993,7 @@
       "video_id": "VID044",
       "product": "Mother Bucker Pre Workout",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "推重量前的状态切换",
       "description": "推重量前的状态切换",
@@ -5053,7 +5068,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -5193,6 +5207,7 @@
       "video_id": "VID045",
       "product": "Mother Bucker Pre Workout",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "硬核训练前",
       "description": "硬核训练前",
@@ -5267,7 +5282,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -5407,6 +5421,7 @@
       "video_id": "VID046",
       "product": "Mother Bucker Pre Workout",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "重训日专用",
       "description": "重训日专用",
@@ -5481,7 +5496,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -5621,6 +5635,7 @@
       "video_id": "VID047",
       "product": "Mother Bucker Pre Workout",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "状态拉满",
       "description": "状态拉满",
@@ -5695,7 +5710,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -5835,6 +5849,7 @@
       "video_id": "VID048",
       "product": "Mother Bucker Pre Workout",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "准备推重量",
       "description": "准备推重量",
@@ -5909,7 +5924,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -6049,6 +6063,7 @@
       "video_id": "VID049",
       "product": "Six Point Creatine",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "不只是普通肌酸",
       "description": "不只是普通肌酸",
@@ -6123,7 +6138,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -6263,6 +6277,7 @@
       "video_id": "VID050",
       "product": "Six Point Creatine",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "力量恢复与训练表现测试",
       "description": "力量恢复与训练表现测试",
@@ -6337,7 +6352,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -6477,6 +6491,7 @@
       "video_id": "VID051",
       "product": "Six Point Creatine",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "进阶训练者的肌酸选择",
       "description": "进阶训练者的肌酸选择",
@@ -6551,7 +6566,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -6691,6 +6705,7 @@
       "video_id": "VID052",
       "product": "Six Point Creatine",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "每天一勺的长期改变",
       "description": "每天一勺的长期改变",
@@ -6765,7 +6780,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -6905,6 +6919,7 @@
       "video_id": "VID053",
       "product": "Six Point Creatine",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "进阶肌酸",
       "description": "进阶肌酸",
@@ -6979,7 +6994,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -7119,6 +7133,7 @@
       "video_id": "VID054",
       "product": "Six Point Creatine",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "训练表现补给",
       "description": "训练表现补给",
@@ -7193,7 +7208,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -7333,6 +7347,7 @@
       "video_id": "VID055",
       "product": "Six Point Creatine",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "每天一勺",
       "description": "每天一勺",
@@ -7407,7 +7422,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -7547,6 +7561,7 @@
       "video_id": "VID056",
       "product": "Six Point Creatine",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "恢复力量感",
       "description": "恢复力量感",
@@ -7621,7 +7636,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -7761,6 +7775,7 @@
       "video_id": "VID057",
       "product": "RUT Test Booster",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "30岁后男人状态下降信号",
       "description": "30岁后男人状态下降信号",
@@ -7835,7 +7850,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -7975,6 +7989,7 @@
       "video_id": "VID058",
       "product": "RUT Test Booster",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "不是累是身体状态掉了",
       "description": "不是累是身体状态掉了",
@@ -8049,7 +8064,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -8189,6 +8203,7 @@
       "video_id": "VID059",
       "product": "RUT Test Booster",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "男性日常状态管理",
       "description": "男性日常状态管理",
@@ -8263,7 +8278,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -8403,6 +8417,7 @@
       "video_id": "VID060",
       "product": "RUT Test Booster",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "从没精神到重新有劲",
       "description": "从没精神到重新有劲",
@@ -8477,7 +8492,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -8617,6 +8631,7 @@
       "video_id": "VID061",
       "product": "RUT Test Booster",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "30岁后要听",
       "description": "30岁后要听",
@@ -8691,7 +8706,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -8831,6 +8845,7 @@
       "video_id": "VID062",
       "product": "RUT Test Booster",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "男人状态下降",
       "description": "男人状态下降",
@@ -8905,7 +8920,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -9045,6 +9059,7 @@
       "video_id": "VID063",
       "product": "RUT Test Booster",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "重新有劲",
       "description": "重新有劲",
@@ -9119,7 +9134,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -9259,6 +9273,7 @@
       "video_id": "VID064",
       "product": "RUT Test Booster",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "日常状态管理",
       "description": "日常状态管理",
@@ -9333,7 +9348,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -9473,6 +9487,7 @@
       "video_id": "VID065",
       "product": "Buck Naked Fat Burner",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "减脂期最怕的不是饿",
       "description": "减脂期最怕的不是饿",
@@ -9547,7 +9562,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -9687,6 +9701,7 @@
       "video_id": "VID066",
       "product": "Buck Naked Fat Burner",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "早晨燃脂状态挑战",
       "description": "早晨燃脂状态挑战",
@@ -9761,7 +9776,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -9901,6 +9915,7 @@
       "video_id": "VID067",
       "product": "Buck Naked Fat Burner",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "从拖延到开始减脂",
       "description": "从拖延到开始减脂",
@@ -9975,7 +9990,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -10115,6 +10129,7 @@
       "video_id": "VID068",
       "product": "Buck Naked Fat Burner",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "减脂不是靠意志硬撑",
       "description": "减脂不是靠意志硬撑",
@@ -10189,7 +10204,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -10329,6 +10343,7 @@
       "video_id": "VID069",
       "product": "Buck Naked Fat Burner",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "减脂期救场",
       "description": "减脂期救场",
@@ -10403,7 +10418,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -10543,6 +10557,7 @@
       "video_id": "VID070",
       "product": "Buck Naked Fat Burner",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "早晨燃脂感",
       "description": "早晨燃脂感",
@@ -10617,7 +10632,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -10757,6 +10771,7 @@
       "video_id": "VID071",
       "product": "Buck Naked Fat Burner",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "别再拖延",
       "description": "别再拖延",
@@ -10831,7 +10846,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -10971,6 +10985,7 @@
       "video_id": "VID072",
       "product": "Buck Naked Fat Burner",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "减脂启动",
       "description": "减脂启动",
@@ -11045,7 +11060,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -11185,6 +11199,7 @@
       "video_id": "VID073",
       "product": "Buck Feed Protein",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "一天蛋白质为什么总是不够",
       "description": "一天蛋白质为什么总是不够",
@@ -11259,7 +11274,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -11399,6 +11413,7 @@
       "video_id": "VID074",
       "product": "Buck Feed Protein",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "增肌期的蛋白补给方案",
       "description": "增肌期的蛋白补给方案",
@@ -11473,7 +11488,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -11613,6 +11627,7 @@
       "video_id": "VID075",
       "product": "Buck Feed Protein",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "忙碌上班族怎么补蛋白",
       "description": "忙碌上班族怎么补蛋白",
@@ -11687,7 +11702,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -11827,6 +11841,7 @@
       "video_id": "VID076",
       "product": "Buck Feed Protein",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "训练后恢复从蛋白开始",
       "description": "训练后恢复从蛋白开始",
@@ -11901,7 +11916,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -12041,6 +12055,7 @@
       "video_id": "VID077",
       "product": "Buck Feed Protein",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "蛋白不够了",
       "description": "蛋白不够了",
@@ -12115,7 +12130,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -12255,6 +12269,7 @@
       "video_id": "VID078",
       "product": "Buck Feed Protein",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "增肌补给",
       "description": "增肌补给",
@@ -12329,7 +12344,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -12469,6 +12483,7 @@
       "video_id": "VID079",
       "product": "Buck Feed Protein",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "训练后恢复",
       "description": "训练后恢复",
@@ -12543,7 +12558,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -12683,6 +12697,7 @@
       "video_id": "VID080",
       "product": "Buck Feed Protein",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "忙人蛋白方案",
       "description": "忙人蛋白方案",
@@ -12757,7 +12772,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -12897,6 +12911,7 @@
       "video_id": "VID081",
       "product": "PWR BUCK",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "不用喝饮料的能量方式",
       "description": "不用喝饮料的能量方式",
@@ -12971,7 +12986,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -13111,6 +13125,7 @@
       "video_id": "VID082",
       "product": "PWR BUCK",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "开车上班健身都能用",
       "description": "开车上班健身都能用",
@@ -13185,7 +13200,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -13325,6 +13339,7 @@
       "video_id": "VID083",
       "product": "PWR BUCK",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "口袋里的清醒补给",
       "description": "口袋里的清醒补给",
@@ -13399,7 +13414,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -13539,6 +13553,7 @@
       "video_id": "VID084",
       "product": "PWR BUCK",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "无尼古丁能量袋测试",
       "description": "无尼古丁能量袋测试",
@@ -13613,7 +13628,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -13753,6 +13767,7 @@
       "video_id": "VID085",
       "product": "PWR BUCK",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "口袋能量",
       "description": "口袋能量",
@@ -13827,7 +13842,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -13967,6 +13981,7 @@
       "video_id": "VID086",
       "product": "PWR BUCK",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "不用开罐",
       "description": "不用开罐",
@@ -14041,7 +14056,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -14181,6 +14195,7 @@
       "video_id": "VID087",
       "product": "PWR BUCK",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "无尼古丁选择",
       "description": "无尼古丁选择",
@@ -14255,7 +14270,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -14395,6 +14409,7 @@
       "video_id": "VID088",
       "product": "PWR BUCK",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "随时清醒",
       "description": "随时清醒",
@@ -14469,7 +14484,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -14609,6 +14623,7 @@
       "video_id": "VID089",
       "product": "Pump Ocalypse",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "训练泵感到底是什么",
       "description": "训练泵感到底是什么",
@@ -14683,7 +14698,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -14823,6 +14837,7 @@
       "video_id": "VID090",
       "product": "Pump Ocalypse",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "手臂训练前后对比",
       "description": "手臂训练前后对比",
@@ -14897,7 +14912,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -15037,6 +15051,7 @@
       "video_id": "VID091",
       "product": "Pump Ocalypse",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "健身房泵感挑战",
       "description": "健身房泵感挑战",
@@ -15111,7 +15126,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -15251,6 +15265,7 @@
       "video_id": "VID092",
       "product": "Pump Ocalypse",
       "type": "T1",
+      "duration": 30,
       "business": "Bucked Up",
       "name": "不是刺激是充血感",
       "description": "不是刺激是充血感",
@@ -15325,7 +15340,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 30,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -15465,6 +15479,7 @@
       "video_id": "VID093",
       "product": "Pump Ocalypse",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "泵感来了",
       "description": "泵感来了",
@@ -15539,7 +15554,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -15679,6 +15693,7 @@
       "video_id": "VID094",
       "product": "Pump Ocalypse",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "手臂爆胀感",
       "description": "手臂爆胀感",
@@ -15753,7 +15768,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -15893,6 +15907,7 @@
       "video_id": "VID095",
       "product": "Pump Ocalypse",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "训练前泵感",
       "description": "训练前泵感",
@@ -15967,7 +15982,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -16107,6 +16121,7 @@
       "video_id": "VID096",
       "product": "Pump Ocalypse",
       "type": "T2",
+      "duration": 120,
       "business": "Bucked Up",
       "name": "健身房挑战",
       "description": "健身房挑战",
@@ -16181,7 +16196,6 @@
         "latest_version": "",
         "last_updated_at": ""
       },
-      "duration": 120,
       "zh": {
         "status": {
           "brief": "not_started",
@@ -16314,20 +16328,6 @@
         "latest_version": "",
         "last_updated_at": ""
       }
-    }
-  ],
-  "types": [
-    {
-      "id": "T1",
-      "en": "Type 1 (~30s)",
-      "zh": "类型1 (约30秒)",
-      "duration": 30
-    },
-    {
-      "id": "T2",
-      "en": "Type 2 (~120s)",
-      "zh": "类型2 (约120秒)",
-      "duration": 120
     }
   ]
 }

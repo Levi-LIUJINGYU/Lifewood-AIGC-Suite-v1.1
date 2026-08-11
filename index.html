@@ -213,6 +213,12 @@
   .batchbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--green-800);color:#fff;border-radius:10px;padding:10px 14px;margin-bottom:12px;}
   .batchbar label{font-size:12px;font-weight:600;color:#cfe0d5;}
   .batchbar select{padding:6px 9px;border-radius:7px;border:none;font-size:13px;font-weight:600;} .batchbar .btn{padding:6px 12px;} .batchbar #selCount{font-weight:700;margin-right:6px;}
+  #batchbar{display:none !important;}
+  body.admin-mode #batchbar.batch-visible{display:flex !important;}
+  .admin-tools{display:none !important;gap:8px;align-items:center;flex-wrap:wrap;}
+  body.admin-mode .admin-tools{display:flex !important;}
+  #modalDeleteBtn{display:none !important;}
+  body.admin-mode #modalDeleteBtn{display:inline-block !important;}
   .flag-summary{font-size:12px;color:var(--muted);margin:0 0 12px;display:flex;gap:18px;flex-wrap:wrap;} .flag-summary b{color:#b23b2e;font-size:13px;}
   .table-card{background:var(--card);border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden;}
   table{width:100%;border-collapse:collapse;font-size:13px;}
@@ -466,7 +472,7 @@
     <div class="statstrip" id="trackerStats"></div>
     <div class="legend" id="legend2" style="margin:10px 0"></div>
     <div class="flag-summary" id="flagSummary"></div>
-    <div class="batchbar" id="batchbar" style="display:none">
+    <div class="batchbar" id="batchbar">
       <span id="selCount"></span>
       <label data-i18n="trackLabel">Track</label>
       <select id="bTrack"></select>
@@ -476,7 +482,7 @@
       <button class="btn" onclick="batchStatus()" data-i18n="applyStatus">Apply status</button>
       <select id="bPic"></select>
       <button class="btn" onclick="batchAssign()" data-i18n="assignPIC">Assign PIC</button>
-      <button class="btn warn" id="batchDeleteBtn" onclick="batchDeleteVideos()" data-i18n="batchDelete" style="display:none">Delete selected</button>
+      <button class="btn warn" id="batchDeleteBtn" onclick="batchDeleteVideos()" data-i18n="batchDelete">Delete selected</button>
       <div class="spacer" style="flex:1"></div>
       <button class="btn" onclick="clearSel()" data-i18n="clearSel">Clear</button>
     </div>
@@ -493,14 +499,16 @@
       <button class="btn primary" onclick="startEnterData()" data-i18n="enterData" data-i18n-tip="enterDataTip" title="">录入数据</button>
       <button class="btn" onclick="reloadFromFile()" data-i18n="reloadFile" title="">Reload file</button>
       <span class="save-pill" id="savePill" style="display:none"></span>
-      <button class="btn" onclick="exportJSON()" data-i18n="export">Export backup</button>
-      <button class="btn" onclick="exportSlice()" data-i18n="exportSlice" title="Export only your selected / filtered videos">Export slice</button>
-      <button class="btn" onclick="document.getElementById('importFile').click()" data-i18n="import" title="Replace ALL data with a backup file">Import</button>
-      <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importJSON(event)" />
-      <button class="btn" onclick="document.getElementById('mergeFile').click()" data-i18n="merge" title="Combine a teammate's slice into your data (by id)">Merge</button>
-      <input type="file" id="mergeFile" accept="application/json" style="display:none" onchange="mergeJSON(event)" />
-      <button class="btn warn" onclick="resetData()" data-i18n="reset">Reset</button>
-      <button class="btn" id="undoBtn" onclick="restoreUndo()" style="display:none" data-i18n="undoReset">Undo reset</button>
+      <div class="admin-tools" id="adminToolbar">
+        <button class="btn" id="exportBtn" onclick="exportJSON()" data-i18n="export">Export backup</button>
+        <button class="btn" id="exportSliceBtn" onclick="exportSlice()" data-i18n="exportSlice" title="Export only your selected / filtered videos">Export slice</button>
+        <button class="btn" id="importBtn" onclick="adminImportClick()" data-i18n="import" title="Replace ALL data with a backup file">Import</button>
+        <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importJSON(event)" />
+        <button class="btn" id="mergeBtn" onclick="adminMergeClick()" data-i18n="merge" title="Combine a teammate's slice into your data (by id)">Merge</button>
+        <input type="file" id="mergeFile" accept="application/json" style="display:none" onchange="mergeJSON(event)" />
+        <button class="btn warn" id="resetBtn" onclick="resetData()" data-i18n="reset">Reset</button>
+        <button class="btn" id="undoBtn" onclick="restoreUndo()" style="display:none" data-i18n="undoReset">Undo reset</button>
+      </div>
     </div>
     <div class="table-card"><div class="tbl-wrap"><table><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table></div></div>
     <div class="footer-note" data-i18n="footerFile">When started via Start Lifewood AIGC.bat, all changes are saved to dashboard-data.json in this folder. You can also edit that file directly (reload the page afterward).</div>
@@ -665,7 +673,7 @@
     </div>
     <div class="field"><label data-i18n="notesLabel">Notes</label><textarea id="mNotes" data-i18n-ph="notesPh" placeholder="Add any details…"></textarea></div>
     <div class="modal-actions split">
-      <button class="btn warn" id="modalDeleteBtn" onclick="deleteEditingVideo()" data-i18n="deleteVideo" style="display:none">Delete video</button>
+      <button class="btn warn" id="modalDeleteBtn" onclick="deleteEditingVideo()" data-i18n="deleteVideo">Delete video</button>
       <div style="display:flex;gap:8px"><button class="btn" onclick="closeModal()" data-i18n="cancel">Cancel</button><button class="btn primary" onclick="saveModal()" data-i18n="saveBtn">Save</button></div>
     </div>
   </div>
@@ -845,8 +853,8 @@ const I18N = {
     loginTip:"Sign in", logoutTip:"Signed in as lifewood — click to sign out", accountMenu:"Account menu", logoutConfirm:"Sign out? You'll need the team account to view data again.",
     changePass:"Change password", changePassSub:"Set a new team password for this browser.", curPass:"Current password", newPass:"New password", confirmPass:"Confirm new password",
     adminLogin:"Admin login", adminLogout:"Admin sign out", adminAuthTitle:"Admin login",
-    adminAuthSub:"Admin access unlocks delete actions (batch delete / delete video).",
-    adminOn:"Admin mode on", adminRequired:"Admin login required to delete.",
+    adminAuthSub:"Admin access unlocks batch edit, export/import/merge/reset, and delete actions.",
+    adminOn:"Admin mode on", adminRequired:"This action requires admin login.",
     passWrongCur:"Current password is incorrect.", passEmpty:"New password cannot be empty.", passMismatch:"New passwords do not match.", passChanged:"Password changed. Use it next time you sign in.",
     helpTitle:"Help / User guide", close:"Close",
     helpNamingH:"File naming — quick reference",
@@ -996,8 +1004,8 @@ const I18N = {
     loginTip:"登录", logoutTip:"已登录：lifewood —— 点击展开菜单", accountMenu:"账号菜单", logoutConfirm:"确定退出登录？再次查看数据需要重新输入团队账号。",
     changePass:"修改密码", changePassSub:"为本浏览器设置新的团队密码。", curPass:"当前密码", newPass:"新密码", confirmPass:"确认新密码",
     adminLogin:"管理员登录", adminLogout:"退出管理员", adminAuthTitle:"管理员登录",
-    adminAuthSub:"管理员登录后才能使用删除功能（删除选中 / 删除视频）。",
-    adminOn:"管理员模式已开启", adminRequired:"删除需要管理员登录。",
+    adminAuthSub:"管理员登录后可使用批量编辑、导出/导入/合并/重置及删除功能。",
+    adminOn:"管理员模式已开启", adminRequired:"此操作需要管理员登录。",
     passWrongCur:"当前密码不正确。", passEmpty:"新密码不能为空。", passMismatch:"两次输入的新密码不一致。", passChanged:"密码已修改，下次登录请使用新密码。",
     helpTitle:"帮助 / 使用指南", close:"关闭",
     helpNamingH:"命名规则速查",
@@ -1657,13 +1665,16 @@ function buildFilters(){
   ids.forEach(i=>document.getElementById(i).value=cur[i]);
 }
 function buildBatch(){
-  const bar=document.getElementById("batchbar"); bar.style.display=SEL.size>0?"flex":"none"; if(SEL.size===0)return;
+  const bar=document.getElementById("batchbar");
+  if(!bar) return;
+  if(!isAdmin()){ bar.classList.remove("batch-visible"); return; }
+  bar.classList.toggle("batch-visible", SEL.size>0);
+  if(SEL.size===0) return;
   document.getElementById("selCount").textContent=`${SEL.size} ${t("selectedWord")}`;
   const bTrack=document.getElementById("bTrack"),ctr=bTrack.value; bTrack.innerHTML=TRACKS.map(trk=>`<option value="${trk}">${esc(langLabel(trk))}</option>`).join(""); bTrack.value=TRACKS.includes(ctr)?ctr:(TRACKS[0]||"en");
   const bStage=document.getElementById("bStage"),cs=bStage.value; bStage.innerHTML=STAGES.map(s=>`<option value="${s}">${t("stages")[s]}</option>`).join(""); if(cs)bStage.value=cs;
   const bStatus=document.getElementById("bStatus"),cst=bStatus.value; bStatus.innerHTML=STATUSES.map(s=>`<option value="${s}">${t("statuses")[s]}</option>`).join(""); if(cst)bStatus.value=cst;
   const bPic=document.getElementById("bPic"),cp=bPic.value; bPic.innerHTML=`<option value="">${t("pending")}</option>`+TEAM.map(p=>`<option value="${p}">${p}</option>`).join(""); bPic.value=cp;
-  applyAdminUI();
 }
 function renderBanner(){
   const s=projStats(); const span=DEADLINE-KICKOFF; const expected=Math.round(Math.max(0,Math.min(1,(new Date()-KICKOFF)/span))*100);
@@ -1844,11 +1855,13 @@ function filteredRows(){
   });
 }
 function renderTable(){
-  document.getElementById("thead").innerHTML=`<th style="width:30px"><input type="checkbox" id="selAll" onclick="toggleSelAll(this.checked)"></th>`+["colBiz","colNum","colVideo","colType","colLang","colStage","colCurrent","colLatest","colCompletedAt","colIssue","colProgress"].map(k=>`<th>${t(k)}</th>`).join("");
+  const admin=isAdmin();
+  const selCol=admin?`<th style="width:30px"><input type="checkbox" id="selAll" onclick="toggleSelAll(this.checked)"></th>`:"";
+  document.getElementById("thead").innerHTML=selCol+["colBiz","colNum","colVideo","colType","colLang","colStage","colCurrent","colLatest","colCompletedAt","colIssue","colProgress"].map(k=>`<th>${t(k)}</th>`).join("");
   const rows=filteredRows();
   document.getElementById("tbody").innerHTML=rows.map(v=>{ ensureVideoTracks(v); const trk=viewLang(v); const pct=videoPct(v,trk); const abn=TRACKS.some(t=>isAbnormal(v[t]));
     return `<tr class="${v.flag?"row-flagged":(abn?"row-abn":"")}">
-      <td><input type="checkbox" ${SEL.has(v.id)?"checked":""} onclick="toggleSel(${v.id},this.checked)"></td>
+      ${admin?`<td><input type="checkbox" ${SEL.has(v.id)?"checked":""} onclick="toggleSel(${v.id},this.checked)"></td>`:""}
       <td class="biz-cell">${esc(v.business||defaultBusiness())}</td>
       <td><span class="task-base">${taskCode(v.id)}</span></td>
       <td class="vid-cell" onclick="openModal(${v.id})" title="${esc(v.description)||esc(t("clickToEdit"))}">
@@ -1874,7 +1887,7 @@ function render(){
   buildFilters(); buildBatch();
   renderBanner(); renderKPIs(); renderDailyOutput(); renderPipeline(); renderAnoms("anoms"); renderAnoms("anoms2"); renderEsStageBars(); renderIssues(); renderLangBars(); renderTimeline();
   renderTranslation(); renderCharts(); renderProducts(); renderFlagSummary(); renderTrackerStats(); renderAnStats(); renderTable(); renderAdmin(); renderSyncPage();
-  document.getElementById("undoBtn").style.display=localStorage.getItem("bu_undo")?"inline-block":"none";
+  applyAdminUI();
   { const hm=document.getElementById("helpModal"); if(hm&&hm.classList.contains("open")) renderHelp(); }
 }
 
@@ -1895,8 +1908,12 @@ function getPass(){ return localStorage.getItem("bu_pass") || CREDS.pass; }   //
 function isAdmin(){ return !!ADMIN; }
 function applyAdminUI(){
   const show=isAdmin();
-  const bd=document.getElementById("batchDeleteBtn"); if(bd) bd.style.display=show?"":"none";
-  const md=document.getElementById("modalDeleteBtn"); if(md) md.style.display=show?"":"none";
+  document.body.classList.toggle("admin-mode", show);
+  if(!show && SEL.size) SEL.clear();
+  const bar=document.getElementById("batchbar");
+  if(bar) bar.classList.toggle("batch-visible", show && SEL.size>0);
+  const ub=document.getElementById("undoBtn");
+  if(ub) ub.style.display=(show&&localStorage.getItem("bu_undo"))?"":"none";
   const li=document.getElementById("adminLoginItem"); if(li) li.style.display=show?"none":"";
   const lo=document.getElementById("adminLogoutItem"); if(lo) lo.style.display=show?"":"none";
   const lab=document.getElementById("avatarLabel");
@@ -1925,7 +1942,7 @@ function closeAuth(){ document.getElementById("authModal").classList.remove("ope
 function doLogin(){ const u=(document.getElementById("authUser").value||"").trim(), p=document.getElementById("authPass").value||"";
   if(u===CREDS.user && p===getPass()){ AUTH=true; localStorage.setItem("bu_auth","1"); closeAuth(); render(); }
   else { document.getElementById("authErr").style.display="block"; } }
-function logout(){ closeAvatarMenu(); AUTH=false; ADMIN=false; localStorage.removeItem("bu_auth"); localStorage.removeItem("bu_admin"); render(); }
+function logout(){ closeAvatarMenu(); AUTH=false; ADMIN=false; SEL.clear(); localStorage.removeItem("bu_auth"); localStorage.removeItem("bu_admin"); render(); }
 function openAdminAuth(){ closeAvatarMenu(); const e=document.getElementById("adminAuthErr"); if(e)e.style.display="none";
   const u=document.getElementById("adminUser"),p=document.getElementById("adminPass"); if(u)u.value=""; if(p)p.value="";
   document.getElementById("adminAuthModal").classList.add("open"); setTimeout(()=>{ try{u.focus();}catch(_){}; },40); }
@@ -1938,8 +1955,10 @@ function doAdminLogin(){
     const e=document.getElementById("adminAuthErr"); if(e) e.style.display="block";
   }
 }
-function logoutAdmin(){ closeAvatarMenu(); ADMIN=false; localStorage.removeItem("bu_admin"); applyAdminUI(); render(); }
+function logoutAdmin(){ closeAvatarMenu(); ADMIN=false; localStorage.removeItem("bu_admin"); SEL.clear(); applyAdminUI(); render(); }
 function requireAdmin(){ if(isAdmin()) return true; alert(t("adminRequired")); openAdminAuth(); return false; }
+function adminImportClick(){ if(!requireAdmin()) return; document.getElementById("importFile").click(); }
+function adminMergeClick(){ if(!requireAdmin()) return; document.getElementById("mergeFile").click(); }
 /* change password (stored locally; default stays 'lifewood' for new browsers) */
 function openChangePass(){ closeAvatarMenu(); const e=document.getElementById("passErr"); if(e){e.style.display="none";e.textContent="";}
   ["curPass","newPass","confirmPass"].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=""; });
@@ -1976,12 +1995,12 @@ function renderHelp(){
 /* ============================== Actions ============================== */
 function cycleStage(id,trk,stage){ const v=DATA.find(x=>x.id===id); if(!v)return; const cur=v[trk].status[stage]; const i=STATUSES.indexOf(cur); const neu=STATUSES[(i+1)%STATUSES.length]; applyStatusChange(v[trk],stage,neu,cur); v[trk].status[stage]=neu; v[trk].last_updated_at=todayStr(); save(); render(); }
 function setLang(l){ LANG=l; localStorage.setItem("bu_lang",l); render(); }
-function toggleSel(id,on){ if(on)SEL.add(id); else SEL.delete(id); buildBatch(); }
-function toggleSelAll(on){ const rows=filteredRows(); if(on)rows.forEach(v=>SEL.add(v.id)); else rows.forEach(v=>SEL.delete(v.id)); render(); }
-function clearSel(){ SEL.clear(); render(); }
-function batchStatus(){ const trk=document.getElementById("bTrack").value,stage=document.getElementById("bStage").value,status=document.getElementById("bStatus").value;
+function toggleSel(id,on){ if(!isAdmin()) return; if(on)SEL.add(id); else SEL.delete(id); buildBatch(); }
+function toggleSelAll(on){ if(!isAdmin()) return; const rows=filteredRows(); if(on)rows.forEach(v=>SEL.add(v.id)); else rows.forEach(v=>SEL.delete(v.id)); render(); }
+function clearSel(){ if(!requireAdmin()) return; SEL.clear(); render(); }
+function batchStatus(){ if(!requireAdmin()) return; const trk=document.getElementById("bTrack").value,stage=document.getElementById("bStage").value,status=document.getElementById("bStatus").value;
   DATA.forEach(v=>{ if(!SEL.has(v.id))return; const old=v[trk].status[stage]; applyStatusChange(v[trk],stage,status,old); v[trk].status[stage]=status; v[trk].last_updated_at=todayStr(); }); save(); render(); }
-function batchAssign(){ const trk=document.getElementById("bTrack").value,stage=document.getElementById("bStage").value,pic=document.getElementById("bPic").value;
+function batchAssign(){ if(!requireAdmin()) return; const trk=document.getElementById("bTrack").value,stage=document.getElementById("bStage").value,pic=document.getElementById("bPic").value;
   DATA.forEach(v=>{ if(!SEL.has(v.id))return; v[trk].pic[stage]=pic; }); save(); render(); }
 
 /* ============================== File sync simulator ============================== */
@@ -2227,22 +2246,22 @@ function saveModal(){ const v=DATA.find(x=>x.id===editingId); if(!v){closeModal(
 }
 
 /* ============================== backup / reset ============================== */
-function resetData(){ if(confirm(t("confirmReset"))){ localStorage.setItem("bu_undo",JSON.stringify(DATA)); downloadBackup("bucked-up-backup-before-reset.json");
+function resetData(){ if(!requireAdmin()) return; if(confirm(t("confirmReset"))){ localStorage.setItem("bu_undo",JSON.stringify(DATA)); downloadBackup("bucked-up-backup-before-reset.json");
   DATA.forEach(v=>{ TRACKS.forEach(trk=>{ STAGES.forEach(s=>{ v[trk].status[s]="not_started"; v[trk].pic[s]=""; if(v[trk].completed_at) v[trk].completed_at[s]=""; }); v[trk].latest_file_name="";v[trk].latest_file_path="";v[trk].latest_version="";v[trk].last_updated_at=""; }); v.flag=false;v.revisions=0;v.reason="";v.notes="";v.priority=""; });
   save(); render(); alert(t("resetDone")); } }
-function restoreUndo(){ const s=localStorage.getItem("bu_undo"); if(!s){alert(t("noUndo"));return;} DATA=JSON.parse(s).map(ensureOne); localStorage.removeItem("bu_undo"); save(); render(); }
+function restoreUndo(){ if(!requireAdmin()) return; const s=localStorage.getItem("bu_undo"); if(!s){alert(t("noUndo"));return;} DATA=JSON.parse(s).map(ensureOne); localStorage.removeItem("bu_undo"); save(); render(); }
 function downloadBackup(name){ exportBundleJSON(name); }
-function exportJSON(){ exportBundleJSON("bucked-up-dashboard-backup.json"); }
+function exportJSON(){ if(!requireAdmin()) return; exportBundleJSON("bucked-up-dashboard-backup.json"); }
 function exportBundleJSON(name){ const blob=new Blob([JSON.stringify(buildBundle(),null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href); }
-function exportSlice(){ const rows=SEL.size>0?DATA.filter(v=>SEL.has(v.id)):filteredRows(); const blob=new Blob([JSON.stringify(rows,null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`bucked-up-slice-${rows.length}.json`; a.click(); URL.revokeObjectURL(a.href); }
-function importJSON(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader();
+function exportSlice(){ if(!requireAdmin()) return; const rows=SEL.size>0?DATA.filter(v=>SEL.has(v.id)):filteredRows(); const blob=new Blob([JSON.stringify(rows,null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`bucked-up-slice-${rows.length}.json`; a.click(); URL.revokeObjectURL(a.href); }
+function importJSON(e){ if(!requireAdmin()){ e.target.value=""; return; } const f=e.target.files[0]; if(!f)return; const r=new FileReader();
   r.onload=()=>{ try{ const d=JSON.parse(r.result);
     if(d&&Array.isArray(d.videos)){ applyBundle(d); localStorage.setItem("bu_custom_mode","1"); save(); render(); }
     else if(Array.isArray(d)&&d.every(x=>x&&("id"in x))){ DATA=isNewFormat(d)?d.map(ensureOne):migrateOld(d); DATA.forEach(ensureVideoTracks); localStorage.setItem("bu_custom_mode","1"); save(); render(); }
     else throw new Error();
   }catch(err){ alert(t("importBad")); } };
   r.readAsText(f); e.target.value=""; }
-function mergeJSON(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader();
+function mergeJSON(e){ if(!requireAdmin()){ e.target.value=""; return; } const f=e.target.files[0]; if(!f)return; const r=new FileReader();
   r.onload=()=>{ try{ let arr=JSON.parse(r.result); if(!Array.isArray(arr))throw new Error(); arr=arr.filter(x=>x&&("id"in x)); if(!arr.length)throw new Error();
     arr=isNewFormat(arr)?arr.map(ensureOne):migrateOld(arr); let n=0; arr.forEach(inc=>{ const i=DATA.findIndex(v=>v.id===inc.id); if(i>=0)DATA[i]=inc; else DATA.push(inc); n++; });
     DATA.sort((a,b)=>a.id-b.id); save(); render(); alert(t("mergeDone").replace("{n}",n)); }catch(err){ alert(t("importBad")); } };
@@ -2367,6 +2386,7 @@ function showView(name){
 async function boot(){
   try{ initCharts(); }catch(e){ console.warn("charts unavailable:",e); }
   applyToolLinks();
+  applyAdminUI();
   await initData();
   render();
   showView(localStorage.getItem("bu_view")||"overview");
