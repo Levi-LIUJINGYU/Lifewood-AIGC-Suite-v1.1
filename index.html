@@ -213,6 +213,8 @@
   .batchbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--green-800);color:#fff;border-radius:10px;padding:10px 14px;margin-bottom:12px;}
   .batchbar label{font-size:12px;font-weight:600;color:#cfe0d5;}
   .batchbar select{padding:6px 9px;border-radius:7px;border:none;font-size:13px;font-weight:600;} .batchbar .btn{padding:6px 12px;} .batchbar #selCount{font-weight:700;margin-right:6px;}
+  #adminToolbar{display:none !important;}
+  body.admin-mode #adminToolbar{display:flex !important;}
   #batchbar{display:none !important;}
   body.admin-mode #batchbar.batch-visible{display:flex !important;}
   .admin-tools{display:none !important;gap:8px;align-items:center;flex-wrap:wrap;}
@@ -497,7 +499,7 @@
       <select id="fFlag" onchange="render()"></select>
       <div class="spacer" style="flex:1"></div>
       <span class="save-pill" id="savePill" style="display:none"></span>
-      <div class="admin-tools" id="adminToolbar">
+      <div class="admin-tools" id="adminToolbar" hidden>
         <button class="btn primary" onclick="startEnterData()" data-i18n="enterData" data-i18n-tip="enterDataTip" title="">录入数据</button>
         <button class="btn" onclick="reloadFromFile()" data-i18n="reloadFile" title="">Reload file</button>
         <button class="btn" id="exportBtn" onclick="exportJSON()" data-i18n="export">Export backup</button>
@@ -1904,7 +1906,8 @@ function applyToolLinks(){ const a=document.getElementById("toolAgent"), u=docum
 const CREDS = { user:"lifewood", pass:"lifewood" };
 const ADMIN_CREDS = { user:"LIFEWOOD", pass:"LIFEWOOD" };
 let AUTH = localStorage.getItem("bu_auth")==="1";
-let ADMIN = localStorage.getItem("bu_admin")==="1";
+try{ localStorage.removeItem("bu_admin"); }catch(_){}
+let ADMIN = sessionStorage.getItem("bu_admin")==="1";
 function getPass(){ return localStorage.getItem("bu_pass") || CREDS.pass; }   // changeable, stored per browser
 function isAdmin(){ return !!ADMIN; }
 function applyAdminUI(){
@@ -1913,6 +1916,8 @@ function applyAdminUI(){
   if(!show && SEL.size) SEL.clear();
   const bar=document.getElementById("batchbar");
   if(bar) bar.classList.toggle("batch-visible", show && SEL.size>0);
+  const tb=document.getElementById("adminToolbar");
+  if(tb){ tb.hidden=!show; tb.style.display=show?"":"none"; }
   const ub=document.getElementById("undoBtn");
   if(ub) ub.style.display=(show&&localStorage.getItem("bu_undo"))?"":"none";
   const li=document.getElementById("adminLoginItem"); if(li) li.style.display=show?"none":"";
@@ -1941,9 +1946,9 @@ function openAuth(){ const e=document.getElementById("authErr"); if(e)e.style.di
   document.getElementById("authModal").classList.add("open"); setTimeout(()=>{ try{u.focus();}catch(_){}; },40); }
 function closeAuth(){ document.getElementById("authModal").classList.remove("open"); }
 function doLogin(){ const u=(document.getElementById("authUser").value||"").trim(), p=document.getElementById("authPass").value||"";
-  if(u===CREDS.user && p===getPass()){ AUTH=true; localStorage.setItem("bu_auth","1"); closeAuth(); render(); }
+  if(u===CREDS.user && p===getPass()){ AUTH=true; ADMIN=false; sessionStorage.removeItem("bu_admin"); localStorage.setItem("bu_auth","1"); closeAuth(); render(); }
   else { document.getElementById("authErr").style.display="block"; } }
-function logout(){ closeAvatarMenu(); AUTH=false; ADMIN=false; SEL.clear(); localStorage.removeItem("bu_auth"); localStorage.removeItem("bu_admin"); render(); }
+function logout(){ closeAvatarMenu(); AUTH=false; ADMIN=false; SEL.clear(); localStorage.removeItem("bu_auth"); sessionStorage.removeItem("bu_admin"); render(); }
 function openAdminAuth(){ closeAvatarMenu(); const e=document.getElementById("adminAuthErr"); if(e)e.style.display="none";
   const u=document.getElementById("adminUser"),p=document.getElementById("adminPass"); if(u)u.value=""; if(p)p.value="";
   document.getElementById("adminAuthModal").classList.add("open"); setTimeout(()=>{ try{u.focus();}catch(_){}; },40); }
@@ -1951,12 +1956,12 @@ function closeAdminAuth(){ const m=document.getElementById("adminAuthModal"); if
 function doAdminLogin(){
   const u=(document.getElementById("adminUser").value||"").trim(), p=document.getElementById("adminPass").value||"";
   if(u.toUpperCase()===ADMIN_CREDS.user && p===ADMIN_CREDS.pass){
-    ADMIN=true; localStorage.setItem("bu_admin","1"); closeAdminAuth(); applyAdminUI(); render();
+    ADMIN=true; sessionStorage.setItem("bu_admin","1"); closeAdminAuth(); applyAdminUI(); render();
   } else {
     const e=document.getElementById("adminAuthErr"); if(e) e.style.display="block";
   }
 }
-function logoutAdmin(){ closeAvatarMenu(); ADMIN=false; localStorage.removeItem("bu_admin"); SEL.clear(); applyAdminUI(); render(); }
+function logoutAdmin(){ closeAvatarMenu(); ADMIN=false; sessionStorage.removeItem("bu_admin"); SEL.clear(); applyAdminUI(); render(); }
 function requireAdmin(){ if(isAdmin()) return true; alert(t("adminRequired")); openAdminAuth(); return false; }
 function adminImportClick(){ if(!requireAdmin()) return; document.getElementById("importFile").click(); }
 function adminMergeClick(){ if(!requireAdmin()) return; document.getElementById("mergeFile").click(); }
