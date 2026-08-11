@@ -385,6 +385,8 @@
         <div class="avatar-menu" id="avatarMenu">
           <button class="menu-item" onclick="openHelp()">❓ <span data-i18n="helpTitle">Help / User guide</span></button>
           <button class="menu-item" onclick="openChangePass()">🔑 <span data-i18n="changePass">Change password</span></button>
+          <button class="menu-item" id="adminLoginItem" onclick="openAdminAuth()">🛡 <span data-i18n="adminLogin">Admin login</span></button>
+          <button class="menu-item" id="adminLogoutItem" onclick="logoutAdmin()" style="display:none">🛡 <span data-i18n="adminLogout">Admin sign out</span></button>
           <button class="menu-item danger" onclick="logout()">⎋ <span data-i18n="logout">Sign out</span></button>
         </div>
       </div>
@@ -474,7 +476,7 @@
       <button class="btn" onclick="batchStatus()" data-i18n="applyStatus">Apply status</button>
       <select id="bPic"></select>
       <button class="btn" onclick="batchAssign()" data-i18n="assignPIC">Assign PIC</button>
-      <button class="btn warn" onclick="batchDeleteVideos()" data-i18n="batchDelete">Delete selected</button>
+      <button class="btn warn" id="batchDeleteBtn" onclick="batchDeleteVideos()" data-i18n="batchDelete" style="display:none">Delete selected</button>
       <div class="spacer" style="flex:1"></div>
       <button class="btn" onclick="clearSel()" data-i18n="clearSel">Clear</button>
     </div>
@@ -663,7 +665,7 @@
     </div>
     <div class="field"><label data-i18n="notesLabel">Notes</label><textarea id="mNotes" data-i18n-ph="notesPh" placeholder="Add any details…"></textarea></div>
     <div class="modal-actions split">
-      <button class="btn warn" onclick="deleteEditingVideo()" data-i18n="deleteVideo">Delete video</button>
+      <button class="btn warn" id="modalDeleteBtn" onclick="deleteEditingVideo()" data-i18n="deleteVideo" style="display:none">Delete video</button>
       <div style="display:flex;gap:8px"><button class="btn" onclick="closeModal()" data-i18n="cancel">Cancel</button><button class="btn primary" onclick="saveModal()" data-i18n="saveBtn">Save</button></div>
     </div>
   </div>
@@ -691,6 +693,18 @@
     <div class="auth-field"><label data-i18n="newPass">New password</label><input type="password" id="newPass" autocomplete="new-password" /></div>
     <div class="auth-field"><label data-i18n="confirmPass">Confirm new password</label><input type="password" id="confirmPass" autocomplete="new-password" onkeydown="if(event.key==='Enter')doChangePass()" /></div>
     <div class="modal-actions"><button class="btn" onclick="closePass()" data-i18n="cancel">Cancel</button><button class="btn primary" onclick="doChangePass()" data-i18n="saveBtn">Save</button></div>
+  </div>
+</div>
+
+<!-- Admin login modal (delete privileges) -->
+<div class="overlay" id="adminAuthModal" onclick="if(event.target===this)closeAdminAuth()">
+  <div class="modal" style="width:min(400px,92vw)">
+    <h3 data-i18n="adminAuthTitle">Admin login</h3>
+    <div class="msub" style="font-family:inherit" data-i18n="adminAuthSub">Admin access is required for delete actions.</div>
+    <div class="auth-err" id="adminAuthErr" data-i18n="authBad">Wrong account or password.</div>
+    <div class="auth-field"><label data-i18n="authUser">Account</label><input type="text" id="adminUser" autocomplete="username" data-i18n-ph="authUserPh" placeholder="account" onkeydown="if(event.key==='Enter')doAdminLogin()" /></div>
+    <div class="auth-field"><label data-i18n="authPass">Password</label><input type="password" id="adminPass" autocomplete="current-password" data-i18n-ph="authPassPh" placeholder="password" onkeydown="if(event.key==='Enter')doAdminLogin()" /></div>
+    <div class="modal-actions"><button class="btn" onclick="closeAdminAuth()" data-i18n="cancel">Cancel</button><button class="btn primary" onclick="doAdminLogin()" data-i18n="adminLogin">Admin login</button></div>
   </div>
 </div>
 
@@ -830,6 +844,9 @@ const I18N = {
     lockTitle:"Dashboard locked", lockMsg:"Please sign in with the team account to view the project data.",
     loginTip:"Sign in", logoutTip:"Signed in as lifewood — click to sign out", accountMenu:"Account menu", logoutConfirm:"Sign out? You'll need the team account to view data again.",
     changePass:"Change password", changePassSub:"Set a new team password for this browser.", curPass:"Current password", newPass:"New password", confirmPass:"Confirm new password",
+    adminLogin:"Admin login", adminLogout:"Admin sign out", adminAuthTitle:"Admin login",
+    adminAuthSub:"Admin access unlocks delete actions (batch delete / delete video).",
+    adminOn:"Admin mode on", adminRequired:"Admin login required to delete.",
     passWrongCur:"Current password is incorrect.", passEmpty:"New password cannot be empty.", passMismatch:"New passwords do not match.", passChanged:"Password changed. Use it next time you sign in.",
     helpTitle:"Help / User guide", close:"Close",
     helpNamingH:"File naming — quick reference",
@@ -978,6 +995,9 @@ const I18N = {
     lockTitle:"看板已锁定", lockMsg:"请使用团队账号登录后查看项目数据。",
     loginTip:"登录", logoutTip:"已登录：lifewood —— 点击展开菜单", accountMenu:"账号菜单", logoutConfirm:"确定退出登录？再次查看数据需要重新输入团队账号。",
     changePass:"修改密码", changePassSub:"为本浏览器设置新的团队密码。", curPass:"当前密码", newPass:"新密码", confirmPass:"确认新密码",
+    adminLogin:"管理员登录", adminLogout:"退出管理员", adminAuthTitle:"管理员登录",
+    adminAuthSub:"管理员登录后才能使用删除功能（删除选中 / 删除视频）。",
+    adminOn:"管理员模式已开启", adminRequired:"删除需要管理员登录。",
     passWrongCur:"当前密码不正确。", passEmpty:"新密码不能为空。", passMismatch:"两次输入的新密码不一致。", passChanged:"密码已修改，下次登录请使用新密码。",
     helpTitle:"帮助 / 使用指南", close:"关闭",
     helpNamingH:"命名规则速查",
@@ -1643,6 +1663,7 @@ function buildBatch(){
   const bStage=document.getElementById("bStage"),cs=bStage.value; bStage.innerHTML=STAGES.map(s=>`<option value="${s}">${t("stages")[s]}</option>`).join(""); if(cs)bStage.value=cs;
   const bStatus=document.getElementById("bStatus"),cst=bStatus.value; bStatus.innerHTML=STATUSES.map(s=>`<option value="${s}">${t("statuses")[s]}</option>`).join(""); if(cst)bStatus.value=cst;
   const bPic=document.getElementById("bPic"),cp=bPic.value; bPic.innerHTML=`<option value="">${t("pending")}</option>`+TEAM.map(p=>`<option value="${p}">${p}</option>`).join(""); bPic.value=cp;
+  applyAdminUI();
 }
 function renderBanner(){
   const s=projStats(); const span=DEADLINE-KICKOFF; const expected=Math.round(Math.max(0,Math.min(1,(new Date()-KICKOFF)/span))*100);
@@ -1867,8 +1888,20 @@ function applyToolLinks(){ const a=document.getElementById("toolAgent"), u=docum
 
 /* ============================== Auth (team login gate) ============================== */
 const CREDS = { user:"lifewood", pass:"lifewood" };
+const ADMIN_CREDS = { user:"LIFEWOOD", pass:"LIFEWOOD" };
 let AUTH = localStorage.getItem("bu_auth")==="1";
+let ADMIN = localStorage.getItem("bu_admin")==="1";
 function getPass(){ return localStorage.getItem("bu_pass") || CREDS.pass; }   // changeable, stored per browser
+function isAdmin(){ return !!ADMIN; }
+function applyAdminUI(){
+  const show=isAdmin();
+  const bd=document.getElementById("batchDeleteBtn"); if(bd) bd.style.display=show?"":"none";
+  const md=document.getElementById("modalDeleteBtn"); if(md) md.style.display=show?"":"none";
+  const li=document.getElementById("adminLoginItem"); if(li) li.style.display=show?"none":"";
+  const lo=document.getElementById("adminLogoutItem"); if(lo) lo.style.display=show?"":"none";
+  const lab=document.getElementById("avatarLabel");
+  if(lab&&AUTH) lab.textContent=show?(CREDS.user+" · Admin"):CREDS.user;
+}
 function applyAuth(){
   const locked=!AUTH;
   const tb=document.getElementById("tabbar"), ac=document.getElementById("appContent"), ls=document.getElementById("lockScreen");
@@ -1876,9 +1909,10 @@ function applyAuth(){
   if(ac) ac.style.display=locked?"none":"";
   if(ls) ls.style.display=locked?"flex":"none";
   const btn=document.getElementById("avatarBtn"), lab=document.getElementById("avatarLabel");
-  if(btn){ btn.classList.toggle("authed",AUTH); btn.title=AUTH?t("accountMenu"):t("loginTip"); }
+  if(btn){ btn.classList.toggle("authed",AUTH); btn.title=AUTH?(isAdmin()?t("adminOn"):t("accountMenu")):t("loginTip"); }
   if(lab) lab.textContent=AUTH?CREDS.user:t("login");
-  if(locked) closeAvatarMenu();
+  if(locked){ closeAvatarMenu(); closeAdminAuth(); }
+  applyAdminUI();
 }
 function goHome(){ closeAvatarMenu(); showView("overview"); try{ window.scrollTo({top:0,behavior:"smooth"}); }catch(_){ window.scrollTo(0,0); } }
 function onAvatarClick(ev){ if(ev) ev.stopPropagation(); if(AUTH) toggleAvatarMenu(); else openAuth(); }
@@ -1891,7 +1925,21 @@ function closeAuth(){ document.getElementById("authModal").classList.remove("ope
 function doLogin(){ const u=(document.getElementById("authUser").value||"").trim(), p=document.getElementById("authPass").value||"";
   if(u===CREDS.user && p===getPass()){ AUTH=true; localStorage.setItem("bu_auth","1"); closeAuth(); render(); }
   else { document.getElementById("authErr").style.display="block"; } }
-function logout(){ closeAvatarMenu(); AUTH=false; localStorage.removeItem("bu_auth"); render(); }
+function logout(){ closeAvatarMenu(); AUTH=false; ADMIN=false; localStorage.removeItem("bu_auth"); localStorage.removeItem("bu_admin"); render(); }
+function openAdminAuth(){ closeAvatarMenu(); const e=document.getElementById("adminAuthErr"); if(e)e.style.display="none";
+  const u=document.getElementById("adminUser"),p=document.getElementById("adminPass"); if(u)u.value=""; if(p)p.value="";
+  document.getElementById("adminAuthModal").classList.add("open"); setTimeout(()=>{ try{u.focus();}catch(_){}; },40); }
+function closeAdminAuth(){ const m=document.getElementById("adminAuthModal"); if(m) m.classList.remove("open"); }
+function doAdminLogin(){
+  const u=(document.getElementById("adminUser").value||"").trim(), p=document.getElementById("adminPass").value||"";
+  if(u.toUpperCase()===ADMIN_CREDS.user && p===ADMIN_CREDS.pass){
+    ADMIN=true; localStorage.setItem("bu_admin","1"); closeAdminAuth(); applyAdminUI(); render();
+  } else {
+    const e=document.getElementById("adminAuthErr"); if(e) e.style.display="block";
+  }
+}
+function logoutAdmin(){ closeAvatarMenu(); ADMIN=false; localStorage.removeItem("bu_admin"); applyAdminUI(); render(); }
+function requireAdmin(){ if(isAdmin()) return true; alert(t("adminRequired")); openAdminAuth(); return false; }
 /* change password (stored locally; default stays 'lifewood' for new browsers) */
 function openChangePass(){ closeAvatarMenu(); const e=document.getElementById("passErr"); if(e){e.style.display="none";e.textContent="";}
   ["curPass","newPass","confirmPass"].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=""; });
@@ -2057,6 +2105,7 @@ function openEntryModal(){
 }
 function closeEntryModal(){ document.getElementById("entryModal").classList.remove("open"); }
 function deleteVideos(ids){
+  if(!requireAdmin()) return;
   const set=new Set(ids);
   DATA=DATA.filter(v=>!set.has(v.id));
   ids.forEach(id=>SEL.delete(id));
@@ -2064,11 +2113,13 @@ function deleteVideos(ids){
 }
 function deleteEditingVideo(){
   if(!editingId) return;
+  if(!requireAdmin()) return;
   if(!confirm(t("confirmDelete").replace("{id}",taskCode(editingId)))) return;
   deleteVideos([editingId]); closeModal();
 }
 function batchDeleteVideos(){
   if(!SEL.size) return;
+  if(!requireAdmin()) return;
   if(!confirm(t("confirmDeleteBatch").replace("{n}",SEL.size))) return;
   deleteVideos([...SEL]);
 }
