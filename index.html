@@ -496,10 +496,10 @@
       <select id="fPIC" onchange="render()"></select>
       <select id="fFlag" onchange="render()"></select>
       <div class="spacer" style="flex:1"></div>
-      <button class="btn primary" onclick="startEnterData()" data-i18n="enterData" data-i18n-tip="enterDataTip" title="">录入数据</button>
-      <button class="btn" onclick="reloadFromFile()" data-i18n="reloadFile" title="">Reload file</button>
       <span class="save-pill" id="savePill" style="display:none"></span>
       <div class="admin-tools" id="adminToolbar">
+        <button class="btn primary" onclick="startEnterData()" data-i18n="enterData" data-i18n-tip="enterDataTip" title="">录入数据</button>
+        <button class="btn" onclick="reloadFromFile()" data-i18n="reloadFile" title="">Reload file</button>
         <button class="btn" id="exportBtn" onclick="exportJSON()" data-i18n="export">Export backup</button>
         <button class="btn" id="exportSliceBtn" onclick="exportSlice()" data-i18n="exportSlice" title="Export only your selected / filtered videos">Export slice</button>
         <button class="btn" id="importBtn" onclick="adminImportClick()" data-i18n="import" title="Replace ALL data with a backup file">Import</button>
@@ -853,7 +853,7 @@ const I18N = {
     loginTip:"Sign in", logoutTip:"Signed in as lifewood — click to sign out", accountMenu:"Account menu", logoutConfirm:"Sign out? You'll need the team account to view data again.",
     changePass:"Change password", changePassSub:"Set a new team password for this browser.", curPass:"Current password", newPass:"New password", confirmPass:"Confirm new password",
     adminLogin:"Admin login", adminLogout:"Admin sign out", adminAuthTitle:"Admin login",
-    adminAuthSub:"Admin access unlocks batch edit, export/import/merge/reset, and delete actions.",
+    adminAuthSub:"Admin access unlocks data entry, reload, batch edit, export/import/merge/reset, and delete actions.",
     adminOn:"Admin mode on", adminRequired:"This action requires admin login.",
     passWrongCur:"Current password is incorrect.", passEmpty:"New password cannot be empty.", passMismatch:"New passwords do not match.", passChanged:"Password changed. Use it next time you sign in.",
     helpTitle:"Help / User guide", close:"Close",
@@ -1004,7 +1004,7 @@ const I18N = {
     loginTip:"登录", logoutTip:"已登录：lifewood —— 点击展开菜单", accountMenu:"账号菜单", logoutConfirm:"确定退出登录？再次查看数据需要重新输入团队账号。",
     changePass:"修改密码", changePassSub:"为本浏览器设置新的团队密码。", curPass:"当前密码", newPass:"新密码", confirmPass:"确认新密码",
     adminLogin:"管理员登录", adminLogout:"退出管理员", adminAuthTitle:"管理员登录",
-    adminAuthSub:"管理员登录后可使用批量编辑、导出/导入/合并/重置及删除功能。",
+    adminAuthSub:"管理员登录后可使用录入数据、重新加载、批量编辑、导出/导入/合并/重置及删除功能。",
     adminOn:"管理员模式已开启", adminRequired:"此操作需要管理员登录。",
     passWrongCur:"当前密码不正确。", passEmpty:"新密码不能为空。", passMismatch:"两次输入的新密码不一致。", passChanged:"密码已修改，下次登录请使用新密码。",
     helpTitle:"帮助 / 使用指南", close:"关闭",
@@ -1485,6 +1485,7 @@ async function initData(){
   setSavePill("",t("saveLocalOnly"));
 }
 async function reloadFromFile(){
+  if(!requireAdmin()) return;
   if(!FILE_API){ alert(t("reloadFileFail")); return; }
   try{
     const r=await fetch("/api/data");
@@ -2143,6 +2144,7 @@ function batchDeleteVideos(){
   deleteVideos([...SEL]);
 }
 function startEnterData(){
+  if(!requireAdmin()) return;
   if(isCustomMode() && DATA.length>0){ openEntryModal(); return; }
   if(DATA.length>0){
     if(!confirm(t("confirmEnterData").replace("{n}", DATA.length))) return;
