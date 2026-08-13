@@ -813,8 +813,10 @@ const I18N = {
     confirmDeleteBatch:"Delete {n} selected video(s)? This cannot be undone.",
     reloadFile:"Reload file", reloadFileDone:"Reloaded from dashboard-data.json.",
     reloadFileFail:"Could not load dashboard-data.json — is the local server running?",
-    saveToFile:"Saved · dashboard-data.json", saveToFilePending:"Saving…", saveToFileErr:"Save failed", saveLocalOnly:"Browser only (open via Start Lifewood AIGC.bat for JSON file)",
+    saveToFile:"Saved · server", saveToFilePending:"Saving…", saveToFileErr:"Save failed", saveLocalOnly:"Browser only (open via Start Lifewood AIGC.bat for JSON file)",
     fileApiOff:"JSON file offline — close this tab, double-click Start Lifewood AIGC.bat, use http://localhost:8765",
+    saveConflict:"Server data was updated by someone else.\n\nOK = load the server copy (discard your unsaved edits).\nCancel = overwrite the server with this page.",
+    sessionExpired:"Session expired. Please sign in again.",
     flaggedCount:"Flagged with issues", revLimitReached:"Revision limit reached",
     colNum:"ID", colVideo:"Video", colType:"Type", colBiz:"Business", colLang:"Language", colStage:"Stages",
     colEN:"English stages", colES:"Spanish stages",
@@ -880,7 +882,7 @@ const I18N = {
     helpFaqH:"FAQ",
     helpFaq:[
       ["I can't see any data.","Sign in first with the team account (default lifewood / lifewood). Data stays hidden until you do."],
-      ["Where is my data stored?","In this browser only (localStorage). Each computer keeps its own copy — there is no automatic sync."],
+      ["Where is my data stored?","On the server (dashboard-data.json or Cloudflare KV) after you sign in. Saves use a login token and reject stale overwrites if someone else saved first."],
       ["How do we work as a team?","Each person clicks Export slice and sends it to one keeper, who clicks Merge, then Export backup to send the combined file back. See SHARING.md."],
       ["If I change the password, does it change for everyone?","No — it only applies on this browser. The default stays lifewood for everyone you shared the file with."],
       ["A distribution file appeared but review was not approved.","The video is flagged Abnormal (Rule 3). Uploading a new version also resets Review automatically (Rule 4)."],
@@ -997,8 +999,10 @@ const I18N = {
     confirmDeleteBatch:"确定删除选中的 {n} 条视频？此操作不可撤销。",
     reloadFile:"重新加载文件", reloadFileDone:"已从 dashboard-data.json 重新加载。",
     reloadFileFail:"无法加载 dashboard-data.json —— 请确认本地服务已启动。",
-    saveToFile:"已保存 · dashboard-data.json", saveToFilePending:"保存中…", saveToFileErr:"保存失败", saveLocalOnly:"仅浏览器缓存（请用 Start Lifewood AIGC.bat 打开以使用 JSON 文件）",
+    saveToFile:"已保存 · 服务器", saveToFilePending:"保存中…", saveToFileErr:"保存失败", saveLocalOnly:"仅浏览器缓存（请用 Start Lifewood AIGC.bat 打开以使用 JSON 文件）",
     fileApiOff:"JSON 文件未连接 —— 请关闭本页，双击 Start Lifewood AIGC.bat，访问 http://localhost:8765",
+    saveConflict:"服务器数据已被他人更新。\n\n确定 = 加载服务器版本（放弃本页未保存修改）。\n取消 = 用当前页面覆盖服务器。",
+    sessionExpired:"登录已过期，请重新登录。",
     importBad:"无法读取该文件 — 请确认这是从本看板导出的备份。",
     login:"登录", logout:"退出登录", authTitle:"登录以查看数据", authSub:"输入团队账号以解锁看板。",
     authUser:"账号", authPass:"密码", authUserPh:"账号", authPassPh:"密码", authBtn:"登录", authBad:"账号或密码错误。",
@@ -1031,7 +1035,7 @@ const I18N = {
     helpFaqH:"常见问题",
     helpFaq:[
       ["看不到数据？","请先用团队账号登录（默认 lifewood / lifewood）。未登录前数据不显示。"],
-      ["数据保存在哪里？","只存在本浏览器（localStorage）。每台电脑各存各的，不会自动同步。"],
+      ["数据保存在哪里？","登录后保存在服务器（dashboard-data.json 或 Cloudflare KV）。保存需登录令牌；若别人先保存，本页过期写入会被拒绝。"],
       ["怎么和同事协作？","各自点「导出部分」发给一位管理员，管理员点「合并」，再「导出备份」把汇总文件发回给大家。详见 SHARING.md。"],
       ["改了密码同事也会变吗？","不会 —— 只在本浏览器生效。你分享出去的文件，默认密码仍是 lifewood。"],
       ["分发文件出现了但审核没通过？","该视频会标记为「异常」（规则 3）；并且上传新版本会自动重置「审核」（规则 4）。"],
@@ -1388,11 +1392,13 @@ function loadLocal(){
 function buildBundle(){
   return { version:2, custom_mode:isCustomMode(), daily_goal:DAILY_VIDEO_GOAL, daily_video_goal:DAILY_VIDEO_GOAL, daily_stage_goal:DAILY_STAGE_GOAL, daily_stage:DAILY_STAGE_KEY, team:TEAM, businesses:BUSINESSES.slice(), languages:LANG_DEFS.map(l=>({id:l.id,en:l.en,zh:l.zh})), types:TYPE_DEFS.map(x=>({id:x.id,en:x.en,zh:x.zh,duration:x.duration})), sync_log:SYNC_LOG.slice(0,500), videos:DATA };
 }
-function applyBundle(b){
+function applyBundle(b, fromServer){
   if(!b||typeof b!=="object") return;
   applyingRemote=true;
-  try{ applyBundleInner(b); }
-  finally{ applyingRemote=false; }
+  try{
+    applyBundleInner(b);
+    if(fromServer!==false && b.updated_at) REMOTE_UPDATED_AT=b.updated_at;
+  }finally{ applyingRemote=false; }
 }
 function applyBundleInner(b){
   if(b.custom_mode) localStorage.setItem("bu_custom_mode","1"); else localStorage.removeItem("bu_custom_mode");
@@ -1417,7 +1423,29 @@ function applyBundleInner(b){
   saveBusinesses();
   localStorage.setItem("bu_data",JSON.stringify(DATA));
 }
-let FILE_API=false, saveTimer=null, persistBusy=false, applyingRemote=false;
+let FILE_API=false, saveTimer=null, persistBusy=false, applyingRemote=false, REMOTE_UPDATED_AT="", API_TOKEN=localStorage.getItem("bu_api_token")||"", refreshTimer=null;
+function apiHeaders(opts){
+  const h={};
+  if(!opts||opts.json!==false) h["Content-Type"]="application/json";
+  if(API_TOKEN) h.Authorization="Bearer "+API_TOKEN;
+  if(opts&&opts.force) h["If-Match"]="*";
+  else if(opts&&opts.ifMatch) h["If-Match"]=opts.ifMatch;
+  else if(REMOTE_UPDATED_AT) h["If-Match"]=REMOTE_UPDATED_AT;
+  return h;
+}
+function setApiToken(tok){
+  API_TOKEN=tok||"";
+  if(API_TOKEN) localStorage.setItem("bu_api_token", API_TOKEN);
+  else localStorage.removeItem("bu_api_token");
+}
+function expireSession(){
+  setApiToken("");
+  AUTH=false; ADMIN=false; SEL.clear();
+  localStorage.removeItem("bu_auth");
+  sessionStorage.removeItem("bu_admin");
+  try{ alert(t("sessionExpired")); }catch(_){}
+  openAuth();
+}
 function setSavePill(mode,msg){
   const el=document.getElementById("savePill"); if(!el) return;
   el.style.display="inline-block";
@@ -1431,15 +1459,28 @@ function schedulePersist(){
   saveTimer=setTimeout(()=>{ persistToFile(); },400);
 }
 function hasPendingSave(){ return !!(persistBusy||saveTimer); }
-async function persistToFile(){
+async function persistToFile(force){
   if(!FILE_API||applyingRemote) return false;
+  if(!API_TOKEN){ expireSession(); return false; }
   clearTimeout(saveTimer); saveTimer=null;
   persistBusy=true;
   try{
-    const r=await fetch("/api/data",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(buildBundle()),cache:"no-store"});
+    const r=await fetch("/api/data",{method:"PUT",headers:apiHeaders({force:!!force}),body:JSON.stringify(buildBundle()),cache:"no-store"});
+    if(r.status===401){ expireSession(); return false; }
+    if(r.status===409){
+      const useServer=confirm(t("saveConflict"));
+      if(useServer){
+        const g=await fetch("/api/data",{headers:apiHeaders({json:false}),cache:"no-store"});
+        if(g.ok){ applyBundle(await g.json(), true); render(); }
+        setSavePill("err",t("saveToFileErr"));
+        return false;
+      }
+      return persistToFile(true);
+    }
     if(!r.ok) throw new Error("http "+r.status);
     const out=await r.json();
     if(!out||!out.ok) throw new Error("bad response");
+    if(out.updated_at) REMOTE_UPDATED_AT=out.updated_at;
     setSavePill("file",t("saveToFile"));
     return true;
   }catch(e){
@@ -1459,81 +1500,106 @@ async function saveNow(){
   return await persistToFile();
 }
 window.addEventListener("beforeunload",function(){
-  if(!FILE_API||applyingRemote||!hasPendingSave()) return;
+  if(!FILE_API||applyingRemote||!hasPendingSave()||!API_TOKEN) return;
   try{
-    fetch("/api/data",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(buildBundle()),cache:"no-store",keepalive:true});
+    fetch("/api/data",{method:"PUT",headers:apiHeaders({force:false}),body:JSON.stringify(buildBundle()),cache:"no-store",keepalive:true});
   }catch(_){}
 });
-async function probeFileApi(){
+async function probeHealth(){
   try{
     const hr=await fetch("/api/health",{cache:"no-store"});
     if(!hr.ok) return null;
     const h=await hr.json();
     if(!h||h.app!=="lifewood-aigc-suite") return null;
-    const r=await fetch("/api/data",{cache:"no-store"});
-    if(!r.ok) return null;
-    const bundle=await r.json();
-    if(!bundle||typeof bundle!=="object"||!Array.isArray(bundle.videos)||typeof bundle.version!=="number") return null;
-    return bundle;
+    return h;
   }catch(e){ return null; }
+}
+async function apiLogin(user, pass){
+  const r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user,pass}),cache:"no-store"});
+  if(!r.ok) return null;
+  const out=await r.json();
+  return (out&&out.ok&&out.token)?out:null;
+}
+async function fetchBundle(){
+  const r=await fetch("/api/data",{headers:apiHeaders({json:false}),cache:"no-store"});
+  if(r.status===401){ expireSession(); return null; }
+  if(!r.ok) return null;
+  const bundle=await r.json();
+  if(!bundle||typeof bundle!=="object"||!Array.isArray(bundle.videos)||typeof bundle.version!=="number") return null;
+  return bundle;
+}
+function finishLocalLoad(){
+  applyingRemote=true;
+  try{
+    LANG_DEFS=normalizeLangDefs(LANG_DEFS); saveLanguages();
+    TYPE_DEFS=normalizeTypeDefs(TYPE_DEFS); saveTypes();
+    DATA.forEach(ensureVideoTracks);
+  }finally{ applyingRemote=false; }
+}
+async function applyServerBundle(bundle){
+  const localRaw=localStorage.getItem("bu_data");
+  let localHas=false;
+  try{ localHas=localRaw&&JSON.parse(localRaw).length; }catch(_){}
+  const fileEmpty=!bundle.videos.length;
+  if(fileEmpty&&localHas&&!bundle.updated_at){
+    DATA=loadLocal();
+    await persistToFile(true);
+  }else applyBundle(bundle, true);
+  finishLocalLoad();
+  setSavePill("file",t("saveToFile"));
 }
 async function initData(){
   const onHttp=/^https?:$/.test(location.protocol);
   if(onHttp){
-    const bundle=await probeFileApi();
-    if(bundle){
+    const health=await probeHealth();
+    if(health){
       FILE_API=true;
-      const localRaw=localStorage.getItem("bu_data");
-      let localHas=false;
-      try{ localHas=localRaw&&JSON.parse(localRaw).length; }catch(_){}
-      const fileEmpty=!bundle.videos.length;
-      if(fileEmpty&&localHas&&!bundle.updated_at){
-        DATA=loadLocal();
-        await persistToFile();
-      }else applyBundle(bundle);
-      LANG_DEFS=normalizeLangDefs(LANG_DEFS); saveLanguages();
-      TYPE_DEFS=normalizeTypeDefs(TYPE_DEFS); saveTypes();
-      DATA.forEach(ensureVideoTracks);
-      setSavePill("file",t("saveToFile"));
+      if(!AUTH||!API_TOKEN){
+        AUTH=false;
+        DATA=[];
+        setSavePill("file",t("saveToFilePending"));
+        return;
+      }
+      const bundle=await fetchBundle();
+      if(bundle){ await applyServerBundle(bundle); startAutoRefresh(); return; }
+      setSavePill("err",t("fileApiOff"));
+      DATA=loadLocal(); finishLocalLoad();
       return;
     }
     setSavePill("err",t("fileApiOff"));
-    DATA=loadLocal();
-    LANG_DEFS=normalizeLangDefs(LANG_DEFS); saveLanguages();
-    TYPE_DEFS=normalizeTypeDefs(TYPE_DEFS); saveTypes();
-    DATA.forEach(ensureVideoTracks);
+    DATA=loadLocal(); finishLocalLoad();
     return;
   }
   FILE_API=false;
-  DATA=loadLocal();
-  LANG_DEFS=normalizeLangDefs(LANG_DEFS); saveLanguages();
-  TYPE_DEFS=normalizeTypeDefs(TYPE_DEFS); saveTypes();
-  DATA.forEach(ensureVideoTracks);
+  DATA=loadLocal(); finishLocalLoad();
   setSavePill("",t("saveLocalOnly"));
 }
 async function reloadFromFile(){
   if(!requireAdmin()) return;
   if(!FILE_API){ alert(t("reloadFileFail")); return; }
   try{
-    const r=await fetch("/api/data");
-    if(!r.ok) throw new Error();
-    applyBundle(await r.json());
+    const bundle=await fetchBundle();
+    if(!bundle) throw new Error();
+    applyBundle(bundle, true);
     SEL.clear(); render();
     alert(t("reloadFileDone"));
   }catch(e){ alert(t("reloadFileFail")); }
 }
 async function silentReloadFromFile(){
-  if(!FILE_API||editingId!=null||document.visibilityState==="hidden"||hasPendingSave()) return;
+  if(!FILE_API||!API_TOKEN||editingId!=null||document.visibilityState==="hidden"||hasPendingSave()) return;
   try{
-    const r=await fetch("/api/data",{cache:"no-store"});
+    const r=await fetch("/api/data",{headers:apiHeaders({json:false}),cache:"no-store"});
+    if(r.status===401){ expireSession(); render(); return; }
     if(!r.ok||hasPendingSave()) return;
-    applyBundle(await r.json());
+    const bundle=await r.json();
+    if(bundle&&bundle.updated_at&&bundle.updated_at===REMOTE_UPDATED_AT) return;
+    applyBundle(bundle, true);
     render();
   }catch(e){ /* stay on last known-good data; next tick will retry */ }
 }
 function startAutoRefresh(){
-  if(!FILE_API) return;
-  setInterval(silentReloadFromFile,8000);
+  if(!FILE_API||refreshTimer) return;
+  refreshTimer=setInterval(silentReloadFromFile,8000);
 }
 let DATA=[];
 let DAILY_VIDEO_GOAL=(function(){ try{ const n=+localStorage.getItem("bu_daily_video_goal"); if(!isNaN(n)) return Math.max(0,Math.round(n)); const leg=+localStorage.getItem("bu_daily_goal"); return isNaN(leg)?0:Math.max(0,Math.round(leg)); }catch(e){ return 0; } })();
@@ -1970,10 +2036,35 @@ function openAuth(){ const e=document.getElementById("authErr"); if(e)e.style.di
   const u=document.getElementById("authUser"),p=document.getElementById("authPass"); if(u)u.value=""; if(p)p.value="";
   document.getElementById("authModal").classList.add("open"); setTimeout(()=>{ try{u.focus();}catch(_){}; },40); }
 function closeAuth(){ document.getElementById("authModal").classList.remove("open"); }
-function doLogin(){ const u=(document.getElementById("authUser").value||"").trim(), p=document.getElementById("authPass").value||"";
-  if(u===CREDS.user && p===getPass()){ AUTH=true; ADMIN=false; sessionStorage.removeItem("bu_admin"); localStorage.setItem("bu_auth","1"); closeAuth(); render(); }
-  else { document.getElementById("authErr").style.display="block"; } }
-function logout(){ closeAvatarMenu(); AUTH=false; ADMIN=false; SEL.clear(); localStorage.removeItem("bu_auth"); sessionStorage.removeItem("bu_admin"); render(); }
+async function doLogin(){
+  const u=(document.getElementById("authUser").value||"").trim(), p=document.getElementById("authPass").value||"";
+  const err=document.getElementById("authErr"); if(err) err.style.display="none";
+  const health=FILE_API?true:await probeHealth();
+  if(health){
+    FILE_API=true;
+    try{
+      const sess=await apiLogin(u,p);
+      if(!sess){ if(err) err.style.display="block"; return; }
+      setApiToken(sess.token);
+      AUTH=true; ADMIN=false; sessionStorage.removeItem("bu_admin");
+      localStorage.setItem("bu_auth","1");
+      closeAuth();
+      await initData();
+      render();
+      return;
+    }catch(e){ if(err) err.style.display="block"; return; }
+  }
+  if(u===CREDS.user && p===getPass()){
+    AUTH=true; ADMIN=false; sessionStorage.removeItem("bu_admin");
+    localStorage.setItem("bu_auth","1"); closeAuth();
+    DATA=loadLocal(); finishLocalLoad(); render();
+  } else { if(err) err.style.display="block"; }
+}
+function logout(){
+  closeAvatarMenu(); AUTH=false; ADMIN=false; SEL.clear(); DATA=[]; REMOTE_UPDATED_AT="";
+  setApiToken("");
+  localStorage.removeItem("bu_auth"); sessionStorage.removeItem("bu_admin"); render();
+}
 function openAdminAuth(){ closeAvatarMenu(); const e=document.getElementById("adminAuthErr"); if(e)e.style.display="none";
   const u=document.getElementById("adminUser"),p=document.getElementById("adminPass"); if(u)u.value=""; if(p)p.value="";
   document.getElementById("adminAuthModal").classList.add("open"); setTimeout(()=>{ try{u.focus();}catch(_){}; },40); }
@@ -2290,7 +2381,7 @@ function exportBundleJSON(name){ const blob=new Blob([JSON.stringify(buildBundle
 function exportSlice(){ if(!requireAdmin()) return; const rows=SEL.size>0?DATA.filter(v=>SEL.has(v.id)):filteredRows(); const blob=new Blob([JSON.stringify(rows,null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`bucked-up-slice-${rows.length}.json`; a.click(); URL.revokeObjectURL(a.href); }
 function importJSON(e){ if(!requireAdmin()){ e.target.value=""; return; } const f=e.target.files[0]; if(!f)return; const r=new FileReader();
   r.onload=()=>{ try{ const d=JSON.parse(r.result);
-    if(d&&Array.isArray(d.videos)){ applyBundle(d); localStorage.setItem("bu_custom_mode","1"); save(); render(); }
+    if(d&&Array.isArray(d.videos)){ applyBundle(d, false); localStorage.setItem("bu_custom_mode","1"); save(); render(); }
     else if(Array.isArray(d)&&d.every(x=>x&&("id"in x))){ DATA=isNewFormat(d)?d.map(ensureOne):migrateOld(d); DATA.forEach(ensureVideoTracks); localStorage.setItem("bu_custom_mode","1"); save(); render(); }
     else throw new Error();
   }catch(err){ alert(t("importBad")); } };

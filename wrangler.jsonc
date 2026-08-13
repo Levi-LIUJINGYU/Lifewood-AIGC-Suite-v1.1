@@ -11,5 +11,11 @@
       "binding": "DASHBOARD_KV",
       "id": "13d1ba8d9c9c44f7b95372c3603f943f"
     }
-  ]
+  ],
+  "vars": {
+    "API_TEAM_USER": "lifewood",
+    "API_TEAM_PASS": "lifewood",
+    "API_ADMIN_USER": "LIFEWOOD",
+    "API_ADMIN_PASS": "LIFEWOOD"
+  }
 }
