@@ -1390,6 +1390,11 @@ function buildBundle(){
 }
 function applyBundle(b){
   if(!b||typeof b!=="object") return;
+  applyingRemote=true;
+  try{ applyBundleInner(b); }
+  finally{ applyingRemote=false; }
+}
+function applyBundleInner(b){
   if(b.custom_mode) localStorage.setItem("bu_custom_mode","1"); else localStorage.removeItem("bu_custom_mode");
   if(typeof b.daily_video_goal==="number"&&!isNaN(b.daily_video_goal)){ DAILY_VIDEO_GOAL=Math.max(0,Math.round(b.daily_video_goal)); localStorage.setItem("bu_daily_video_goal",String(DAILY_VIDEO_GOAL)); }
   else if(typeof b.daily_goal==="number"&&!isNaN(b.daily_goal)){ DAILY_VIDEO_GOAL=Math.max(0,Math.round(b.daily_goal)); localStorage.setItem("bu_daily_video_goal",String(DAILY_VIDEO_GOAL)); }
@@ -1405,14 +1410,14 @@ function applyBundle(b){
   if(Array.isArray(b.sync_log)){ SYNC_LOG=b.sync_log; localStorage.setItem("bu_sync_log",JSON.stringify(SYNC_LOG)); }
   const vids=Array.isArray(b.videos)?b.videos:[];
   if(vids.length) DATA=isNewFormat(vids)?vids.map(ensureOne):migrateOld(vids);
-  else DATA=isCustomMode()?[]:seedData();
+  else DATA=(isCustomMode()||FILE_API)?[]:seedData();
   DATA.forEach(ensureVideoTracks);
   // collect businesses from videos
   DATA.forEach(v=>{ if(v.business&&BUSINESSES.indexOf(v.business)<0) BUSINESSES.push(v.business); });
   saveBusinesses();
   localStorage.setItem("bu_data",JSON.stringify(DATA));
 }
-let FILE_API=false, saveTimer=null;
+let FILE_API=false, saveTimer=null, persistBusy=false, applyingRemote=false;
 function setSavePill(mode,msg){
   const el=document.getElementById("savePill"); if(!el) return;
   el.style.display="inline-block";
@@ -1420,25 +1425,45 @@ function setSavePill(mode,msg){
   el.textContent=msg||"";
 }
 function schedulePersist(){
-  if(!FILE_API) return;
+  if(!FILE_API||applyingRemote) return;
   setSavePill("file",t("saveToFilePending"));
   clearTimeout(saveTimer);
-  saveTimer=setTimeout(persistToFile,400);
+  saveTimer=setTimeout(()=>{ persistToFile(); },400);
 }
+function hasPendingSave(){ return !!(persistBusy||saveTimer); }
 async function persistToFile(){
-  if(!FILE_API) return;
+  if(!FILE_API||applyingRemote) return false;
+  clearTimeout(saveTimer); saveTimer=null;
+  persistBusy=true;
   try{
     const r=await fetch("/api/data",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(buildBundle()),cache:"no-store"});
     if(!r.ok) throw new Error("http "+r.status);
     const out=await r.json();
     if(!out||!out.ok) throw new Error("bad response");
     setSavePill("file",t("saveToFile"));
-  }catch(e){ console.warn("file save failed",e); setSavePill("err",t("saveToFileErr")); FILE_API=false; }
+    return true;
+  }catch(e){
+    console.warn("file save failed",e);
+    setSavePill("err",t("saveToFileErr"));
+    return false;
+  }finally{ persistBusy=false; }
 }
 function save(){
   localStorage.setItem("bu_data",JSON.stringify(DATA));
   schedulePersist();
 }
+async function saveNow(){
+  localStorage.setItem("bu_data",JSON.stringify(DATA));
+  if(!FILE_API) return true;
+  setSavePill("file",t("saveToFilePending"));
+  return await persistToFile();
+}
+window.addEventListener("beforeunload",function(){
+  if(!FILE_API||applyingRemote||!hasPendingSave()) return;
+  try{
+    fetch("/api/data",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(buildBundle()),cache:"no-store",keepalive:true});
+  }catch(_){}
+});
 async function probeFileApi(){
   try{
     const hr=await fetch("/api/health",{cache:"no-store"});
@@ -1498,10 +1523,10 @@ async function reloadFromFile(){
   }catch(e){ alert(t("reloadFileFail")); }
 }
 async function silentReloadFromFile(){
-  if(!FILE_API||editingId!=null||document.visibilityState==="hidden") return;
+  if(!FILE_API||editingId!=null||document.visibilityState==="hidden"||hasPendingSave()) return;
   try{
     const r=await fetch("/api/data",{cache:"no-store"});
-    if(!r.ok) return;
+    if(!r.ok||hasPendingSave()) return;
     applyBundle(await r.json());
     render();
   }catch(e){ /* stay on last known-good data; next tick will retry */ }
@@ -2129,12 +2154,16 @@ function openEntryModal(){
   document.getElementById("eProduct").focus();
 }
 function closeEntryModal(){ document.getElementById("entryModal").classList.remove("open"); }
-function deleteVideos(ids){
-  if(!requireAdmin()) return;
-  const set=new Set(ids);
-  DATA=DATA.filter(v=>!set.has(v.id));
+async function deleteVideos(ids){
+  if(!requireAdmin()) return false;
+  const set=new Set(ids.map(id=>+id));
+  DATA=DATA.filter(v=>!set.has(+v.id));
   ids.forEach(id=>SEL.delete(id));
-  save(); render();
+  localStorage.setItem("bu_custom_mode","1");
+  render();
+  const ok=await saveNow();
+  if(!ok) alert(t("saveToFileErr"));
+  return ok;
 }
 function deleteEditingVideo(){
   if(!editingId) return;
