@@ -15262,6 +15262,220 @@
       "id": 72,
       "project_id": "AIGC001",
       "video_id": "VID072",
+      "product": "Buck Naked Fat Burner",
+      "type": "T1",
+      "duration": 15,
+      "business": "Bucked Up",
+      "name": "Buck Naked Fat Burner",
+      "description": "",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "",
+      "en": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-11T12:00",
+          "script": "2026-07-11T12:00",
+          "voice": "2026-07-11T12:00",
+          "music": "2026-07-11T12:00",
+          "video": "2026-07-11T12:00",
+          "review": "2026-07-11T12:00",
+          "distribution": "2026-07-11T12:00"
+        },
+        "latest_file_name": "Bucked Up_BU-BN001_Buck Naked Fat Burner_EN_15s_V1.mp4",
+        "latest_file_path": "",
+        "latest_version": "v1",
+        "last_updated_at": "2026-07-11"
+      },
+      "es": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-11T12:00",
+          "script": "2026-07-11T12:00",
+          "voice": "2026-07-11T12:00",
+          "music": "2026-07-11T12:00",
+          "video": "2026-07-11T12:00",
+          "review": "2026-07-11T12:00",
+          "distribution": "2026-07-11T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-11"
+      },
+      "zh": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-11T12:00",
+          "script": "2026-07-11T12:00",
+          "voice": "2026-07-11T12:00",
+          "music": "2026-07-11T12:00",
+          "video": "2026-07-11T12:00",
+          "review": "2026-07-11T12:00",
+          "distribution": "2026-07-11T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-11"
+      },
+      "yue": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-11T12:00",
+          "script": "2026-07-11T12:00",
+          "voice": "2026-07-11T12:00",
+          "music": "2026-07-11T12:00",
+          "video": "2026-07-11T12:00",
+          "review": "2026-07-11T12:00",
+          "distribution": "2026-07-11T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-11"
+      },
+      "ja": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-11T12:00",
+          "script": "2026-07-11T12:00",
+          "voice": "2026-07-11T12:00",
+          "music": "2026-07-11T12:00",
+          "video": "2026-07-11T12:00",
+          "review": "2026-07-11T12:00",
+          "distribution": "2026-07-11T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-11"
+      },
+      "ko": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-11T12:00",
+          "script": "2026-07-11T12:00",
+          "voice": "2026-07-11T12:00",
+          "music": "2026-07-11T12:00",
+          "video": "2026-07-11T12:00",
+          "review": "2026-07-11T12:00",
+          "distribution": "2026-07-11T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-11"
+      }
+    },
+    {
+      "id": 73,
+      "project_id": "AIGC001",
+      "video_id": "VID073",
       "product": "Creatine Monohydrate Original",
       "type": "T1",
       "duration": 15,
@@ -15473,9 +15687,9 @@
       }
     },
     {
-      "id": 73,
+      "id": 74,
       "project_id": "AIGC001",
-      "video_id": "VID073",
+      "video_id": "VID074",
       "product": "Bucked Up Energy Drink Rocket Pop",
       "type": "T1",
       "duration": 15,
@@ -15687,9 +15901,223 @@
       }
     },
     {
-      "id": 74,
+      "id": 75,
       "project_id": "AIGC001",
-      "video_id": "VID074",
+      "video_id": "VID075",
+      "product": "Mother Bucker Pre-Workout",
+      "type": "T1",
+      "duration": 15,
+      "business": "Bucked Up",
+      "name": "Mother Bucker Pre-Workout",
+      "description": "",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "",
+      "en": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-11T12:00",
+          "script": "2026-07-11T12:00",
+          "voice": "2026-07-11T12:00",
+          "music": "2026-07-11T12:00",
+          "video": "2026-07-11T12:00",
+          "review": "2026-07-11T12:00",
+          "distribution": "2026-07-11T12:00"
+        },
+        "latest_file_name": "Bucked Up_BU-MB01_Mother Bucker Pre-Workout_EN_15s_V1.mp4",
+        "latest_file_path": "",
+        "latest_version": "v1",
+        "last_updated_at": "2026-07-11"
+      },
+      "es": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-11T12:00",
+          "script": "2026-07-11T12:00",
+          "voice": "2026-07-11T12:00",
+          "music": "2026-07-11T12:00",
+          "video": "2026-07-11T12:00",
+          "review": "2026-07-11T12:00",
+          "distribution": "2026-07-11T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-11"
+      },
+      "zh": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-11T12:00",
+          "script": "2026-07-11T12:00",
+          "voice": "2026-07-11T12:00",
+          "music": "2026-07-11T12:00",
+          "video": "2026-07-11T12:00",
+          "review": "2026-07-11T12:00",
+          "distribution": "2026-07-11T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-11"
+      },
+      "yue": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-11T12:00",
+          "script": "2026-07-11T12:00",
+          "voice": "2026-07-11T12:00",
+          "music": "2026-07-11T12:00",
+          "video": "2026-07-11T12:00",
+          "review": "2026-07-11T12:00",
+          "distribution": "2026-07-11T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-11"
+      },
+      "ja": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-11T12:00",
+          "script": "2026-07-11T12:00",
+          "voice": "2026-07-11T12:00",
+          "music": "2026-07-11T12:00",
+          "video": "2026-07-11T12:00",
+          "review": "2026-07-11T12:00",
+          "distribution": "2026-07-11T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-11"
+      },
+      "ko": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-11T12:00",
+          "script": "2026-07-11T12:00",
+          "voice": "2026-07-11T12:00",
+          "music": "2026-07-11T12:00",
+          "video": "2026-07-11T12:00",
+          "review": "2026-07-11T12:00",
+          "distribution": "2026-07-11T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-11"
+      }
+    },
+    {
+      "id": 76,
+      "project_id": "AIGC001",
+      "video_id": "VID076",
       "product": "Pump Ocalypse Original",
       "type": "T1",
       "duration": 15,
@@ -15901,9 +16329,223 @@
       }
     },
     {
-      "id": 75,
+      "id": 77,
       "project_id": "AIGC001",
-      "video_id": "VID075",
+      "video_id": "VID077",
+      "product": "Protein Drinks Banana Pineapple",
+      "type": "T1",
+      "duration": 15,
+      "business": "Bucked Up",
+      "name": "Protein Drinks Banana Pineapple",
+      "description": "",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "",
+      "en": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-08T12:00",
+          "script": "2026-07-08T12:00",
+          "voice": "2026-07-08T12:00",
+          "music": "2026-07-08T12:00",
+          "video": "2026-07-08T12:00",
+          "review": "2026-07-08T12:00",
+          "distribution": "2026-07-08T12:00"
+        },
+        "latest_file_name": "Bucked Up_BU-PS001_Protein Drinks Banana Pineapple_EN_15s_V1.mp4",
+        "latest_file_path": "",
+        "latest_version": "v1",
+        "last_updated_at": "2026-07-08"
+      },
+      "es": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-08T12:00",
+          "script": "2026-07-08T12:00",
+          "voice": "2026-07-08T12:00",
+          "music": "2026-07-08T12:00",
+          "video": "2026-07-08T12:00",
+          "review": "2026-07-08T12:00",
+          "distribution": "2026-07-08T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-08"
+      },
+      "zh": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-08T12:00",
+          "script": "2026-07-08T12:00",
+          "voice": "2026-07-08T12:00",
+          "music": "2026-07-08T12:00",
+          "video": "2026-07-08T12:00",
+          "review": "2026-07-08T12:00",
+          "distribution": "2026-07-08T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-08"
+      },
+      "yue": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-08T12:00",
+          "script": "2026-07-08T12:00",
+          "voice": "2026-07-08T12:00",
+          "music": "2026-07-08T12:00",
+          "video": "2026-07-08T12:00",
+          "review": "2026-07-08T12:00",
+          "distribution": "2026-07-08T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-08"
+      },
+      "ja": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-08T12:00",
+          "script": "2026-07-08T12:00",
+          "voice": "2026-07-08T12:00",
+          "music": "2026-07-08T12:00",
+          "video": "2026-07-08T12:00",
+          "review": "2026-07-08T12:00",
+          "distribution": "2026-07-08T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-08"
+      },
+      "ko": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "2026-07-08T12:00",
+          "script": "2026-07-08T12:00",
+          "voice": "2026-07-08T12:00",
+          "music": "2026-07-08T12:00",
+          "video": "2026-07-08T12:00",
+          "review": "2026-07-08T12:00",
+          "distribution": "2026-07-08T12:00"
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": "2026-07-08"
+      }
+    },
+    {
+      "id": 78,
+      "project_id": "AIGC001",
+      "video_id": "VID078",
       "product": "Bucked Up Pre-Workout Miami",
       "type": "T1",
       "duration": 15,
@@ -16115,9 +16757,9 @@
       }
     },
     {
-      "id": 76,
+      "id": 79,
       "project_id": "AIGC001",
-      "video_id": "VID076",
+      "video_id": "VID079",
       "product": "PWR Buck Pouches Original",
       "type": "T1",
       "duration": 15,
@@ -16329,9 +16971,9 @@
       }
     },
     {
-      "id": 77,
+      "id": 80,
       "project_id": "AIGC001",
-      "video_id": "VID077",
+      "video_id": "VID080",
       "product": "RUT Testosterone Booster",
       "type": "T1",
       "duration": 15,
@@ -16543,9 +17185,223 @@
       }
     },
     {
-      "id": 78,
+      "id": 81,
       "project_id": "AIGC001",
-      "video_id": "VID078",
+      "video_id": "VID081",
+      "product": "Woke AF BKFC IceCold",
+      "type": "T1",
+      "duration": 30,
+      "business": "Bucked Up",
+      "name": "Woke AF BKFC IceCold",
+      "description": "",
+      "priority": "",
+      "flag": false,
+      "revisions": 0,
+      "reason": "",
+      "notes": "",
+      "en": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "Bucked Up_BU-WAF001_Woke AF BKFC IceCold_EN_30s_V1.mov",
+        "latest_file_path": "",
+        "latest_version": "v1",
+        "last_updated_at": ""
+      },
+      "es": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "zh": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "yue": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "ja": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      },
+      "ko": {
+        "status": {
+          "brief": "completed",
+          "script": "completed",
+          "voice": "completed",
+          "music": "completed",
+          "video": "completed",
+          "review": "completed",
+          "distribution": "completed"
+        },
+        "pic": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "completed_at": {
+          "brief": "",
+          "script": "",
+          "voice": "",
+          "music": "",
+          "video": "",
+          "review": "",
+          "distribution": ""
+        },
+        "latest_file_name": "",
+        "latest_file_path": "",
+        "latest_version": "",
+        "last_updated_at": ""
+      }
+    },
+    {
+      "id": 82,
+      "project_id": "AIGC001",
+      "video_id": "VID082",
       "product": "Woke AF Pre-Workout Original",
       "type": "T1",
       "duration": 15,
@@ -16757,5 +17613,5 @@
       }
     }
   ],
-  "updated_at": "2026-08-15T05:45:34.000Z"
+  "updated_at": "2026-08-15T06:08:10.000Z"
 }

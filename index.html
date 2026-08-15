@@ -789,7 +789,7 @@ const I18N = {
     completionByType:"Completion by type", byProduct:"Progress by product", tracker:"Video tracker",
     completeWord:"complete", onTrack:"On track", atRisk:"At risk", toDelivery:"days to delivery",
     tlKickoff:"Kickoff · 1 Jul 2026", tlProduction:"Production · Jul 2026", tlDelivery:"Delivery · 1 Aug 2026", todayLabel:"Today",
-    kTotal:"Total deliverables", kTotalHint:"Videos × languages (scoped by business filter)", kDone:"Completed", kProd:"In production",
+    kTotal:"Total videos", kTotalHint:"One row per video (language tracks are in the dropdown)", kDone:"Completed", kProd:"In production",
     kReview:"Pending review", kRejected:"Rejected", kDistributed:"Distributed",
     stShowing:"Showing", stCompleted:"Completed", stInProgress:"In production", stRejected:"Rejected", stTotal:"Total",
     flaggedLbl:"Flagged", inRevision:"In revision", revLimit:"Revision limit",
@@ -941,7 +941,7 @@ const I18N = {
     completionByType:"按类型完成情况", byProduct:"按产品进度", tracker:"视频追踪表",
     completeWord:"完成", onTrack:"进度正常", atRisk:"有风险", toDelivery:"天后交付",
     tlKickoff:"启动 · 2026年7月1日", tlProduction:"制作 · 2026年7月", tlDelivery:"交付 · 2026年8月1日", todayLabel:"今天",
-    kTotal:"交付件总数", kTotalHint:"视频 × 语言（受业务筛选影响）", kDone:"已完成", kProd:"制作中",
+    kTotal:"视频总数", kTotalHint:"一条视频一行（语言在下拉框中切换）", kDone:"已完成", kProd:"制作中",
     kReview:"待审核", kRejected:"被退回", kDistributed:"已分发",
     stShowing:"显示中", stCompleted:"已完成", stInProgress:"制作中", stRejected:"被退回", stTotal:"总数",
     flaggedLbl:"已标记", inRevision:"修改中", revLimit:"达修改上限",
@@ -1630,21 +1630,32 @@ function dailyPanelCards(today,goal,goalSetter,unitKey,todayLabel,todayHint,firs
 }
 
 /* ============================== stats ============================== */
+function videoOverall(v){
+  ensureVideoTracks(v);
+  const ovs=TRACKS.map(trk=>trackOverall(v[trk]));
+  if(ovs.some(o=>o==="rejected")) return "rejected";
+  if(ovs.every(o=>o==="completed")) return "completed";
+  if(ovs.every(o=>o==="not_started")) return "not_started";
+  if(ovs.some(o=>o==="reviewing"||o==="abnormal")) return ovs.includes("abnormal")?"abnormal":"reviewing";
+  return "in_progress";
+}
 function projStats(){
   const rows=scopedData(); rows.forEach(ensureVideoTracks);
-  const tracks=rows.length*Math.max(1,TRACKS.length); let done=0,prod=0,review=0,rejected=0,distributed=0,sum=0,not=0;
-  rows.forEach(v=>TRACKS.forEach(trk=>{ const tr=v[trk]; const ov=trackOverall(tr); sum+=trackPct(tr);
+  const videos=rows.length; let done=0,prod=0,review=0,rejected=0,distributed=0,sum=0,not=0;
+  rows.forEach(v=>{
+    const ov=videoOverall(v);
+    sum+=videoPct(v);
     if(ov==="completed")done++; else if(ov==="not_started")not++; else prod++;
-    if(tr.status.review==="reviewing"||trackCurrent(tr)==="review")review++;
-    if(tr.status.review==="rejected")rejected++;
-    if(stageDone(tr,"distribution"))distributed++;
-  }));
-  return {tracks,done,not,prod,review,rejected,distributed,pct:tracks?Math.round(sum/tracks*100):0,
+    if(ov==="reviewing"||TRACKS.some(trk=>v[trk].status.review==="reviewing"||trackCurrent(v[trk])==="review")) review++;
+    if(ov==="rejected") rejected++;
+    if(TRACKS.some(trk=>stageDone(v[trk],"distribution"))) distributed++;
+  });
+  return {tracks:videos, videos, done, not, prod, review, rejected, distributed, pct:videos?Math.round(sum/videos):0,
     days:Math.max(0,Math.ceil((DEADLINE-new Date())/86400000)),
     flagged:rows.filter(v=>v.flag).length, inRev:rows.filter(v=>v.revisions>0).length, revMax:rows.filter(v=>v.revisions>=2).length}; }
-function stageDoneCount(stage){ return scopedData().reduce((a,v)=>{ ensureVideoTracks(v); return a+TRACKS.reduce((b,trk)=>b+(stageDone(v[trk],stage)?1:0),0); },0); }
+function stageDoneCount(stage){ return scopedData().filter(v=>{ ensureVideoTracks(v); return TRACKS.every(trk=>stageDone(v[trk],stage)); }).length; }
 function stageDoneTrack(trk,stage){ return scopedData().filter(v=>{ ensureVideoTracks(v); return stageDone(v[trk],stage); }).length; }
-function trackDenom(){ return Math.max(1, scopedData().length * Math.max(1,TRACKS.length)); }
+function trackDenom(){ return Math.max(1, scopedData().length); }
 function langDenom(){ return Math.max(1, scopedData().length); }
 
 /* ---------- anomalies ---------- */
